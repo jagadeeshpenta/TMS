@@ -7,7 +7,7 @@
     {
       "root": "src",
       "outDir": "dist",
-      "output-path": "../dist/",
+      "output-path": "dist",
       "assets": [
         "assets",
         "favicon.ico"
