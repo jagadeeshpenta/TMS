@@ -6,8 +6,19 @@
 @import "bootswatch";
 @import 'dashboard';
 @import 'footer';
-@import 'login';
 body {
-  background-color: #ddd;
   padding: 60px 0;
+}
+
+.quote {
+  margin-top: 20px;
+  .text-capitalize {
+    color: #ddd;
+  }
+  blockquote {
+    background-color: #fafafa; 
+    .fa {
+      margin-right: 10px;
+    }
+  }
 }

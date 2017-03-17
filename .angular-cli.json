@@ -24,7 +24,10 @@
         "../node_modules/font-awesome/scss/font-awesome.scss",
         "../node_modules/ionicons/dist/scss/ionicons.scss"
       ],
-      "scripts": [],
+      "scripts": [
+        "../node_modules/jquery/dist/jquery.min.js",
+        "../node_modules/bootstrap/dist/js/bootstrap.min.js"
+      ],
       "environmentSource": "environments/environment.ts",
       "environments": {
         "dev": "environments/environment.ts",
