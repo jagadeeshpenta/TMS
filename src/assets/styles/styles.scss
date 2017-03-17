@@ -1,10 +1,13 @@
+
 /* You can add global styles to this file, and also import other style files */
+
 @import "variables";
 @import "node_modules/bootstrap/scss/bootstrap";
 @import "bootswatch";
 @import 'dashboard';
 @import 'footer';
-
+@import 'login';
 body {
-        padding: 60px 0;
+  background-color: #ddd;
+  padding: 60px 0;
 }

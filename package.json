@@ -25,7 +25,8 @@
     "font-awesome": "^4.7.0",
     "ng2-bootstrap": "^1.4.0",
     "rxjs": "^5.1.0",
-    "zone.js": "^0.7.6"
+    "zone.js": "^0.7.6",
+    "ioniciconsv3" : "git://github.com/driftyco/ionicons.git#3.0"
   },
   "devDependencies": {
     "@angular/cli": "1.0.0-rc.0",
