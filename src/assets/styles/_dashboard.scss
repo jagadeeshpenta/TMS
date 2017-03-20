@@ -1,16 +1,22 @@
 .dashboard {
-    .card {
-        margin-bottom: 20px;
-    }
+  .card {
+    margin-bottom: 20px;
+  }
 }
-@media only screen and (min-width : 520px) {
-    .dashboard {
-        position: absolute;
-        top: 0;
-        bottom: 0;
-        right: 0;
-        left: 0;
-        display: flex;
-        align-items: center;
-    }
+
+.hand-symbol {
+  cursor: pointer;
+  cursor: hand;
+}
+
+@media only screen and (min-width: 520px) {
+  .dashboard {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    left: 0;
+    display: flex;
+    align-items: center;
+  }
 }
