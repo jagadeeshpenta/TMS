@@ -11,6 +11,12 @@ import { DashboardComponent } from './components/dashboard/dashboard.component';
 
 import '../../node_modules/ng2-bootstrap';
 import { LoginComponent } from './components/login/login.component';
+import { ProfileComponent } from './components/profile/profile.component';
+import { ChangePasswordComponent } from './components/change-password/change-password.component';
+import { TimeSheetComponent } from './components/time-sheet/time-sheet.component';
+import { MyTeamComponent } from './components/my-team/my-team.component';
+import { EmployeesComponent } from './components/employees/employees.component';
+import { ReportsComponent } from './components/reports/reports.component';
 
 
 
@@ -20,7 +26,13 @@ import { LoginComponent } from './components/login/login.component';
     NavigationComponent,
     FooterComponent,
     DashboardComponent,
-    LoginComponent
+    LoginComponent,
+    ProfileComponent,
+    ChangePasswordComponent,
+    TimeSheetComponent,
+    MyTeamComponent,
+    EmployeesComponent,
+    ReportsComponent
   ],
   imports: [
     BrowserModule,
