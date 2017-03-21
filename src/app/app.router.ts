@@ -9,6 +9,7 @@ import { TimeSheetComponent } from './components/time-sheet/time-sheet.component
 import { MyTeamComponent } from './components/my-team/my-team.component';
 import { EmployeesComponent } from './components/employees/employees.component';
 import { ReportsComponent } from './components/reports/reports.component';
+import { TodoComponent } from './components/todo/todo.component';
 
 export const router: Routes = [
     
@@ -20,6 +21,7 @@ export const router: Routes = [
     { path: 'my-team', component: MyTeamComponent },
     { path: 'employees', component: EmployeesComponent },
     { path: 'reports', component: ReportsComponent },
+    { path: 'todo', component: TodoComponent },
 
 { path: '**', redirectTo: 'login', pathMatch: 'full' }
 ];

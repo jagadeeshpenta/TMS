@@ -4,9 +4,8 @@ import { TodoService } from "./todo.service";
 import { TodoModal } from "../../Modals/todo.modal";
 
 @Component({
-    moduleId: module.id,
     selector: '[todo-details]',
-    templateUrl: 'todo-detail.component.html'
+    templateUrl: './todo-detail.component.html'
 })
 
 export class TodoDetailsComponent {

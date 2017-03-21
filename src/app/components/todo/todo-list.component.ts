@@ -3,9 +3,8 @@ import { TodoService } from './todo.service';
 import { TodoModal } from '../../Modals/todo.modal';
 
 @Component({
-    moduleId: module.id,
     selector: '[todo-list]',
-    templateUrl: 'todo-list.component.html'
+    templateUrl: './todo-list.component.html'
 })
 export class TodoListComponent {
     public Title: string = 'Hello World';
