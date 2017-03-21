@@ -5,6 +5,10 @@ import { appConstants } from './app.constants';
 import 'rxjs/add/operator/catch';
 import 'rxjs/add/operator/map';
 
+/**
+ * Please refer below url (stackoverflow) for implementing http wrapper.
+ * http://stackoverflow.com/questions/39033038/rxjs-observables-and-generic-types-for-angular2typescript-http-wrapper
+ */
 @Injectable()
 export abstract class HttpWrapper<T> {
     private options: RequestOptions;

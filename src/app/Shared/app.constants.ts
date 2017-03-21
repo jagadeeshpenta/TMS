@@ -1,5 +1,6 @@
 export class appConstants {
+    private static  baseUrl : '';
     public static API_CONSTANTS = {
-        baseUrl : ''
+        'GET_USERS' :  appConstants.baseUrl + ''
     };
 }
