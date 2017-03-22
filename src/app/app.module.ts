@@ -4,7 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
 import { routes } from './app.router';
 import './Shared/app.constants';
-import { ApiService } from './Shared/apiservice';
+
 
 import { AppComponent } from './app.component';
 import { NavigationComponent } from './components/navigation/navigation.component';
@@ -20,6 +20,10 @@ import { TimeSheetComponent } from './components/time-sheet/time-sheet.component
 import { MyTeamComponent } from './components/my-team/my-team.component';
 import { EmployeesComponent } from './components/employees/employees.component';
 import { ReportsComponent } from './components/reports/reports.component';
+
+ 
+import { AuthService } from './Shared/auth/auth.service';
+import { UserService } from './components/todo/user.service';
 
 @NgModule({
   declarations: [
@@ -42,7 +46,7 @@ import { ReportsComponent } from './components/reports/reports.component';
     TodoModule,
     routes
   ],
-  providers: [ApiService],
+  providers: [AuthService,UserService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

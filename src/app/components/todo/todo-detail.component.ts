@@ -1,7 +1,9 @@
-import { Component } from '@angular/core';
+import { Component, Inject } from '@angular/core';
 import { ActivatedRoute } from "@angular/router";
 import { TodoService } from "./todo.service";
 import { TodoModal } from "../../Modals/todo.modal";
+import { UserModal } from "../../Modals/todo.modal";
+import { UserService } from "./user.service";
 
 @Component({
     selector: '[todo-details]',
@@ -10,7 +12,8 @@ import { TodoModal } from "../../Modals/todo.modal";
 
 export class TodoDetailsComponent {
     private _todoModal: TodoModal;
-    constructor(private _route: ActivatedRoute, private _todoService: TodoService) {
+    private user: UserModal;
+    constructor(private _route: ActivatedRoute,@Inject(TodoService) private _todoService: TodoService, @Inject(UserService) private usrservice: UserService ) {
 
     }
 
@@ -21,5 +24,8 @@ export class TodoDetailsComponent {
         } else {
             this._todoModal = this._todoService.Todos[1];
         }
+        this.usrservice.getOne().subscribe(x=>{
+            this.user = x;
+        });
     }
 }
