@@ -4,13 +4,13 @@
     <div class="col-lg-6 col-md-6 col-sm-6">
       <div class="card">
         <div class="card-block">
-          <form class="form-horizontal" (submit)="Login()">
+          <form class="form-horizontal" method="POST" (submit)="Login()">
             <fieldset>
               <legend>Login</legend>
               <div class="form-group">
                 <div class="input-group">
                   <span class="input-group-addon">Username </span>
-                  <input type="text" class="form-control" id="inputEmail" placeholder="Email">
+                  <input type="text" class="form-control" id="inputEmail" placeholder="Email" [(ngModel)]="user.email" name="email" />
 
                 </div>
 
@@ -18,7 +18,7 @@
               <div class="form-group">
                 <div class="input-group">
                   <span class="input-group-addon">Password</span>
-                  <input type="password" class="form-control" id="inputPassword" placeholder="Password">
+                  <input type="password" class="form-control" id="inputPassword" placeholder="Password" [(ngModel)]="user.password" name="password" />
 
                 </div>
 
