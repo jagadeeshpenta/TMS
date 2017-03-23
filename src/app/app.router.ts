@@ -26,4 +26,5 @@ export const router: Routes = [
 { path: '**', redirectTo: 'login', pathMatch: 'full' }
 ];
 
+
 export const routes: ModuleWithProviders = RouterModule.forRoot(router);
