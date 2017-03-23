@@ -5,7 +5,6 @@ import { HttpModule } from '@angular/http';
 import { routes } from './app.router';
 import './Shared/app.constants';
 
-
 import { AppComponent } from './app.component';
 import { NavigationComponent } from './components/navigation/navigation.component';
 import { FooterComponent } from './components/footer/footer.component';
@@ -23,6 +22,7 @@ import { ReportsComponent } from './components/reports/reports.component';
 
  
 import { AuthService } from './Shared/auth/auth.service';
+import { AuthGuard } from './Shared/auth.guard';
 import { UserService } from './components/todo/user.service';
 
 @NgModule({
@@ -46,7 +46,7 @@ import { UserService } from './components/todo/user.service';
     TodoModule,
     routes
   ],
-  providers: [AuthService,UserService],
+  providers: [AuthService, UserService, AuthGuard],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
