@@ -28,4 +28,5 @@ export const router: Routes = [
 { path: '**', redirectTo: 'dashboard', pathMatch: 'full' }
 ];
 
+
 export const routes: ModuleWithProviders = RouterModule.forRoot(router);
