@@ -32,7 +32,7 @@ export class AuthService {
 
   isLoggedIn() {
     if (Cookie.get('auth_key')) { // if remove cookie from browser
-      return this.isAuthenticated;
+      return true;
     }else{
       return false;
     }

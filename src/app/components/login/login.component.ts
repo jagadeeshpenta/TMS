@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthService } from '../../Shared/auth/auth.service';
+import { ToastsManager } from '../../../../node_modules/ng2-toastr/ng2-toastr';
 
 @Component({
   selector: 'app-login',
@@ -11,7 +12,9 @@ export class LoginComponent {
     email: '',
     password: ''
   }
-  constructor(private _router: Router, private auth:AuthService) { }
+  constructor(private _router: Router, private auth:AuthService,public toastr: ToastsManager) { 
+     this.toastr.success('You are awesome!', 'Success!');
+  }
 
 
   public Login(): void {

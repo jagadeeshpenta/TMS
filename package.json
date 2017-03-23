@@ -26,6 +26,7 @@
     "ionicons": "git://github.com/driftyco/ionicons.git#3.0",
     "ng2-bootstrap": "^1.4.0",
     "ng2-cookies": "^1.0.6",
+    "ng2-toastr": "^4.0.1",
     "rxjs": "^5.1.0",
     "zone.js": "^0.7.6"
   },
