@@ -11,8 +11,7 @@ import { FooterComponent } from './components/footer/footer.component';
 import { DashboardComponent } from './components/dashboard/dashboard.component';
 
 import '../../node_modules/ng2-bootstrap';
-// import { Ng2BootstrapModule } from '../../node_modules/ng2-bootstrap';
-import { ToastsModule } from '../../node_modules/ng2-toastr/ng2-toastr';  
+// import { Ng2BootstrapModule } from '../../node_modules/ng2-bootstrap'; 
 import { TodoModule } from './components/todo'
 import { LoginComponent } from './components/login/login.component';
 import { ProfileComponent } from './components/profile/profile.component';
@@ -47,7 +46,6 @@ import { UserService } from './components/todo/user.service';
     HttpModule,
     TodoModule,
     routes,
-    ToastsModule
   ],
   providers: [AuthService, UserService, AuthGuard],
   bootstrap: [AppComponent]
