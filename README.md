@@ -13,3 +13,6 @@
 
 ## Note
 Please dont push any changes/updates to master branch
+
+## ToDo
+check Todo sample for http functionality (GET,POST)
