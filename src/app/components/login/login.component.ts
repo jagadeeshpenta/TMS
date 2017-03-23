@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthService } from '../../Shared/auth/auth.service';
+import { ToastrService } from '../../../../node_modules/toastr-ng2';
 
 @Component({
   selector: 'app-login',
@@ -11,7 +12,9 @@ export class LoginComponent {
     email: '',
     password: ''
   }
-  constructor(private _router: Router, private auth:AuthService) { 
+  constructor(private _router: Router, private auth:AuthService, private toastrService: ToastrService) { 
+    
+   
   }
 
 
@@ -21,9 +24,10 @@ export class LoginComponent {
     let checknow = this.auth.authenticate(this.user);
     checknow.then((res) => {
       if (res) {
-        console.log(res);
+         this.toastrService.success('', 'login has been success!');
         this._router.navigate(['/dashboard']);
       } else {
+         this.toastrService.error('', 'Failed login! please check again!');
         console.log('Invalid user');
       }
     });

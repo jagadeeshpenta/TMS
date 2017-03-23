@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
 import { routes } from './app.router';
 import './Shared/app.constants';
+import { ToastrModule } from '../../node_modules/toastr-ng2';
 
 import { AppComponent } from './app.component';
 import { NavigationComponent } from './components/navigation/navigation.component';
@@ -46,6 +47,7 @@ import { UserService } from './components/todo/user.service';
     HttpModule,
     TodoModule,
     routes,
+    ToastrModule.forRoot(),
   ],
   providers: [AuthService, UserService, AuthGuard],
   bootstrap: [AppComponent]
