@@ -14,6 +14,9 @@
 ## Note
 Please dont push any changes/updates to master branch
 
+## ToDo
+check Todo sample for http functionality (GET,POST)
+
 ## Rules to create branches
 
 1. Naming convention should be followed (TMS-change-password or TMS-profile). Name of the branch should be followed by TMS-*.
