@@ -13,3 +13,8 @@
 
 ## Note
 Please dont push any changes/updates to master branch
+
+## Rules to create branches
+
+1. Naming convention should be followed (TMS-change-password or TMS-profile). Name of the branch should be followed by TMS-*.
+2. Don't delete branches after raising pull request and merging with master. This is for the tracking purpose.
