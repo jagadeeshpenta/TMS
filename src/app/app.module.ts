@@ -27,6 +27,23 @@ import { AuthService } from './Shared/auth/auth.service';
 import { AuthGuard } from './Shared/auth.guard';
 import { UserService } from './components/todo/user.service';
 
+
+import { UiForApiModule } from './ui-for-api/ui-for-api.module';
+import { environment } from './../environments/environment';
+
+var importModulesArr = [
+  BrowserModule,
+  FormsModule,
+  HttpModule,
+  TodoModule,
+  routes,
+  ToastrModule.forRoot()
+];
+
+if (!environment.production) {
+  importModulesArr.push(UiForApiModule);
+}
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -41,14 +58,7 @@ import { UserService } from './components/todo/user.service';
     EmployeesComponent,
     ReportsComponent
   ],
-  imports: [
-    BrowserModule,
-    FormsModule,
-    HttpModule,
-    TodoModule,
-    routes,
-    ToastrModule.forRoot(),
-  ],
+  imports: importModulesArr,
   providers: [AuthService, UserService, AuthGuard],
   bootstrap: [AppComponent]
 })

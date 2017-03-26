@@ -23,10 +23,15 @@ export const router: Routes = [
     { path: 'my-team', component: MyTeamComponent, canActivate:[AuthGuard] },
     { path: 'employees', component: EmployeesComponent, canActivate:[AuthGuard] },
     { path: 'reports', component: ReportsComponent, canActivate:[AuthGuard] },
-    { path: 'todo', component: TodoComponent },
-
-{ path: '**', redirectTo: 'dashboard', pathMatch: 'full' }
+    { path: 'todo', component: TodoComponent }
 ];
+
+import { environment } from './../environments/environment';
+import { UiForApiModule } from './ui-for-api/ui-for-api.module';
+if (!environment.production) {
+    router.push({ path: 'api-ui', component: UiForApiModule.getRootComponent().ApiUiComponent });
+}
+router.push({ path: '**', redirectTo: 'dashboard', pathMatch: 'full' });
 
 
 export const routes: ModuleWithProviders = RouterModule.forRoot(router);

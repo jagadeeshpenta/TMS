@@ -1,0 +1,85 @@
+<div class="container">
+	<div class="page login-page">
+		<div>
+			Login to Get lToken from server <span [ngClass]="{'hidden': hideErrMsg}">(username and password not matched)</span>
+		</div>
+		<form class="form-inline" method="POST" (submit)="getlToken()">
+			<div class="form-group">
+				<input name="username" required type="text" [(ngModel)]="userCreds.username" class="form-control" id="exampleInputEmail3"
+				 placeholder="EmailId or EmpId">
+			</div>
+			<div class="form-group">
+				<input name="password" required type="password" [(ngModel)]="userCreds.password" class="form-control" id="exampleInputPassword3"
+				 placeholder="Password">
+			</div>
+			<button type="submit" class="btn btn-default"> Get Token </button>
+		</form>
+	</div>
+	<div class="after-login" *ngIf="isAuthenticated">
+		<div>
+			<div>
+				lToken : <span>{{ userCreds.lToken}}</span>
+			</div>
+			<div>
+				Is DB Admin : <span>{{ profile.role }}</span>
+			</div>
+		</div>
+		<div *ngIf="afterLoadingData">
+			<div>
+				<button class="btn btn-default" (click)="activeTab = 'employees';getList('employees')" [ngClass]="{'btn-active': activeTab === 'employees'}"> Employees </button>
+				<button class="btn btn-default" (click)="activeTab = 'projects'; getList('projects')" [ngClass]="{'btn-active': activeTab === 'projects'}"> Projects </button>
+				<button class="btn btn-default" (click)="activeTab = 'profile'" [ngClass]="{'btn-active': activeTab === 'profile'}"> Profile </button>
+				<button class="btn btn-default" (click)="activeTab = 'timesheets';getList('timesheets')" [ngClass]="{'btn-active': activeTab === 'timesheets'}"> Timesheets </button>
+				<button class="btn btn-default" (click)="activeTab = 'allocation'; getList('allocations')" [ngClass]="{'btn-active': activeTab === 'allocations'}"> Allocation </button>
+			</div>
+			<div class="tab-content">
+				<div class="tab" [ngClass]="{'active': activeTab === 'employees'}">
+					<table class="table">
+						<tr>
+							<th>Id</th>
+							<th>Name</th>
+						</tr>
+						<tr *ngFor="let emp of Employees">
+							<td>{{emp.id}}</td>
+							<td>{{emp.firstname + ' ' + emp.lastname}}</td>
+						</tr>
+					</table>
+				</div>
+				<div class="tab" [ngClass]="{'active': activeTab === 'projects'}">
+					<table class="table">
+						<tr>
+							<th>Id</th>
+							<th>Name</th>
+							<th>Employees</th>
+						</tr>
+						<tr *ngFor="let project of Projects">
+							<td>{{project.id}}</td>
+							<td>{{project.name}}</td>
+							<td>
+								<ul>
+									<li *ngFor="let emp of project.Employees">{{ emp.firstname + ' ' + emp.lastname}}</li>
+								</ul>
+							</td>
+						</tr>
+					</table>
+				</div>
+				<div class="tab" [ngClass]="{'active': activeTab === 'profile'}">
+					<div>
+						<table class="table">
+							<tr>
+								<td> Firstname </td>
+								<td> {{ profile.firstname }}</td>
+							</tr>
+						</table>
+					</div>
+				</div>
+				<div class="tab" [ngClass]="{'active': activeTab === 'timesheets'}">
+					timesheets
+				</div>
+				<div class="tab" [ngClass]="{'active': activeTab === 'allocations'}">
+					Allocation
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
