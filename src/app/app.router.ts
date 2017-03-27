@@ -1,6 +1,8 @@
 import { ModuleWithProviders } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 
+import { AuthGuard } from './Shared/auth.guard';
+
 import { DashboardComponent } from './components/dashboard/dashboard.component'
 import { LoginComponent } from './components/login/login.component';
 import { ChangePasswordComponent } from './components/change-password/change-password.component';
@@ -13,17 +15,17 @@ import { TodoComponent } from './components/todo/todo.component';
 
 export const router: Routes = [
     
-    { path: 'dashboard', component: DashboardComponent },
-    { path: 'login', component: LoginComponent },
-    { path: 'change-password', component: ChangePasswordComponent },
-    { path: 'profile', component: ProfileComponent },
-    { path: 'time-sheet', component: TimeSheetComponent },
-    { path: 'my-team', component: MyTeamComponent },
-    { path: 'employees', component: EmployeesComponent },
-    { path: 'reports', component: ReportsComponent },
+    { path: 'login', component: LoginComponent, canActivate:[AuthGuard]  },
+    { path: 'dashboard', component: DashboardComponent, canActivate:[AuthGuard] },
+    { path: 'change-password', component: ChangePasswordComponent, canActivate:[AuthGuard] },
+    { path: 'profile', component: ProfileComponent, canActivate:[AuthGuard] },
+    { path: 'time-sheet', component: TimeSheetComponent, canActivate:[AuthGuard] },
+    { path: 'my-team', component: MyTeamComponent, canActivate:[AuthGuard] },
+    { path: 'employees', component: EmployeesComponent, canActivate:[AuthGuard] },
+    { path: 'reports', component: ReportsComponent, canActivate:[AuthGuard] },
     { path: 'todo', component: TodoComponent },
 
-{ path: '**', redirectTo: 'login', pathMatch: 'full' }
+{ path: '**', redirectTo: 'dashboard', pathMatch: 'full' }
 ];
 
 

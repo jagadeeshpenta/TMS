@@ -7,27 +7,40 @@ export class AuthService {
   isAuthenticated: boolean = false;
   cookies: Object;
 
-  constructor(private http: Http) { 
+  constructor(private http: Http) {
   }
 
-  authenticate(userCredentials){
+  authenticate(userCredentials) {
     var userData = 'name=' + userCredentials.email + '&password=' + userCredentials.password;
 
     var headers = new Headers();
     headers.append('Content-Type', 'application/X-www-form-urlencoded');
 
     return new Promise((resolve) => {
-        this.http.post('http://localhost:8080/api/authenticate', userData, {headers: headers}).subscribe((data) => {
-            if(data.json().success) {
-                console.log('auth_key', data.json().token);
-                 Cookie.set('auth_key', data.json().token);
-                this.isAuthenticated = true;}
-                resolve(this.isAuthenticated);
-            }
+      this.http.post('http://localhost:8080/api/authenticate', userData, { headers: headers })
+        .subscribe((data) => {
+          if (data.json().success) {
+            //console.log('auth_key', data.json().token);
+            Cookie.set('auth_key', data.json().token);
+            this.isAuthenticated = true;
+          }
+          resolve(this.isAuthenticated);
+        }
         )
     });
   }
 
+  isLoggedIn() {
+    if (Cookie.get('auth_key')) { // if remove cookie from browser
+      return true;
+    }else{
+      return false;
+    }
+  }
 
+  logout(){
+    Cookie.delete('auth_key');
+    this.isAuthenticated = false;    
+  }
 
 }
