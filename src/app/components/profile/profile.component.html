@@ -36,18 +36,11 @@
       <tr>
         <td>First Name</td>
         <td>
-          <span *ngIf="isEdit == false">{{ profile.firstname}}</span>
-          <input *ngIf="isEdit" class="form-control" type="text" [(ngModel)]="editProfile.firstname" />
+          <span *ngIf="isEdit == false">{{ profile.name}}</span>
+          <input *ngIf="isEdit" class="form-control" type="text" [(ngModel)]="editProfile.name" />
         </td>
       </tr>
       <tr>
-        <td>Last Name</td>
-        <td>
-          <span>{{ profile.lastname}}</span>
-        </td>
-      </tr>
-
-        <tr>
         <td>DOB</td>
         <td>
           <div>
@@ -56,6 +49,29 @@
           </div>
         </td>
       </tr>
+      <tr>
+        <td>Address</td>
+        <td>
+          <span *ngIf="isEdit == false">{{ profile.address}}</span>
+          <input *ngIf="isEdit" class="form-control" type="text" [(ngModel)]="editProfile.address" />
+        </td>
+      </tr>
+      <tr>
+        <td>Email</td>
+        <td>
+          <span *ngIf="isEdit == false">{{ profile.email}}</span>
+          <input *ngIf="isEdit" class="form-control" type="text" [(ngModel)]="editProfile.email" />
+        </td>
+      </tr>
+      <tr>
+        <td>Emergency Contact</td>
+        <td>
+          <span *ngIf="isEdit == false">{{ profile.emgCon}}</span>
+          <input *ngIf="isEdit" class="form-control" type="text" [(ngModel)]="editProfile.emgCon" />
+        </td>
+      </tr>
+
+      
       
     </table>
     <div>
