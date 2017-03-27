@@ -1,3 +1,117 @@
-<p>
-  profile works!
-</p>
+<div class="container">
+  <div>
+    <h4>Employee Details</h4>
+    <table class="table">
+      <tbody>
+        <tr>
+          <th>Job Family</th>
+          <td>B</td>
+        </tr>
+        <tr>
+          <th>Job Grade</th>
+          <td>B1</td>
+        </tr>
+        <tr>
+          <th>Department</th>
+          <td>Java Practice</td>
+        </tr>
+        <tr>
+          <th>Location</th>
+          <td>Hyderabad</td>
+        </tr>
+        <tr>
+          <th>Report To</th>
+          <td>Praveen Kumar Thirupathi</td>
+        </tr>
+        <tr>
+          <th>Date Of Joining</th>
+          <td>Dec 21, 2016</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <div>
+    <h4>Personal Details</h4>
+    <table class="table">
+      <tbody>
+        <tr>
+          <th>Preffered Name</th>
+          <td *ngIf="users">
+            <div *ngFor="let user of users">
+              {{user.name}} 
+              <i class="fa fa-pencil-square-o" aria-hidden="true" 
+              (click)="selectUser(user)" [class.active]="user === activeUser"
+               data-toggle="modal" data-target="#myModal"
+              ></i>
+            </div>
+            <div *ngIf="activeUser">
+              {{user.name}}
+              <input type="text" 
+                [(ngModel)]="activeUser.name" class="form-control" >
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <th>Date Of Birth</th>
+          <td>01-12-1990</td>
+          <!--<td>Celebrate On</td>
+          <td>01-Dec</td>-->
+          
+        </tr>
+        <tr>
+          <th>Address</th>
+          <td>No: 6A, Ganesh Nagar, Ponniammanmedu, Chennai, TamilNadu 600110</td>
+        </tr>
+        <tr>
+          <th>Phone</th>
+          <td>8220285568</td>
+          
+        </tr>
+        <tr>
+          <th>Email</th>
+          <td>adeenadayalan@evoketechnologies.com</td>
+          
+        </tr>
+        <tr>
+          <th>Emergency Contact</th>
+          <td>Shanthi, India</td>
+          
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+
+
+<!-- Modal -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel">Modal title</h4>
+      </div>
+      <div class="modal-body">
+        <label>Preffered Name</label>
+        <input type="text" class="form-control">
+        <label>Date of Birth</label>
+        <input type="date" name="" id="" class="form-control">
+        <label>Address</label>
+        <textarea cols="30" rows="10" class="form-control"></textarea>
+        <label>Phone</label>
+        <input type="tel" name="" id="" class="form-control">
+        <label>Email</label>
+        <input type="email" name="" id="" class="form-control">
+        <label>Emergency Contact</label>
+        <input type="text" class="form-control">Name
+        <input type="tel" class="form-control">Tel
+        <input type="text" class="form-control">contry
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary">Save changes</button>
+      </div>
+    </div>
+  </div>
+</div>
