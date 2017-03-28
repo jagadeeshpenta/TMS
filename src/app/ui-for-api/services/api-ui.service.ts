@@ -15,7 +15,11 @@ export class ApiUiService {
 		return new Promise((res) => {
 			switch (method) {
 				case 'POST':
-					self.http.post(this.baseUrl + url, reqData, { headers }).subscribe((resp) => {
+					var urlToPost = this.baseUrl + url;
+					if (reqData.lToken) {
+						urlToPost = urlToPost + '?lToken=' + reqData.lToken;
+					}
+					self.http.post(urlToPost, reqData, { headers }).subscribe((resp) => {
 						res(resp.json());
 					}, (err) => {
 						res({ err });
@@ -37,6 +41,14 @@ export class ApiUiService {
 				default:
 					break;
 			}
+		});
+	}
+
+	addEmployee({ newEmployee, lToken }) {
+		return new Promise((res, rej) => {
+			this.makeRequest('/employees?lToken=' + lToken, new Headers(), newEmployee, 'POST').then((resp) => {
+				res(resp);
+			});
 		});
 	}
 

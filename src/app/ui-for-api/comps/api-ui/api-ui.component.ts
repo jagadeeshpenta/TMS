@@ -1,13 +1,12 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, AfterViewInit } from '@angular/core';
 import { ApiUiService } from './../../services/api-ui.service'
-
+declare var $: any;
 @Component({
 	selector: 'app-api-ui',
 	templateUrl: './api-ui.component.html',
 	styleUrls: ['./api-ui.component.scss']
 })
-export class ApiUiComponent implements OnInit {
-
+export class ApiUiComponent implements OnInit, AfterViewInit {
 	userCreds = {
 		username: '943',
 		password: 'murali',
@@ -30,10 +29,27 @@ export class ApiUiComponent implements OnInit {
 		isTimesheetsLoaded: false,
 		isAllocationsLoaded: false
 	};
+
+	newEmployee = {
+		reportingmanager: 0
+	};
 	constructor(public api: ApiUiService) { }
 
 	ngOnInit() {
 
+	}
+
+	ngAfterViewInit() {
+		// console.log('elem ', $('#addEmployeeModal'));
+	}
+
+	addEmployee() {
+
+		this.api.addEmployee({ newEmployee: this.newEmployee, lToken: this.userCreds.lToken }).then((resp) => {
+			console.log('response on new employee : ', resp);
+		});
+
+		$('#addEmployeeModal').modal('hide');
 	}
 
 	getlToken(): void {
@@ -62,16 +78,16 @@ export class ApiUiComponent implements OnInit {
 			if (this.Projects instanceof Array && this.Projects.length > 0) {
 				this.Projects.forEach((project) => {
 					project.Employees = this.Employees.filter((employee) => {
-						 var alls = this.Allocations.filter((a) => {
-							 if (a.projectid == project.id && a.empid == employee.empid) {
-								 return true;
-							 }
-							 return false;
-						 });
-						 if (alls.length > 0) {
-							 return true;
-						 }
-						 return false;
+						var alls = this.Allocations.filter((a) => {
+							if (a.projectid == project.id && a.empid == employee.empid) {
+								return true;
+							}
+							return false;
+						});
+						if (alls.length > 0) {
+							return true;
+						}
+						return false;
 					});
 				});
 				this.afterLoadingData = true;
