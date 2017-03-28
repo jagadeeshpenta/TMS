@@ -18,7 +18,7 @@ export const router: Routes = [
     { path: 'login', component: LoginComponent, canActivate:[AuthGuard]  },
     { path: 'dashboard', component: DashboardComponent, canActivate:[AuthGuard] },
     { path: 'change-password', component: ChangePasswordComponent, canActivate:[AuthGuard] },
-    { path: 'profile', component: ProfileComponent, canActivate:[AuthGuard] },
+    { path: 'profile', component: ProfileComponent },
     { path: 'time-sheet', component: TimeSheetComponent, canActivate:[AuthGuard] },
     { path: 'my-team', component: MyTeamComponent, canActivate:[AuthGuard] },
     { path: 'employees', component: EmployeesComponent, canActivate:[AuthGuard] },
