@@ -14,7 +14,6 @@ import { ReportsComponent } from './components/reports/reports.component';
 import { TodoComponent } from './components/todo/todo.component';
 
 export const router: Routes = [
-    
     { path: 'login', component: LoginComponent, canActivate:[AuthGuard]  },
     { path: 'dashboard', component: DashboardComponent, canActivate:[AuthGuard] },
     { path: 'change-password', component: ChangePasswordComponent, canActivate:[AuthGuard] },

@@ -16,9 +16,6 @@ export class User {
 })
 export class ProfileComponent implements OnInit {
 
-  
-
-
   profile: User = {
     name: 'muralikrishna',
     dob: '1989-04-15',
@@ -35,10 +32,9 @@ export class ProfileComponent implements OnInit {
   // selectUser(user) {
   //   this.activeUser = user;
   //   console.log(this.activeUser);
-  // }
-  
+  //
 
-  doEditProfile():void {
+  doEditProfile(): void {
     this.isEdit = true;
     this.editProfile = Object.create(this.profile);
   }
@@ -50,7 +46,7 @@ export class ProfileComponent implements OnInit {
     this.profile.phone = this.editProfile.phone;
     this.profile.email = this.editProfile.email;
     this.profile.emgCon = this.editProfile.emgCon;
-    //TODO: Save changes to DB using API call
+    // TODO: Save changes to DB using API call
     this.isEdit = false;
   }
 }
