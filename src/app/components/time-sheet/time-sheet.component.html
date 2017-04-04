@@ -1,3 +1,77 @@
-<p>
-  time-sheet works!
-</p>
+<div class="container">
+  <div style="margin-top:15px; margin-bottom:15px;">
+    <ul class="breadcrumbs">
+      <li class="bread-item">
+        <a routerLink="/dashboard">Dashboard</a>
+        <i class="fa fa-angle-right" aria-hidden="true" style="margin-left:5px;"></i>
+      </li>
+      <li class="bread-item">Timesheets</li>
+    </ul>
+  </div>
+  <div>
+    <div>
+      <button class="btn btn-primary" (click)="navigateToWeek()">Prev Week</button>
+      <button class="btn btn-primary pull-right" (click)="navigateToWeek(1)">Next Week</button>
+    </div>
+    <table class="table month-timesheet m15-top" *ngIf="weekDays.length > 0">
+      <tr>
+        <td [attr.colspan]="weekDays.length + 1" style="text-align: center;">{{ weekDays[0].getFullYear() }}</td>
+      </tr>
+      <tr class="days-head">
+        <td style="width: 30%;">Project Name </td>
+        <td *ngFor="let dy of weekDays">
+          <div>{{ MonthNames[dy.getMonth()] }}</div>
+          <div>{{ dy.getDate() }}</div>
+          <div>{{ weekNames[dy.getDay()] }}</div>
+        </td>
+      </tr>
+      <tr *ngFor="let project of myProjects">
+        <td>{{project.name}}</td>
+        <td *ngFor="let dy of weekDays">
+          <button class="btn btn-primary" (click)="openLogWorkmodal(project, dy)">{{getLoggedHours(project, dy)}}</button>
+        </td>
+      </tr>
+    </table>
+  </div>
+</div>
+
+<div class="modal fade" id="logWorkModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">
+          <legend>Log Work</legend>
+        </h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form class="form-horizontal" method="POST" (submit)="logWork()">
+          <div class="form-group">
+            <label for="projectname">Project</label>
+            <input [attr.disabled]="logModalData.ispreload" required type="text" class="form-control" id="projectname" name="projectname"
+              [(ngModel)]="logModalData.project.name" />
+          </div>
+          <div class="form-group">
+            <label for="timesheetdate">Timesheet Date (mm/dd/yyyy)</label>
+            <input [(ngModel)]="logModalData.timesheetdate" required type="date" class="form-control" name="timesheetdate" [attr.disabled]="logModalData.ispreload"
+            />
+          </div>
+          <div class="form-group">
+            <label for="logwork">Hours</label>
+            <input [(ngModel)]="logModalData.loggedhours" required type="number" class="form-control" name="logwork" />
+          </div>
+          <div class="form-group">
+            <label for="timesheetcomment">Comments</label>
+            <textarea class="form-control" name="timesheetcomment" [(ngModel)]="logModalData.timesheetcomment" rows="3"></textarea>
+          </div>
+          <div style="text-align: right;">
+            <button type="submit" class="btn btn-success">Submit</button>
+            <button type="button" class="btn btn-danger" (click)="close()">Cancel</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

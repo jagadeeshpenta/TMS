@@ -1,3 +1,177 @@
-<p>
-  employees works!
-</p>
+<div class="container">
+
+  <div style="margin-top:15px; margin-bottom:15px;">
+    <ul class="breadcrumbs">
+      <li class="bread-item">
+        <a routerLink="/dashboard">Dashboard</a>
+        <i class="fa fa-angle-right" aria-hidden="true" style="margin-left:5px;"></i>
+      </li>
+      <li class="bread-item">Employees</li>
+    </ul>
+  </div>
+
+
+  <div>
+    <button type="button" class="btn btn-default" (click)="openAddEmployeeModal(newEmployeeForm)">
+      Add Employee
+    </button>
+  </div>
+  <div>
+    <div class="modal fade" id="addEmployeeModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+      <div class="modal-dialog" role="document">
+        <form  #newEmployeeForm="ngForm" (submit)="addEmployee()" method="POST" class="form" [ngClass]="{ 'submitted': IsSubmitted}">
+          <div class="modal-content">
+            <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+              <h4 class="modal-title" id="myModalLabel">New Employee</h4>
+            </div>
+            <div class="modal-body">
+              <table class="table">
+                <tr>
+                  <td>firstname</td>
+                  <td>
+                    <input type="text" name="firstname" required class="form-control" [(ngModel)]="newEmployee.firstname" />
+                  </td>
+                </tr>
+                <tr>
+                  <td>lastname</td>
+                  <td>
+                    <input type="text" name="lastname" required class="form-control" [(ngModel)]="newEmployee.lastname" />
+                  </td>
+                </tr>
+                <tr>
+                  <td>empid</td>
+                  <td>
+                    <input type="text" name="empid" required class="form-control" [(ngModel)]="newEmployee.empid" />
+                  </td>
+                </tr>
+                <tr>
+                  <td>password</td>
+                  <td>
+                    <input type="password" name="password" required class="form-control" [(ngModel)]="newEmployee.password" />
+                  </td>
+                </tr>
+                <tr>
+                  <td>emailid</td>
+                  <td>
+                    <input type="text" required name="emailid" class="form-control" [(ngModel)]="newEmployee.emailid" />
+                    <span>@evoketechnologies.com</span>
+                  </td>
+                </tr>
+                <tr>
+                  <td>personalemailid</td>
+                  <td>
+                    <input type="text" name="personalemailid" class="form-control" [(ngModel)]="newEmployee.personalemailid" />
+                  </td>
+                </tr>
+                <tr>
+                  <td>designation</td>
+                  <td>
+                    <input type="text" name="designation" class="form-control" [(ngModel)]="newEmployee.designation" />
+                  </td>
+                </tr>
+                <tr>
+                  <td>reportingmanager (int)</td>
+                  <td>
+                    <select class="form-control" name="reportingmanager" [(ngModel)]="newEmployee.reportingmanager">
+                      <option value="0">Select Reporting Manager</option>
+                      <option *ngFor="let emp of Employees" [ngValue]="emp.empid" >
+                        {{ emp.firstname + ' ' + emp.lastname }}
+                      </option>
+                    </select>
+                  </td>
+                </tr>
+                <tr>
+                  <td>practise</td>
+                  <td>
+                    <input type="text" name="practise" class="form-control" [(ngModel)]="newEmployee.practise" />
+                  </td>
+                </tr>
+                <tr>
+                  <td>practiserole</td>
+                  <td>
+                    <input type="text" name="practiserole" class="form-control" [(ngModel)]="newEmployee.practiserole" />
+                  </td>
+                </tr>
+                <tr>
+                  <td>role</td>
+                  <td>
+                    <select class="form-control" name="role" [(ngModel)]="newEmployee.role">
+                      <option value="user">User</option>
+                      <option value="admin">Admin</option>
+                    </select>
+                  </td>
+                </tr>
+                <tr>
+                  <td>dob</td>
+                  <td>
+                    <input type="date" name="dob" class="form-control" [(ngModel)]="newEmployee.dob" />
+                  </td>
+                </tr>
+                <tr>
+                  <td>doj</td>
+                  <td>
+                    <input type="date" name="doj" class="form-control" [(ngModel)]="newEmployee.doj" />
+                  </td>
+                </tr>
+                <tr>
+                  <td>jobfamily</td>
+                  <td>
+                    <input type="text" name="jobfamily" class="form-control" [(ngModel)]="newEmployee.jobfamily" />
+                  </td>
+                </tr>
+                <tr>
+                  <td>jobgrade</td>
+                  <td>
+                    <input type="text" name="jobgrade" class="form-control" [(ngModel)]="newEmployee.jobgrade" />
+                  </td>
+                </tr>
+                <tr>
+                  <td>department</td>
+                  <td>
+                    <input type="text" name="department" class="form-control" [(ngModel)]="newEmployee.department" />
+                  </td>
+                </tr>
+
+                <tr>
+                  <td>location</td>
+                  <td>
+                    <input type="text" name="location" class="form-control" [(ngModel)]="newEmployee.location" />
+                  </td>
+                </tr>
+                <tr>
+                  <td>address</td>
+                  <td>
+                    <textarea class="form-control" name="address" rows="3" [(ngModel)]="newEmployee.address"></textarea>
+                  </td>
+                </tr>
+
+              </table>
+            </div>
+            <div class="modal-footer">
+              <button type="submit" class="btn btn-success">Save changes</button>
+              <button type="button" class="btn btn-danger" data-dismiss="modal">Cancel</button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+  <table class="table m20-top">
+    <tr>
+      <th>Id</th>
+      <th>Name</th>
+      <th>Role</th>
+      <th>Options</th>
+    </tr>
+    <tr *ngFor="let emp of Employees">
+      <td>{{emp.id}}</td>
+      <td>{{emp.firstname + ' ' + emp.lastname}}</td>
+      <td>{{ emp.role}}</td>
+      <td>
+        <a class="btn btn-link"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a>
+        <a class="btn btn-link" (click)="deleteEmployee(emp)"><i class="fa fa-times" aria-hidden="true"></i></a>
+      </td>
+    </tr>
+  </table>
+</div>

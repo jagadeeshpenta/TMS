@@ -4,17 +4,16 @@ import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-navigation',
-  templateUrl: './navigation.component.html' 
+  templateUrl: './navigation.component.html'
 })
 export class NavigationComponent {
 
-loggedIn :boolean = false;
-  constructor(private auth: AuthService, private _router: Router) { 
-   // this.loggedIn = auth.isLoggedIn();
-   console.log(auth.isLoggedIn());
+  loggedIn: boolean = false;
+  constructor(private auth: AuthService, private _router: Router) {
+    // this.loggedIn = auth.isLoggedIn();
   }
 
-  logout(){
+  logout() {
     this.auth.logout();
     this._router.navigate(['login']);
   }

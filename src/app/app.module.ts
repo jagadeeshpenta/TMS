@@ -26,6 +26,8 @@ import { ReportsComponent } from './components/reports/reports.component';
 import { AuthService } from './Shared/auth/auth.service';
 import { AuthGuard } from './Shared/auth.guard';
 import { UserService } from './components/todo/user.service';
+import { DBService } from './Shared/dbservice';
+import { RootService } from './Shared/root-service';
 
 
 import { UiForApiModule } from './ui-for-api/ui-for-api.module';
@@ -59,7 +61,7 @@ if (!environment.production) {
     ReportsComponent
   ],
   imports: importModulesArr,
-  providers: [AuthService, UserService, AuthGuard],
+  providers: [AuthService, UserService, AuthGuard, DBService, RootService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

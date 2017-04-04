@@ -179,11 +179,16 @@
 							<th>Id</th>
 							<th>Name</th>
 							<th>Role</th>
+							<th>Options</th>
 						</tr>
 						<tr *ngFor="let emp of Employees">
 							<td>{{emp.id}}</td>
 							<td>{{emp.firstname + ' ' + emp.lastname}}</td>
 							<td>{{ emp.role}}</td>
+							<td>
+								<button>Edit</button>
+								<button class="btn btn-default" (click)="deleteEmployee(emp)">Delete</button>
+							</td>
 						</tr>
 					</table>
 				</div>

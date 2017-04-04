@@ -1,0 +1,35 @@
+.project-list {
+    .project-item {
+        margin-top: 10px;
+        border: 1px solid transparent;
+        border-top: 1px solid #232323;
+        &:hover,
+        &.expand {
+            border: 1px solid #232323;
+        }
+        .accord-head {
+            padding: 10px;
+            cursor: pointer;
+            .fa-folder-open-o {
+                display: none;
+            }
+        }
+        .accord-content {
+            display: none;
+            padding-left: 20px;
+        }
+        &.expand {
+            .accord-head {
+                .fa-folder-open-o {
+                    display: inline;
+                }
+                .fa-folder-o {
+                    display: none;
+                }
+            }
+            .accord-content {
+                display: block;
+            }
+        }
+    }
+}

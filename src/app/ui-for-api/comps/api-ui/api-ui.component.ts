@@ -40,18 +40,25 @@ export class ApiUiComponent implements OnInit, AfterViewInit {
 	}
 
 	ngAfterViewInit() {
-		// console.log('elem ', $('#addEmployeeModal'));
 	}
 
 	addEmployee() {
 
-		this.api.addEmployee({ newEmployee: this.newEmployee, lToken: this.userCreds.lToken }).then((resp) => {
-			console.log('response on new employee : ', resp);
+		this.api.addEmployee({ newEmployee: this.newEmployee, lToken: this.userCreds.lToken }).then(({ err, result }) => {
+			if (!err) {
+				this.getList('employees');
+			}
 		});
 
 		$('#addEmployeeModal').modal('hide');
 	}
-
+	deleteEmployee(empToDelete) {
+		this.api.deleteEmployee({ empToDelete, lToken:this.userCreds.lToken }).then(({ err, result}) => {
+			if(!err){
+				this.getList('employees');
+			}
+		});
+	}
 	getlToken(): void {
 		this.hideErrMsg = true;
 		this.api.authenticate(this.userCreds).then(({ err, result }) => {

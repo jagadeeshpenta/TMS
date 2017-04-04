@@ -32,10 +32,15 @@ export class ApiUiService {
 							params[ky] = reqData[ky];
 						});
 					}
-					self.http.get(this.baseUrl + url + '?lToken=' + reqData.lToken, { headers, search: params }).subscribe((resp) => {
+					self.http.get(this.baseUrl + url + '?lToken=' + reqData.lToken + '&ttt=' + (new Date().getTime()), { headers, search: params }).subscribe((resp) => {
 						res(resp.json());
 					}, (err) => {
 						res({ err });
+					});
+					break;
+				case 'DELETE':
+					self.http.delete(this.baseUrl + url + '&id=' + reqData.id).subscribe((resp) => {
+						res(resp.json());
 					});
 					break;
 				default:
@@ -47,6 +52,14 @@ export class ApiUiService {
 	addEmployee({ newEmployee, lToken }) {
 		return new Promise((res, rej) => {
 			this.makeRequest('/employees?lToken=' + lToken, new Headers(), newEmployee, 'POST').then((resp) => {
+				res(resp);
+			});
+		});
+	}
+
+	deleteEmployee({ empToDelete, lToken }) {
+		return new Promise((res, rej) => {
+			this.makeRequest('/employees?lToken=' + lToken, new Headers(), empToDelete, 'DELETE').then((resp) => {
 				res(resp);
 			});
 		});
