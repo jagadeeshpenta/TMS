@@ -42,13 +42,13 @@
                 <tr>
                   <td>empid</td>
                   <td>
-                    <input type="text" name="empid" required class="form-control" [(ngModel)]="newEmployee.empid" />
+                    <input type="number" name="empid" required class="form-control" [(ngModel)]="newEmployee.empid" />
                   </td>
                 </tr>
                 <tr>
                   <td>password</td>
                   <td>
-                    <input type="password" name="password" required class="form-control" [(ngModel)]="newEmployee.password" />
+                    <input type="password" name="password" class="form-control" [(ngModel)]="newEmployee.password" />
                   </td>
                 </tr>
                 <tr>
@@ -71,11 +71,11 @@
                   </td>
                 </tr>
                 <tr>
-                  <td>reportingmanager (int)</td>
+                  <td>reportingmanager</td>
                   <td>
-                    <select class="form-control" name="reportingmanager" [(ngModel)]="newEmployee.reportingmanager">
+                    <select *ngIf="employeesLoaded" class="form-control" name="reportingmanger" [(ngModel)]="newEmployee.reportingmanger">
                       <option value="0">Select Reporting Manager</option>
-                      <option *ngFor="let emp of Employees" [ngValue]="emp.empid" >
+                      <option *ngFor="let emp of Employees" [value]="emp.empid" [disabled]="emp.empid==newEmployee.empid">
                         {{ emp.firstname + ' ' + emp.lastname }}
                       </option>
                     </select>
@@ -159,17 +159,19 @@
   </div>
   <table class="table m20-top">
     <tr>
-      <th>Id</th>
+      <!--<th>Id</th>-->
       <th>Name</th>
       <th>Role</th>
+      <th>Emp Id</th>
       <th>Options</th>
     </tr>
     <tr *ngFor="let emp of Employees">
-      <td>{{emp.id}}</td>
+      <!--<td>{{emp.id}}</td>-->
       <td>{{emp.firstname + ' ' + emp.lastname}}</td>
       <td>{{ emp.role}}</td>
+      <td>{{ emp.empid }}</td>
       <td>
-        <a class="btn btn-link"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a>
+        <a class="btn btn-link" (click)="editEmployee(emp, newEmployeeForm)"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a>
         <a class="btn btn-link" (click)="deleteEmployee(emp)"><i class="fa fa-times" aria-hidden="true"></i></a>
       </td>
     </tr>
