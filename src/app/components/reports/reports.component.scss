@@ -33,3 +33,27 @@
         }
     }
 }
+
+.monthly-report {
+    .flex-container {
+        display: flex;
+        .flex-col {
+            flex: 1 1 auto;
+            border-right: 1px solid #b4bcc2;
+            text-align: center;
+            &.col-first {
+                text-align: left;
+            }
+            .flex-head {
+                height: 30px;
+                overflow: hidden;
+                font-weight: bold;
+            }
+        }
+        &.no-border {
+            .flex-col {
+                border: none;
+            }
+        }
+    }
+}

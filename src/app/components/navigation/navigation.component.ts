@@ -9,13 +9,20 @@ import { Router } from '@angular/router';
 export class NavigationComponent {
 
   loggedIn: boolean = false;
+  profile;
   constructor(private auth: AuthService, private _router: Router) {
-    // this.loggedIn = auth.isLoggedIn();
+    auth.checkUser().then(({ err, result }) => {
+      if (!err) {
+        this.profile = result.profile;
+      }
+    });
   }
 
   logout() {
     this.auth.logout();
     this._router.navigate(['login']);
   }
+
+
 
 }

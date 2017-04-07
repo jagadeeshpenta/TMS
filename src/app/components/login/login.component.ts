@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthService } from '../../Shared/auth/auth.service';
-import { ToastrService } from '../../../../node_modules/toastr-ng2';
+import { ToastrService, ToastConfig } from '../../../../node_modules/toastr-ng2';
 
 @Component({
   selector: 'app-login',
@@ -31,7 +31,9 @@ export class LoginComponent {
     // });
     this.auth.authenticate(this.user).then(({ err, result }) => {
       if (err) {
-        this.toastrService.error('', 'Username and password not Matched');
+        var toastCfg = new ToastConfig();
+        toastCfg.timeOut = 1000;
+        this.toastrService.error('', 'Username and password not Matched', toastCfg);
       } else {
         this._router.navigateByUrl('/dashboard');
       }

@@ -42,6 +42,7 @@ export class ReportsComponent implements OnInit {
           project.isWeek = true;
           project.isMonth = false;
           project.weekToDisplay = this.generateCurrentWeek(new Date(this.toDay));
+          project.monthToDisplay = this.generateMonthDays(new Date(this.toDay));
         });
       }
       this.isLoaded.readyToRender = true;
@@ -131,6 +132,29 @@ export class ReportsComponent implements OnInit {
       project.weekToDisplay = nextWeek;
     }
   }
+
+  navigateToMonth(project, isNext) {
+    var ld;
+    if (isNext) {
+      var daytoGenerate = project.monthToDisplay[project.monthToDisplay.length - 1];
+      if (daytoGenerate) {
+        ld = new Date(daytoGenerate.getTime());
+        ld.setDate(ld.getDate() + 1);
+      }
+    } else {
+      var daytoGenerate = project.monthToDisplay[0];
+      if (daytoGenerate) {
+        ld = new Date(daytoGenerate.getTime());
+        ld.setDate(ld.getDate() - 1);
+      }
+    }
+    if (ld) {
+      var days = this.generateMonthDays(ld);
+      project.monthToDisplay = days;
+    }
+  }
+
+
   generateCurrentWeek(dateToGenerate) {
     var tDate = dateToGenerate,
       weekHash = {
@@ -186,6 +210,28 @@ export class ReportsComponent implements OnInit {
     orderofDays.forEach((dy) => {
       daysToReturn.push(weekHash[dy]);
     });
+
+    return daysToReturn;
+  }
+
+  generateMonthDays(dateToGenerate) {
+    var daysToReturn = [];
+    var tDate = dateToGenerate;
+    if (dateToGenerate instanceof Date) {
+      tDate = dateToGenerate.getTime();
+    }
+    tDate = new Date(tDate);
+
+    var crntMonth = tDate.getMonth();
+    var crntYr = tDate.getFullYear();
+    var frmDate = new Date(crntYr, crntMonth, 1);
+    for (let i = 0; i < 31; i++) {
+      var tmpDate = new Date(frmDate.getTime());
+      tmpDate.setDate(tmpDate.getDate() + (i * 1));
+      if (tmpDate.getMonth() === frmDate.getMonth()) {
+        daysToReturn.push(new Date(tmpDate.getTime()));
+      }
+    }
 
     return daysToReturn;
   }

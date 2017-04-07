@@ -41,15 +41,47 @@ body {
     cursor: pointer;
 }
 
-
 .ng-touched.ng-invalid:not(form) {
     border-left: 5px solid #a94442;
 }
 
-
 .m20-top {
     margin-top: 20px;
 }
+
 .m15-top {
     margin-top: 15px;
+}
+
+.table {
+    .table-head {
+        font-weight: bold;
+    }
+}
+
+.p0 {
+    padding: 0;
+}
+
+.p20-btm {
+    padding-bottom: 20px;
+}
+
+.table.timesheet-month {
+    tr {
+        td {
+            padding: 2px;
+            .btn {
+                padding: 5px;
+            }
+        }
+    }
+}
+
+
+.text-left {
+    text-align: left;
+}
+.text-right {
+    text-align: right;
 }

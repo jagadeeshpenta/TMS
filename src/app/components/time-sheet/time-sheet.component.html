@@ -1,4 +1,4 @@
-<div class="container">
+<div class="container" [ngClass]="{'fluid-container': isMonth, 'container': isWeek}">
   <div style="margin-top:15px; margin-bottom:15px;">
     <ul class="breadcrumbs">
       <li class="bread-item">
@@ -8,31 +8,70 @@
       <li class="bread-item">Timesheets</li>
     </ul>
   </div>
-  <div>
-    <div>
-      <button class="btn btn-primary" (click)="navigateToWeek()">Prev Week</button>
-      <button class="btn btn-primary pull-right" (click)="navigateToWeek(1)">Next Week</button>
+  <div class="clearfix">
+    <div class="btn-group btn-toggle pull-right">
+      <button class="btn btn-primary" [ngClass]="{'btn-default' : isWeek}" [disabled]="isWeek" (click)="isWeek = true; isMonth= false;">Week</button>
+      <button class="btn btn-primary" [ngClass]="{'btn-default' : isMonth}" [disabled]="isMonth" (click)="isWeek = false; isMonth= true;">Month</button>
     </div>
-    <table class="table month-timesheet m15-top" *ngIf="weekDays.length > 0">
-      <tr>
-        <td [attr.colspan]="weekDays.length + 1" style="text-align: center;">{{ weekDays[0].getFullYear() }}</td>
-      </tr>
-      <tr class="days-head">
-        <td style="width: 30%;">Project Name </td>
-        <td *ngFor="let dy of weekDays">
-          <div>{{ MonthNames[dy.getMonth()] }}</div>
-          <div>{{ dy.getDate() }}</div>
-          <div>{{ weekNames[dy.getDay()] }}</div>
-        </td>
-      </tr>
-      <tr *ngFor="let project of myProjects">
-        <td>{{project.name}}</td>
-        <td *ngFor="let dy of weekDays">
-          <button class="btn btn-primary" (click)="openLogWorkmodal(project, dy)">{{getLoggedHours(project, dy)}}</button>
-        </td>
-      </tr>
-    </table>
   </div>
+  <div class="m20-top">
+    <div *ngIf="isWeek">
+      <div>
+        <button class="btn btn-primary" (click)="navigateToWeek()">Prev Week</button>
+        <button class="btn btn-primary pull-right" (click)="navigateToWeek(1)">Next Week</button>
+      </div>
+      <table class="table month-timesheet m15-top" *ngIf="weekDays.length > 0">
+        <tr>
+          <td [attr.colspan]="weekDays.length + 1" style="text-align: center;">{{ weekDays[0].getFullYear() }}</td>
+        </tr>
+        <tr class="days-head">
+          <td style="width: 30%;">Project Name </td>
+          <td *ngFor="let dy of weekDays">
+            <div>{{ MonthNames[dy.getMonth()] }}</div>
+            <div>{{ dy.getDate() }}</div>
+            <div>{{ weekNames[dy.getDay()] }}</div>
+          </td>
+        </tr>
+        <tr *ngFor="let project of myProjects">
+          <td>{{project.name}}</td>
+          <td *ngFor="let dy of weekDays">
+            <button class="btn btn-primary" (click)="openLogWorkmodal(project, dy)">{{getLoggedHours(project, dy)}}</button>
+          </td>
+        </tr>
+      </table>
+    </div>
+    <div *ngIf="isMonth">
+      <div class="clearfix">
+        <button class="btn btn-primary" (click)="navigateToMonth()">Prev Month</button>
+        <button class="btn btn-primary pull-right" (click)="navigateToMonth(1)">Next Month</button>
+      </div>
+      <table class="table m15-top timesheet-month" *ngIf="monthDays.length > 0">
+        <tr class="table-head">
+          <td [attr.colspan]="monthDays.length + 1" style="text-align: center;">
+            <div>{{ MonthNames[monthDays[0].getMonth()] }}, {{ monthDays[0].getFullYear() }}</div>
+          </td>
+        </tr>
+         <tr class="table-head">
+          <td></td>
+          <td *ngFor="let dy of monthDays">{{ weekNames[dy.getDay()][0] }}</td>
+        </tr>
+        <tr class="table-head">
+          <td>Project Name </td>
+          <td *ngFor="let dy of monthDays">{{ dy.getDate()}}</td>
+        </tr>
+        <tr *ngFor="let project of myProjects" >
+          <td>{{project.name}}</td>
+          <td *ngFor="let dy of monthDays" class="p0">
+            <button class="btn btn-primary" (click)="openLogWorkmodal(project, dy)">{{getLoggedHours(project, dy)}}</button>
+          </td>
+        </tr>
+      </table>
+
+    </div>
+  </div>
+
+
+
 </div>
 
 <div class="modal fade" id="logWorkModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">

@@ -163,6 +163,7 @@
       <th>Name</th>
       <th>Role</th>
       <th>Emp Id</th>
+      <th>reporting Manager </th>
       <th>Options</th>
     </tr>
     <tr *ngFor="let emp of Employees">
@@ -170,6 +171,7 @@
       <td>{{emp.firstname + ' ' + emp.lastname}}</td>
       <td>{{ emp.role}}</td>
       <td>{{ emp.empid }}</td>
+      <td>{{ getEmployeeByEmpId(emp.reportingmanger).firstname + ' ' + getEmployeeByEmpId(emp.reportingmanger).lastname }}</td>
       <td>
         <a class="btn btn-link" (click)="editEmployee(emp, newEmployeeForm)"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a>
         <a class="btn btn-link" (click)="deleteEmployee(emp)"><i class="fa fa-times" aria-hidden="true"></i></a>

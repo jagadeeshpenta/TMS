@@ -42,6 +42,16 @@ export class EmployeesComponent implements OnInit {
     });
   }
 
+  getEmployeeByEmpId(empid) {
+    var emps = this.Employees.filter((emp) => {
+      if(empid == emp.empid) {
+        return true;
+      }
+      return false;
+    });
+    return emps.length > 0 ? emps[0] : { firstname: '', lastname: ''};
+  }
+
   addEmployee() {
     this.db.addEmployee({ newEmployee: this.newEmployee }).then(({ err, result }) => {
       if (!err) {

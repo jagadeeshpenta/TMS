@@ -12,6 +12,8 @@ declare var $: any;
 export class TimeSheetComponent implements OnInit {
 
   weekDays = [];
+  monthDays = [];
+
   serviceData: any = {
     Employees: [],
     Projects: [],
@@ -19,6 +21,8 @@ export class TimeSheetComponent implements OnInit {
     Timesheets: []
   };
 
+  isWeek = false;
+  isMonth = !this.isWeek;
   myProjects = [];
   profile;
   toDay;
@@ -93,6 +97,8 @@ export class TimeSheetComponent implements OnInit {
 
         if (this.toDay) {
           this.weekDays = this.generateCurrentWeek(new Date(this.toDay));
+          this.monthDays = this.generateMonthDays(new Date(this.toDay));
+          console.log('month days ', this.monthDays);
         }
       }
     });
@@ -117,6 +123,27 @@ export class TimeSheetComponent implements OnInit {
     if (ld) {
       var nextWeek = this.generateCurrentWeek(ld);
       this.weekDays = nextWeek;
+    }
+  }
+
+  navigateToMonth(isNext) {
+    var ld;
+    if (isNext) {
+      var daytoGenerate = this.monthDays[this.monthDays.length - 1];
+      if (daytoGenerate) {
+        ld = new Date(daytoGenerate.getTime());
+        ld.setDate(ld.getDate() + 1);
+      }
+    } else {
+      var daytoGenerate = this.monthDays[0];
+      if (daytoGenerate) {
+        ld = new Date(daytoGenerate.getTime());
+        ld.setDate(ld.getDate() - 1);
+      }
+    }
+    if (ld) {
+      var monthDays = this.generateMonthDays(ld);
+      this.monthDays = monthDays;
     }
   }
 
@@ -175,6 +202,28 @@ export class TimeSheetComponent implements OnInit {
     orderofDays.forEach((dy) => {
       daysToReturn.push(weekHash[dy]);
     });
+
+    return daysToReturn;
+  }
+
+  generateMonthDays(dateToGenerate) {
+    var daysToReturn = [];
+    var tDate = dateToGenerate;
+    if (dateToGenerate instanceof Date) {
+      tDate = dateToGenerate.getTime();
+    }
+    tDate = new Date(tDate);
+
+    var crntMonth = tDate.getMonth();
+    var crntYr = tDate.getFullYear();
+    var frmDate = new Date(crntYr, crntMonth, 1);
+    for (let i = 0; i < 31; i++) {
+      var tmpDate = new Date(frmDate.getTime());
+      tmpDate.setDate(tmpDate.getDate() + (i * 1));
+      if (tmpDate.getMonth() === frmDate.getMonth()) {
+        daysToReturn.push(new Date(tmpDate.getTime()));
+      }
+    }
 
     return daysToReturn;
   }
