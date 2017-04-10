@@ -10,16 +10,21 @@ export class NavigationComponent {
 
   loggedIn: boolean = false;
   profile;
-  constructor(private auth: AuthService, private _router: Router) {
+  isLoaded = false;
+  constructor(private auth: AuthService, public _router: Router) {
     auth.checkUser().then(({ err, result }) => {
       if (!err) {
         this.profile = result.profile;
+        this.loggedIn = true;
+        console.log('its logged In ', this.loggedIn);
       }
     });
+ 
   }
 
   logout() {
     this.auth.logout();
+    this.loggedIn = false;
     this._router.navigate(['login']);
   }
 

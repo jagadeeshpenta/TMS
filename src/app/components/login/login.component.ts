@@ -11,9 +11,16 @@ export class LoginComponent {
   user = {
     username: '',
     password: ''
-  }
-  constructor(private _router: Router, private auth: AuthService, private toastrService: ToastrService) {
+  };
 
+  checkUser = false;
+  constructor(private _router: Router, private auth: AuthService, private toastrService: ToastrService) {
+    auth.checkUser().then(({ err, result }) => {
+      this.checkUser = true;
+      if (!err && result) {
+        this._router.navigate(['/dashboard']);
+      }
+    });
 
   }
 

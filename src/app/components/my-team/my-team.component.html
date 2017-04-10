@@ -10,8 +10,8 @@
     </ul>
   </div>
 
-  <div>
-    <button class="btn btn-default" data-toggle="modal" data-target="#addProjectModal">Add Project</button>
+  <div *ngIf="profile">
+    <button *ngIf="profile.role === 'admin'"  class="btn btn-default" data-toggle="modal" data-target="#addProjectModal">Add Project</button>
   </div>
 
   <div class="project-list m20-top" *ngIf="projectsProcessed">
@@ -21,7 +21,7 @@
           <i class="fa fa-folder-o" aria-hidden="true"></i>
           <i class="fa fa-folder-open-o" aria-hidden="true"></i> {{ project.name}}
 
-          <button class="btn btn-danger" style="float: right;" (click)="removeProject(project, $event)"> <i class="fa fa-trash-o" aria-hidden="true"></i> Remove</button>
+          <button *ngIf="profile && profile.role === 'admin'"  class="btn btn-danger" style="float: right;" (click)="removeProject(project, $event)"> <i class="fa fa-trash-o" aria-hidden="true"></i> Remove</button>
         </h4>
       </div>
       <div class="acord-content">
@@ -38,7 +38,7 @@
           </table>
         </div>
         <div class="employees-section">
-          <div>
+          <div *ngIf="profile && profile.role === 'admin'">
             <button class="btn btn-default" (click)="openAddEmpToProjectModal(project)">Add Employee to Project</button>
           </div>
           <h4>Employees</h4>
@@ -46,12 +46,12 @@
             <tr>
               <th>Full Name</th>
               <th>Role</th>
-              <th>Options</th>
+              <th *ngIf="profile && profile.role === 'admin'">Options</th>
             </tr>
             <tr *ngFor="let emp of project.Employees">
               <td>{{emp.firstname + ' ' + emp.lastname}}</td>
-              <td>{{emp.role}}</td>
-              <td>
+              <td>{{ getAllocationType(project.id, emp.empid) }}</td>
+              <td *ngIf="profile && profile.role === 'admin'">
                 <button (click)="removeAllocation(emp, project)" class="btn btn-danger" title="Remove Employee from Project">
                   <i class="fa fa-trash-o" aria-hidden="true"></i>
                 </button>

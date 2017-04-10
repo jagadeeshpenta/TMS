@@ -21,7 +21,7 @@ export class TimeSheetComponent implements OnInit {
     Timesheets: []
   };
 
-  isWeek = false;
+  isWeek = true;
   isMonth = !this.isWeek;
   myProjects = [];
   profile;

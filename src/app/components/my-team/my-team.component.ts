@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { DBService } from './../../Shared/dbservice';
+import { AuthService } from './../../Shared/auth/auth.service';
 declare var $: any;
 
 @Component({
@@ -23,6 +24,8 @@ export class MyTeamComponent implements OnInit {
     showSuggestions: false
   };
 
+  profile = {};
+  
   Projects = [];
   Employees = [];
   Allocations = [];
@@ -32,10 +35,17 @@ export class MyTeamComponent implements OnInit {
   employeesLoaded = false;
 
   projectsProcessed = false;
-  constructor(public db: DBService) { }
+  constructor(public db: DBService, public auth: AuthService) {
+
+    auth.checkUser().then(({ err, result }) => {
+      if (!err) {
+        this.profile = result.profile || result.user;
+        this.fillProjects();
+      }
+    });
+  }
 
   ngOnInit() {
-    this.fillProjects();
   }
 
   fillProjects() {
@@ -69,6 +79,16 @@ export class MyTeamComponent implements OnInit {
       }
 
     }
+  }
+
+  getAllocationType(projectid, empid) {
+    var allocs =  this.Allocations.filter((a) => {
+      if (a.projectid == projectid && a.empid == empid) {
+        return true;
+      }
+      return false;
+    });
+    return allocs.length > 0 ? allocs[0].role : '';
   }
 
 

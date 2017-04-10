@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { DBService } from './../../Shared/dbservice';
 import { AuthService } from './../../Shared/auth/auth.service';
 
+import { ToastrService, ToastConfig } from '../../../../node_modules/toastr-ng2';
+
 declare var $: any;
 
 @Component({
@@ -20,7 +22,7 @@ export class EmployeesComponent implements OnInit {
   isEdit = false;
   employeesLoaded = false;
 
-  constructor(public db: DBService, public auth: AuthService) {
+  constructor(public db: DBService, public auth: AuthService, private toastrService: ToastrService) {
     auth.checkUser().then(({ err, result }) => {
       if (!err) {
         this.profile = result.profile || result.user;
@@ -44,12 +46,12 @@ export class EmployeesComponent implements OnInit {
 
   getEmployeeByEmpId(empid) {
     var emps = this.Employees.filter((emp) => {
-      if(empid == emp.empid) {
+      if (empid == emp.empid) {
         return true;
       }
       return false;
     });
-    return emps.length > 0 ? emps[0] : { firstname: '', lastname: ''};
+    return emps.length > 0 ? emps[0] : { firstname: '', lastname: '' };
   }
 
   addEmployee() {
