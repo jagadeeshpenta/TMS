@@ -98,7 +98,6 @@ export class TimeSheetComponent implements OnInit {
         if (this.toDay) {
           this.weekDays = this.generateCurrentWeek(new Date(this.toDay));
           this.monthDays = this.generateMonthDays(new Date(this.toDay));
-          console.log('month days ', this.monthDays);
         }
       }
     });

@@ -41,10 +41,6 @@ body {
     cursor: pointer;
 }
 
-.ng-touched.ng-invalid:not(form) {
-    border-left: 5px solid #a94442;
-}
-
 .m20-top {
     margin-top: 20px;
 }
@@ -78,10 +74,23 @@ body {
     }
 }
 
-
 .text-left {
     text-align: left;
 }
+
 .text-right {
     text-align: right;
+}
+
+.navbar-nav {
+    .dropdown-menu {
+        a.dropdown-item {
+            color: inherit;
+            &:hover {
+                color: #fff;
+                text-decoration: none;
+                background-color: #2C3E50;
+            }
+        }
+    }
 }

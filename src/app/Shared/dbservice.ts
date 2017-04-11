@@ -35,7 +35,6 @@ export class DBService {
           self.http.get(this.baseUrl + url + '?lToken=' + Cookie.get('lToken') + '&ttt=' + (new Date().getTime()), { headers, search: params }).subscribe((resp) => {
             res(resp.json());
           }, (err) => {
-            console.log('err ', err);
             res({ err });
           });
           break;
@@ -74,8 +73,12 @@ export class DBService {
     });
   }
 
-  updateEmployee() {
-
+  updateEmployee({ profile }) {
+    return new Promise((res, rej) => {
+      this.makeRequest('/profile?lToken=' + Cookie.get('lToken'), new Headers(), profile, 'POST').then((resp) => {
+        res(resp);
+      });
+    });
   }
 
   authenticate(userCreds) {

@@ -16,16 +16,19 @@ export class MyTeamComponent implements OnInit {
     actualenddate: ''
   };
 
+  MonthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+
   employeeToProject = {
     project: {},
     empadd: '',
     role: 'member',
     emp: {},
-    showSuggestions: false
+    showSuggestions: false,
+    onSubmit: false
   };
 
   profile = {};
-  
+
   Projects = [];
   Employees = [];
   Allocations = [];
@@ -82,7 +85,7 @@ export class MyTeamComponent implements OnInit {
   }
 
   getAllocationType(projectid, empid) {
-    var allocs =  this.Allocations.filter((a) => {
+    var allocs = this.Allocations.filter((a) => {
       if (a.projectid == projectid && a.empid == empid) {
         return true;
       }
@@ -149,7 +152,24 @@ export class MyTeamComponent implements OnInit {
   }
 
   filterSuggestions(event) {
+    console.log('keyup ', this.employeeToProject.empadd)
     this.employeeToProject.showSuggestions = true;
+    this.employeeToProject.emp = {};
+    var suitableEmps = [],
+      project: any = this.employeeToProject.project;
+    if (project.id) {
+      suitableEmps = this.Employees.filter((emp) => {
+        var alcos = this.Allocations.filter((a) => { return (a.empid == emp.empid && a.projectid == project.id) ? true : false; });
+        if (alcos.length > 0) {
+          return false;
+        }
+        return true;
+      });
+    }
+    this.EmployeeSuggestions = suitableEmps;
+  }
+  getSuggestions(project) {
+
   }
 
   getAllocations() {
@@ -161,13 +181,18 @@ export class MyTeamComponent implements OnInit {
     });
   }
   addEmployeeToProject() {
-    if (this.employeeToProject.emp && this.employeeToProject.project) {
+    this.employeeToProject.onSubmit = true;
+    if (this.employeeToProject.emp && this.employeeToProject.emp['empid'] && this.employeeToProject.project) {
       this.db.addToProject({
         empid: this.employeeToProject.emp['empid'],
         projectid: this.employeeToProject.project['id'],
         role: this.employeeToProject.role
       }).then(({ err, result }) => {
         if (!err) {
+          this.employeeToProject.project = {};
+          this.employeeToProject.showSuggestions = false;
+          this.employeeToProject.empadd = '';
+          this.employeeToProject.emp = {};
           $('#addEmployeeToProjectModal').modal('hide');
           this.getAllocations();
         }
@@ -193,4 +218,12 @@ export class MyTeamComponent implements OnInit {
     }
   }
 
+  getDisplayDateFormat(timeStamp) {
+    if (timeStamp) {
+      var tmp = new Date(timeStamp);
+      return tmp.getDate() + ' ' + this.MonthNames[tmp.getMonth()] + ',' + tmp.getFullYear();
+    } else {
+      return '';
+    }
+  }
 }

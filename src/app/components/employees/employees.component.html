@@ -164,7 +164,7 @@
       <th>Role</th>
       <th>Emp Id</th>
       <th>reporting Manager </th>
-      <th *ngIf="profile && profile.admin==='admin'" >Options</th>
+      <th *ngIf="profile && profile.role==='admin'" >Options</th>
     </tr>
     <tr *ngFor="let emp of Employees">
       <!--<td>{{emp.id}}</td>-->
@@ -172,7 +172,7 @@
       <td>{{ emp.role}}</td>
       <td>{{ emp.empid }}</td>
       <td>{{ getEmployeeByEmpId(emp.reportingmanger).firstname + ' ' + getEmployeeByEmpId(emp.reportingmanger).lastname }}</td>
-      <td *ngIf="profile && profile.admin==='admin'">
+      <td *ngIf="profile && profile.role==='admin'">
         <a class="btn btn-link" (click)="editEmployee(emp, newEmployeeForm)"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a>
         <a class="btn btn-link" (click)="deleteEmployee(emp)"><i class="fa fa-times" aria-hidden="true"></i></a>
       </td>

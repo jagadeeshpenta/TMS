@@ -29,11 +29,11 @@
           <table>
             <tr>
               <td>Start Date</td>
-              <td>{{ project.actualstartdate}}</td>
+              <td>{{ getDisplayDateFormat(project.actualstartdate)}}</td>
             </tr>
             <tr>
               <td>End Date</td>
-              <td>{{ project.actualenddate}}</td>
+              <td>{{ getDisplayDateFormat(project.actualenddate)}}</td>
             </tr>
           </table>
         </div>
@@ -87,13 +87,13 @@
             <div class="form-group size">
               <div class="input-group">
                 <span class="input-group-addon text align-right">Start Date</span>
-                <input type="text" class="size" name="startdate" [(ngModel)]="newProject.actualstartdate" />
+                <input type="date" class="size" name="startdate" [(ngModel)]="newProject.actualstartdate" />
               </div>
             </div>
             <div class="form-group size">
               <div class="input-group">
                 <span class="input-group-addon text align-right">End  Date</span>
-                <input type="text" class="size" name="enddate" [(ngModel)]="newProject.actualenddate" />
+                <input type="date" class="size" name="enddate" [(ngModel)]="newProject.actualenddate" />
               </div>
             </div>
             <div style="text-align: right;">
@@ -121,9 +121,10 @@
       </div>
       <div class="modal-body">
         <form class="form-horizontal" method="POST" (submit)="addEmployeeToProject()">
+          <div *ngIf="employeeToProject.onSubmit && !employeeToProject.emp.empid">Please Select Employee</div>
           <div class="form-group" style="position: relative;">
             <label for="addemployee">Add Employee to <span style="font-weight: bold;">{{ employeeToProject.project.name}}</span></label>
-            <input autocomplete="off" name="sdgffdgsdgdgf" (keyup)="filterSuggestions($event)" type="text" class="form-control" [(ngModel)]="employeeToProject.empadd"
+            <input autocomplete="off" name="sdgffdgsdgdgf" (keyup)="filterSuggestions($event, employeeToProject.project)" type="text" class="form-control" [(ngModel)]="employeeToProject.empadd"
               id="addemployee" placeholder="Search By EmpId or Employee Name" />
             <div class="emp-sugestion-list" [ngClass]="{'show': employeeToProject.showSuggestions}">
               <ul class="list-group">
