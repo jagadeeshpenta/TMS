@@ -80,6 +80,13 @@ export class DBService {
       });
     });
   }
+  approveTimesheets({ sheets }) {
+    return new Promise((res, rej) => {
+      this.makeRequest('/approvetimesheets?lToken=' + Cookie.get('lToken'), new Headers(), sheets, 'POST').then((resp) => {
+        res(resp);
+      });
+    });
+  }
 
   authenticate(userCreds) {
     var self = this;

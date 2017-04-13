@@ -83,6 +83,9 @@ body {
 }
 
 .navbar-nav {
+    .nav-link {
+        cursor: pointer;
+    }
     .dropdown-menu {
         a.dropdown-item {
             color: inherit;
@@ -91,6 +94,11 @@ body {
                 text-decoration: none;
                 background-color: #2C3E50;
             }
+        }
+
+        &.right-pos {
+            left: initial;
+            right: 0px;
         }
     }
 }

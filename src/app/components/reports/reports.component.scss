@@ -49,11 +49,21 @@
                 overflow: hidden;
                 font-weight: bold;
             }
+
+            .flex-row {
+                height: 35px;
+            }
         }
         &.no-border {
             .flex-col {
                 border: none;
             }
         }
+    }
+}
+
+.reports-table {
+    tr {
+        margin-top: 5px;
     }
 }

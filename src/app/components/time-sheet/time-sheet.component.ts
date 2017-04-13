@@ -21,7 +21,7 @@ export class TimeSheetComponent implements OnInit {
     Timesheets: []
   };
 
-  isWeek = true;
+  isWeek = false;
   isMonth = !this.isWeek;
   myProjects = [];
   profile;
@@ -41,6 +41,155 @@ export class TimeSheetComponent implements OnInit {
 
   }
 
+  waitingForapprovalsLoaded = false;
+  approvalProjects = [];
+  approvalDays = [];
+  approvalChecked = [];
+
+  getTimeSheetId(project, loggedDate, emp) {
+    var empid = emp ? emp.empid : this.profile.empid;
+    if (this.serviceData.Timesheets && this.serviceData.Timesheets.length > 0) {
+      var timesheetData = this.serviceData.Timesheets.filter((t) => {
+        if (t.empid == empid && t.projectid == project.id && t.sheetdate == loggedDate.getDate() && t.sheetmonth == (loggedDate.getMonth() + 1) && t.sheetyear == loggedDate.getFullYear()) {
+          return true;
+        }
+        return false;
+      });
+      if (timesheetData.length > 0) {
+        return timesheetData[0].id;
+      }
+
+      return 0;
+    }
+  }
+  updateCheckedData(event, project, tm, dy) {
+    this.approvalChecked.push($(event.target).attr('timesheetid'));
+  }
+
+  updateStatus(typ) {
+    if (typ === 'A') {
+      this.db.approveTimesheets({
+        sheets: {
+          ids: this.approvalChecked.join(','),
+          isapproved: true,
+        }
+      }).then(() => {
+        this.approvalChecked = [];
+        this.getData('/timesheets', 'Timesheets', 'isTimesheetsLoaded');
+        this.processData();
+      });
+    } else {
+      this.db.approveTimesheets({
+        sheets: {
+          ids: this.approvalChecked.join(','),
+          isapproved: false,
+        }
+      }).then(() => {
+        this.approvalChecked = [];
+        this.getData('/timesheets', 'Timesheets', 'isTimesheetsLoaded');
+        this.processData();
+      });
+    }
+  }
+  processApprovals() {
+    if (this.profile.role == 'admin') {
+      this.approvalProjects = this.serviceData.Projects;
+    } else {
+      this.approvalProjects = this.serviceData.Projects.filter((p) => {
+        var asManager = this.serviceData.Allocations.filter((a) => {
+          if (a.empid == this.profile.empid && a.projectid == p.id && a.role == 'manager') {
+            return true;
+          }
+          return false;
+        });
+        if (asManager.length > 0) {
+          return true;
+        }
+        return false;
+      });
+    }
+    this.approvalDays = this.getDaysToDisplay({});
+    this.waitingForapprovalsLoaded = false;
+  }
+
+  getDaysToDisplay(project) {
+    //return this.generateMonthDays()
+    if (this.isMonth) {
+      return this.generateMonthDays(new Date(this.toDay));
+    } else {
+      return this.generateCurrentWeek(new Date(this.toDay));
+    }
+  }
+
+  moveApprovalDays(isNext) {
+    var ld;
+    if (isNext) {
+      var daytoGenerate = this.approvalDays[this.approvalDays.length - 1];
+      if (daytoGenerate) {
+        ld = new Date(daytoGenerate.getTime());
+        ld.setDate(ld.getDate() + 1);
+      }
+    } else {
+      var daytoGenerate = this.approvalDays[0];
+      if (daytoGenerate) {
+        ld = new Date(daytoGenerate.getTime());
+        ld.setDate(ld.getDate() - 1);
+      }
+    }
+    if (this.isMonth) {
+      this.approvalDays = this.generateMonthDays(ld);
+    } else {
+
+    }
+  }
+
+  getTotalHrs(project, emp) {
+    var dayToCount = this.approvalDays;
+    if (this.serviceData.Timesheets && this.serviceData.Timesheets.length > 0) {
+      var totalHours = 0;
+      var timesheetbyempproject = this.serviceData.Timesheets.filter((t) => {
+        if (t.empid == emp.empid && t.projectid == project.id) {
+          return true;
+        }
+        return false;
+      });
+
+      dayToCount.forEach((w) => {
+        var tsheet = timesheetbyempproject.filter((ts) => {
+          if (ts.sheetyear == w.getFullYear() && ts.sheetmonth == (w.getMonth() + 1) && ts.sheetdate == w.getDate()) {
+            return true;
+          }
+          return false;
+        });
+
+        if (tsheet.length > 0) {
+          totalHours = totalHours + parseInt(tsheet[0].loggedhours);
+        }
+      })
+      return totalHours;
+    }
+    return 0;
+  }
+
+
+  getProjectMembers(project) {
+    let members = [];
+    members = this.serviceData.Employees.filter((emp) => {
+      var ismember = this.serviceData.Allocations.filter((a) => {
+        if (a.empid == emp.empid && a.projectid == project.id) {
+          return true;
+        }
+        return false;
+      });
+
+      if (ismember.length > 0) {
+        return true;
+      }
+      return false;
+    });
+    return members;
+  }
+
   processData() {
     this.myProjects = [];
     if (this.isLoaded.userLoaded && this.isLoaded.isEmpLoaded && this.isLoaded.isAllocationsLoaded && this.isLoaded.isProjectsLoaded && this.isLoaded.isTimesheetsLoaded) {
@@ -54,14 +203,17 @@ export class TimeSheetComponent implements OnInit {
             return false;
           });
         });
+
+        this.processApprovals();
       }
     }
   }
 
-  getLoggedHours(project, loggedDate) {
+  getLoggedHours(project, loggedDate, emp) {
+    var empid = emp ? emp.empid : this.profile.empid;
     if (this.serviceData.Timesheets && this.serviceData.Timesheets.length > 0) {
       var timesheetData = this.serviceData.Timesheets.filter((t) => {
-        if (t.empid == this.profile.empid && t.projectid == project.id && t.sheetdate == loggedDate.getDate() && t.sheetmonth == (loggedDate.getMonth() + 1) && t.sheetyear == loggedDate.getFullYear()) {
+        if (t.empid == empid && t.projectid == project.id && t.sheetdate == loggedDate.getDate() && t.sheetmonth == (loggedDate.getMonth() + 1) && t.sheetyear == loggedDate.getFullYear()) {
           return true;
         }
         return false;
@@ -71,6 +223,22 @@ export class TimeSheetComponent implements OnInit {
       }
     }
     return 0;
+  }
+
+  getStatus(project, loggedDate, emp) {
+    var empid = emp ? emp.empid : this.profile.empid;
+    if (this.serviceData.Timesheets && this.serviceData.Timesheets.length > 0) {
+      var timesheetData = this.serviceData.Timesheets.filter((t) => {
+        if (t.empid == empid && t.projectid == project.id && t.sheetdate == loggedDate.getDate() && t.sheetmonth == (loggedDate.getMonth() + 1) && t.sheetyear == loggedDate.getFullYear()) {
+          return true;
+        }
+        return false;
+      });
+      if (timesheetData.length > 0) {
+        return timesheetData[0].isapproved && parseInt(timesheetData[0].declinedcount) === 0 ? 'approved' : (parseInt(timesheetData[0].declinedcount) > 0 ? 'declined' : 'default');
+      }
+    }
+    return 'default';
   }
 
 
@@ -103,6 +271,7 @@ export class TimeSheetComponent implements OnInit {
     });
 
   }
+
 
   navigateToWeek(isNext) {
     var ld;

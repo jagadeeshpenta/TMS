@@ -39,8 +39,8 @@ export class ReportsComponent implements OnInit {
     if (this.isLoaded.userLoaded && this.isLoaded.isEmpLoaded && this.isLoaded.isAllocationsLoaded && this.isLoaded.isProjectsLoaded && this.isLoaded.isTimesheetsLoaded) {
       if (this.serviceData.Projects.length > 0) {
         this.serviceData.Projects.map((project) => {
-          project.isWeek = true;
-          project.isMonth = false;
+          project.isWeek = false;
+          project.isMonth = !project.isWeek;
           project.weekToDisplay = this.generateCurrentWeek(new Date(this.toDay));
           project.monthToDisplay = this.generateMonthDays(new Date(this.toDay));
         });

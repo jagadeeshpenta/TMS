@@ -2,7 +2,6 @@
     td {
         text-align: center;
     }
-
     .days-head {
         td {
             padding: 0;
@@ -22,6 +21,73 @@
     text-align: right;
 }
 
-
-
- 
+.waiting-for-approval {
+    .sheet-view {
+        padding: 5px;
+        border: 1px solid #454545;
+        margin-top: 10px;
+        &.monthly {
+            .flex-container {
+                display: flex;
+                .flex-col {
+                    flex: 1 1 auto;
+                    text-align: center;
+                    &.left-align {
+                        text-align: left;
+                    }
+                    .flex-head {
+                        height: 40px;
+                        overflow: hidden;
+                        font-weight: bold;
+                    }
+                    .flex-row {
+                        height: 45px;
+                        .logged-hours {
+                            &.approved {
+                                color: white;
+                                position: relative;
+                                &:before {
+                                    content: '';
+                                    position: absolute;
+                                    top: -1px;
+                                    left: -6px;
+                                    width: 20px;
+                                    height: 20px;
+                                    background-color: green;
+                                    border-radius: 20px;
+                                    z-index: -1;
+                                }
+                            }
+                            &.declined {
+                                color: white;
+                                position: relative;
+                                &:before {
+                                    content: '';
+                                    position: absolute;
+                                    top: -1px;
+                                    left: -6px;
+                                    width: 20px;
+                                    height: 20px;
+                                    background-color: red;
+                                    border-radius: 20px;
+                                    z-index: -1;
+                                }
+                            }
+                        }
+                        .show-on-hover {
+                            display: none;
+                        }
+                        &:hover {
+                            .hide-on-hover {
+                                display: none;
+                            }
+                            .show-on-hover {
+                                display: inline;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

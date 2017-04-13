@@ -142,6 +142,10 @@ export class MyTeamComponent implements OnInit {
 
   openAddEmpToProjectModal(project) {
     this.employeeToProject.project = project;
+    this.employeeToProject.onSubmit = false;
+    this.employeeToProject.showSuggestions = false;
+    this.employeeToProject.empadd = '';
+    this.employeeToProject.emp = {};
     $('#addEmployeeToProjectModal').modal('show');
   }
 

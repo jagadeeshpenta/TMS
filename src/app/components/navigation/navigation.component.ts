@@ -2,6 +2,8 @@ import { Component, OnInit, Input, OnChanges } from '@angular/core';
 import { AuthService } from '../../Shared/auth/auth.service';
 import { Router } from '@angular/router';
 
+declare var $:any;
+
 @Component({
   selector: 'app-navigation',
   templateUrl: './navigation.component.html'
@@ -37,6 +39,7 @@ export class NavigationComponent implements OnInit, OnChanges {
   logout() {
     this.auth.logout();
     this.loggedIn = false;
+    $('.dropdown-toggle').dropdown('toggle');
     this._router.navigate(['login']);
   }
 
