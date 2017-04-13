@@ -1,50 +1,53 @@
-<div class="container">
-  <h4>Dashboard</h4>
-  <div class="row">
-    <div class="col-lg-3 col-md-6 col-sm-6">
-      <div class="card card-secondary">
-        <div class="card-block hand-symbol" (click)="goToTimesheet()">
-          <h4 class="card-title"><i class="icon ion-ios-alarm"></i> Time Sheet</h4>
-          <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+<div class="container" *ngIf="isLoaded">
+  <div class="">
+    <h4>Dashboard</h4>
+    <div class="row">
+      <div class="col-lg-3 col-md-6 col-sm-6">
+        <div class="card card-secondary">
+          <div class="card-block hand-symbol" (click)="goToTimesheet()">
+            <h4 class="card-title"><i class="icon ion-ios-alarm"></i> Time Sheet</h4>
+            <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-lg-3 col-md-6 col-sm-6">
+        <div class="card card-secondary">
+          <div class="card-block hand-symbol" (click)="goToMyTeam()">
+            <h4 class="card-title"><i class="icon ion-ios-people"></i> Projects</h4>
+            <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-lg-3 col-md-6 col-sm-6">
+        <div class="card card-secondary">
+          <div class="card-block hand-symbol" (click)="goToEmployees()">
+            <h4 class="card-title"><i class="icon ion-md-people"></i> Employees</h4>
+            <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-lg-3 col-md-6 col-sm-6">
+        <div class="card card-secondary">
+          <div class="card-block hand-symbol" (click)="goToReports()">
+            <h4 class="card-title"><i class="icon ion-ios-stats"></i> Reports</h4>
+            <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+          </div>
         </div>
       </div>
     </div>
-
-    <div class="col-lg-3 col-md-6 col-sm-6">
-      <div class="card card-secondary">
-        <div class="card-block hand-symbol" (click)="goToMyTeam()">
-          <h4 class="card-title"><i class="icon ion-ios-people"></i> My Team</h4>
-          <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+    <div class="quote">
+      <h4><i class="text-capitalize">quote of the day</i></h4>
+      <blockquote class="blockquote d-flex align-items-stretch">
+        <i class="fa fa-quote-left"></i>
+        <div>
+          <p class="mb-0">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer posuere erat a ante.</p>
+          <footer class="blockquote-footer">Someone famous in <cite title="Source Title">Source Title</cite></footer>
         </div>
-      </div>
-    </div>
-
-    <div class="col-lg-3 col-md-6 col-sm-6">
-      <div class="card card-secondary">
-        <div class="card-block hand-symbol" (click)="goToEmployees()">
-          <h4 class="card-title"><i class="icon ion-md-people"></i> Employees</h4>
-          <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-        </div>
-      </div>
-    </div>
-
-    <div class="col-lg-3 col-md-6 col-sm-6">
-      <div class="card card-secondary">
-        <div class="card-block hand-symbol" (click)="goToReports()">
-          <h4 class="card-title"><i class="icon ion-ios-stats"></i> Reports</h4>
-          <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-        </div>
-      </div>
+      </blockquote>
     </div>
   </div>
-  <div class="quote">
-    <h4><i class="text-capitalize">quote of the day</i></h4>
-  <blockquote class="blockquote d-flex align-items-stretch">
-    <i class="fa fa-quote-left"></i>
-    <div>
-      <p class="mb-0">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer posuere erat a ante.</p>
-      <footer class="blockquote-footer">Someone famous in <cite title="Source Title">Source Title</cite></footer>
-    </div>
-  </blockquote>
-  </div>
+
 </div>

@@ -4,22 +4,22 @@
       aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
     <span class="navbar-toggler-icon"></span>
   </button>
-    <a class="navbar-brand" href="/">TMS Evoke</a>
+    <a class="navbar-brand" href="/">TMS Evoke </a>
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
       <ul class="navbar-nav ml-auto">
-
-        
-
         <li class="nav-item dropdown">
-          <a class="nav-link dropdown-toggle" *ngIf="auth.isLoggedIn()" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false"><i class="fa fa-user-circle fa-lg" aria-hidden="true"></i></a>
-          <div class="dropdown-menu">
-            <a *ngIf="auth.isLoggedIn()" class="dropdown-item" routerLink="change-password">Change Password</a>
-            <a *ngIf="auth.isLoggedIn()" class="dropdown-item" routerLink="profile">Profile</a>
+          <a class="nav-link dropdown-toggle" *ngIf="loggedIn" data-toggle="dropdown">
+            <span *ngIf="user" >  {{ user.firstname + ' ' + user.lastname }}  </span>
+            <i class="fa fa-user-circle fa-lg" aria-hidden="true"></i>
+          </a>
+          <div class="dropdown-menu right-pos">
+            <a class="dropdown-item" data-toggle="modal" data-target="#changePasswordModal">Change Password</a>
+            <a class="dropdown-item" routerLink="profile">Profile</a>
             <div class="dropdown-divider"></div>
-            <a *ngIf="auth.isLoggedIn()" class="dropdown-item" (click)="logout()">Logout</a>
+            <a class="dropdown-item" (click)="logout()">Logout</a>
           </div>
         </li>
-        <li class="nav-item">
+        <li class="nav-item" *ngIf="_router.url != '/login'">
           <a *ngIf="!auth.isLoggedIn()" class="nav-link" routerLink="login">login</a>
         </li>
       </ul>

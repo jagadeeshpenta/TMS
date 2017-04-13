@@ -1,0 +1,76 @@
+.project-list {
+    .project-item {
+        margin-top: 10px;
+        border: 1px solid transparent;
+        border-top: 1px solid #232323;
+        &:hover,
+        &.expand {
+            border: 1px solid #232323;
+        }
+        .project-head {
+            padding: 10px;
+            cursor: pointer;
+            .fa-folder-open-o {
+                display: none;
+            }
+        }
+        .acord-content {
+            display: none;
+            padding-left: 20px;
+        }
+        &.expand {
+            .project-head {
+                .fa-folder-open-o {
+                    display: inline;
+                }
+                .fa-folder-o {
+                    display: none;
+                }
+            }
+            .acord-content {
+                display: block;
+            }
+        }
+    }
+}
+
+.acord-content {
+    .employees-section {
+        padding: 10px 20px;
+    }
+}
+
+.hidden {
+    display: none;
+}
+
+.m20-top {
+    margin-top: 20px;
+}
+
+.size {
+    width: 450px;
+}
+
+.text {
+    width: 180px;
+}
+
+.align-right {
+    text-align: right;
+}
+
+.btn {
+    cursor: pointer;
+}
+
+#addEmployeeToProjectModal {
+    .emp-sugestion-list {
+        display: none;
+        max-height: 200px;
+        overflow-y: auto;   
+        &.show {
+            display: block;
+        }
+    }
+}

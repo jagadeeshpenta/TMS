@@ -1,19 +1,104 @@
 <div class="container">
-  <p> Profile </p>
-<ul class="nav nav-tabs" role="tablist">
-  <li class="nav-item">
-    <a class="nav-link active" data-toggle="tab" href="#home" role="tab">Home</a>
-  </li>
-  <li class="nav-item">
-    <a class="nav-link" data-toggle="tab" href="#profile" role="tab">Profile</a>
-  </li>
-  <li class="nav-item">
-    <a class="nav-link" data-toggle="tab" href="#messages" role="tab">Messages</a>
-  </li>
-  <li class="nav-item">
-    <a class="nav-link" data-toggle="tab" href="#settings" role="tab">Settings</a>
-  </li>
-</ul>
+    <div style="margin-top:15px; margin-bottom:15px;">
+        <ul class="breadcrumbs">
+            <li class="bread-item">
+                <a routerLink="/dashboard">Dashboard</a>
+                <i class="fa fa-angle-right" aria-hidden="true" style="margin-left:5px;"></i>
+            </li>
+            <li class="bread-item">Profile</li>
+        </ul>
+    </div>
+
+    <div>
+        <h4>Employee Details</h4>
+        <table class="table">
+            <tbody>
+                <tr>
+                    <th>Job Family</th>
+                    <td>B</td>
+                </tr>
+                <tr>
+                    <th>Job Grade</th>
+                    <td>B1</td>
+                </tr>
+                <tr>
+                    <th>Department</th>
+                    <td>Java Practice</td>
+                </tr>
+                <tr>
+                    <th>Location</th>
+                    <td>Hyderabad</td>
+                </tr>
+                <tr>
+                    <th>Report To</th>
+                    <td>Praveen Kumar Thirupathi</td>
+                </tr>
+                <tr>
+                    <th>Date Of Joining</th>
+                    <td>Dec 21, 2016</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div>
+        <h4>Personal Details <i class="fa fa-pencil-square-o" (click)="doEditProfile()" aria-hidden="true"></i></h4>
+        <table class="table">
+            <tr>
+                <td>First Name</td>
+                <td>
+                    <span *ngIf="isEdit == false">{{ profile.firstname}}</span>
+                    <input *ngIf="isEdit" class="form-control" type="text" [(ngModel)]="editProfile.firstname" />
+                </td>
+            </tr>
+            <tr>
+                <td>Last Name</td>
+                <td>
+                    <span *ngIf="isEdit == false">{{ profile.lastname}}</span>
+                    <input *ngIf="isEdit" class="form-control" type="text" [(ngModel)]="editProfile.lastname" />
+                </td>
+            </tr>
+            <tr>
+                <td>DOB</td>
+                <td>
+                    <div>
+                        <span *ngIf="isEdit == false">{{ profile.dob}}</span>
+                        <input *ngIf="isEdit" class="form-control" type="date" [(ngModel)]="editProfile.dob" />
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td>Address</td>
+                <td>
+                    <span *ngIf="isEdit == false">{{ profile.address}}</span>
+                    <input *ngIf="isEdit" class="form-control" type="text" [(ngModel)]="editProfile.address" />
+                </td>
+            </tr>
+            <tr>
+                <td>Email</td>
+                <td>
+                    <span *ngIf="isEdit == false">{{ profile.email}}</span>
+                    <input *ngIf="isEdit" class="form-control" type="text" [(ngModel)]="editProfile.email" />
+                </td>
+            </tr>
+            <tr>
+                <td>Emergency Contact</td>
+                <td>
+                    <span *ngIf="isEdit == false">{{ profile.emgCon}}</span>
+                    <input *ngIf="isEdit" class="form-control" type="text" [(ngModel)]="editProfile.emgCon" />
+                </td>
+            </tr>
 
 
+
+        </table>
+        <div>
+            <button class="btn btn-primary btn-sm" *ngIf="isEdit" (click)="handleSavechanges()">
+        Save changes
+      </button>
+            <button class="btn btn-primary btn-sm" *ngIf="isEdit" (click)="isEdit = false;">
+        Cancel
+      </button>
+        </div>
+
+    </div>
 </div>

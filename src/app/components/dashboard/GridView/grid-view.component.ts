@@ -1,5 +1,5 @@
 import {Component, NgZone, Input, Output, EventEmitter} from "@angular/core";
-import {KeysPipe} from "../../Pipes/keys.pipe";
+import {KeysPipe} from "./../../../Pipes/keys.pipe";
 
 /**
  * <div class="container" 
