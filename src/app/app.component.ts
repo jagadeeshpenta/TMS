@@ -22,7 +22,7 @@ export class AppComponent implements OnChanges, OnInit {
       if (val instanceof NavigationStart) {
         auth.checkUser().then(({ err, result }) => {
           if (err) {
-            router.navigateByUrl('/login');
+            //router.navigateByUrl('/login');
           } else {
             this.user = result.profile;
           }
