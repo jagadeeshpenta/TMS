@@ -1,0 +1,69 @@
+.project-list {
+    .project-item {
+        margin-top: 10px;
+        border: 1px solid transparent;
+        border-top: 1px solid #232323;
+        &:hover,
+        &.expand {
+            border: 1px solid #232323;
+        }
+        .accord-head {
+            padding: 10px;
+            cursor: pointer;
+            .fa-folder-open-o {
+                display: none;
+            }
+        }
+        .accord-content {
+            display: none;
+            padding-left: 20px;
+        }
+        &.expand {
+            .accord-head {
+                .fa-folder-open-o {
+                    display: inline;
+                }
+                .fa-folder-o {
+                    display: none;
+                }
+            }
+            .accord-content {
+                display: block;
+            }
+        }
+    }
+}
+
+.monthly-report {
+    .flex-container {
+        display: flex;
+        .flex-col {
+            flex: 1 1 auto;
+            border-right: 1px solid #b4bcc2;
+            text-align: center;
+            &.col-first {
+                text-align: left;
+            }
+            .flex-head {
+                height: 30px;
+                overflow: hidden;
+                font-weight: bold;
+            }
+
+            .flex-row {
+                height: 35px;
+            }
+        }
+        &.no-border {
+            .flex-col {
+                border: none;
+            }
+        }
+    }
+}
+
+.reports-table {
+    tr {
+        margin-top: 5px;
+    }
+}

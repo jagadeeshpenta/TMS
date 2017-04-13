@@ -1,0 +1,27 @@
+.hidden {
+    display: none;
+    visibility: hidden;
+}
+
+.m20-top {
+    margin-top: 20px;
+}
+
+.tab-content {
+    .tab {
+        display: none;
+        &.active {
+            display: block;
+        }
+    }
+}
+
+.modal-dialog {
+    max-width: 700px;
+}
+
+// .ng-touched {
+//     .form-control.ng-invalid {
+//         border: 1px solid orangered;
+//     }
+// }

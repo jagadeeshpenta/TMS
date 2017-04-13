@@ -1,3 +1,112 @@
-<p>
-  reports works!
-</p>
+<div class="container">
+  <div style="margin-top:15px; margin-bottom:15px;">
+    <ul class="breadcrumbs">
+      <li class="bread-item">
+        <a routerLink="/dashboard">Dashboard</a>
+        <i class="fa fa-angle-right" aria-hidden="true" style="margin-left:5px;"></i>
+      </li>
+      <li class="bread-item">Reports</li>
+    </ul>
+  </div>
+
+
+  <div class="project-list" *ngIf="isLoaded.readyToRender" style="padding: 20px;">
+    <div class="project-item" *ngFor="let project of serviceData.Projects" [ngClass]="{'expand': project.expand}">
+      <div class="accord-item">
+        <div class="accord-head" (click)="project.expand = !project.expand;">
+          <h4>
+            <i class="fa fa-folder-o" aria-hidden="true"></i>
+            <i class="fa fa-folder-open-o" aria-hidden="true"></i> {{ project.name}}
+          </h4>
+        </div>
+        <div class="accord-content">
+          <div class="clearfix">
+            <div class="btn-group btn-toggle pull-right">
+              <button class="btn btn-primary" [ngClass]="{'btn-default' : !isMonth}" [disabled]="!project.isMonth" (click)="project.isMonth =!project.isMonth;">Week</button>
+              <button class="btn btn-primary" [ngClass]="{'btn-default' : isMonth}" [disabled]="project.isMonth" (click)="project.isMonth =!project.isMonth">Month</button>
+            </div>
+          </div>
+          <div class="weekly-report m20-top" *ngIf="!project.isMonth">
+            <table class="" style="width: 100%;">
+              <tr>
+                <td>
+                  <button class="btn btn-primary" (click)="navigateToWeek(project)">Prev</button>
+                </td>
+                <td style="text-align: center;">
+                  <span *ngIf="project.weekToDisplay.length > 0">{{ project.weekToDisplay[0].getFullYear() }} </span>
+                </td>
+                <td style="text-align: right">
+                  <button class="btn btn-primary" (click)="navigateToWeek(project, 1)">Next</button>
+                </td>
+              </tr>
+            </table>
+            <table class="table m15-top reports-table">
+              <tr>
+                <th>Employee Name</th>
+                <th *ngFor="let dy of project.weekToDisplay">
+                  <div>{{ MonthNames[dy.getMonth()] }}</div>
+                  <div>{{ dy.getDate() }}</div>
+                  <div>{{ weekNames[dy.getDay()] }}</div>
+                </th>
+                <th>
+                  <div>Total </div>
+                  <div>Hours</div>
+                </th>
+              </tr>
+              <tr *ngFor="let allocation of getAllocationsOfProject(project)">
+                <td>{{ allocation.emp.firstname + ' ' + allocation.emp.lastname }} </td>
+                <td *ngFor="let dy of project.weekToDisplay">
+                  {{ getLoggedHours(project, dy, allocation.emp) }}
+                </td>
+                <td>
+                  {{getWeekTotalHours(project, project.weekToDisplay, allocation.emp)}}
+                </td>
+              </tr>
+            </table>
+          </div>
+          <div class="monthly-report m20-top p20-btm" *ngIf="project.isMonth">
+            <div class="flex-container no-border">
+              <div class="flex-col text-left">
+                <button class="btn btn-primary" (click)="navigateToMonth(project)">Prev Month</button>
+              </div>
+              <div class="flex-col">
+                <div *ngIf="project.monthToDisplay">
+                  {{ MonthNames[project.monthToDisplay[0].getMonth()] }}, {{ project.monthToDisplay[0].getFullYear() }}
+                </div>
+              </div>
+              <div class="flex-col text-right">
+                <button class="btn btn-primary" (click)="navigateToMonth(project, 1)">Next month</button>
+              </div>
+            </div>
+            <div class="flex-container m15-top">
+              <div class="flex-col col-first">
+                <div class="flex-head">
+                  Employee Name
+                </div>
+                <div class="flex-row" *ngFor="let allocation of getAllocationsOfProject(project)">
+                  {{ allocation.emp.firstname + ' ' + allocation.emp.lastname }}
+                </div>
+              </div>
+              <div class="flex-col" *ngFor="let dy of project.monthToDisplay">
+                <div class="flex-head">
+                  {{ dy.getDate() }}
+                </div>
+                <div class="flex-row" *ngFor="let allocation of getAllocationsOfProject(project)">
+                  {{ getLoggedHours(project, dy, allocation.emp) }}
+                </div>
+              </div>
+              <div class="flex-col">
+                <div class="flex-head">
+                  Total
+                </div>
+                <div class="flex-row" *ngFor="let allocation of getAllocationsOfProject(project)">
+                  {{ getWeekTotalHours(project, project.monthToDisplay, allocation.emp) }}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
