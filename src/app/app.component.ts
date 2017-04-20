@@ -11,7 +11,7 @@ export class AppComponent implements OnChanges, OnInit {
   title = 'app works!';
   user;
 
-  constructor(public auth: AuthService, private router: Router, ) {
+  constructor(public auth: AuthService, private router: Router) {
     // auth.checkUser().then(({ err, result }) => {
     //   if (err) {
     //     router.navigateByUrl('/login');
