@@ -109,7 +109,7 @@ export class TimeSheetComponent implements OnInit {
       });
     }
     this.approvalDays = this.getDaysToDisplay({});
-    this.waitingForapprovalsLoaded = false;
+    this.waitingForapprovalsLoaded = true;
   }
 
   getDaysToDisplay(project) {
@@ -209,6 +209,21 @@ export class TimeSheetComponent implements OnInit {
     }
   }
 
+  checkLogHours(project, loggedDate, emp) {
+    var empid = emp ? emp.empid : this.profile.empid;
+    if (this.serviceData.Timesheets && this.serviceData.Timesheets.length > 0) {
+      var timesheetData = this.serviceData.Timesheets.filter((t) => {
+        if (t.empid == empid && t.projectid == project.id && t.sheetdate == loggedDate.getDate() && t.sheetmonth == (loggedDate.getMonth() + 1) && t.sheetyear == loggedDate.getFullYear()) {
+          return true;
+        }
+        return false;
+      });
+      if (timesheetData.length > 0) {
+        return true
+      }
+    }
+    return false;
+  }
   getLoggedHours(project, loggedDate, emp) {
     var empid = emp ? emp.empid : this.profile.empid;
     if (this.serviceData.Timesheets && this.serviceData.Timesheets.length > 0) {
@@ -222,7 +237,7 @@ export class TimeSheetComponent implements OnInit {
         return timesheetData[0].loggedhours;
       }
     }
-    return 0;
+    return '-';
   }
 
   getStatus(project, loggedDate, emp) {

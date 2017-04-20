@@ -249,7 +249,7 @@ export class ReportsComponent implements OnInit {
         return timesheetData[0].loggedhours;
       }
     }
-    return 0;
+    return '-';
   }
 
   getWeekTotalHours(project, weekToCount, emp) {

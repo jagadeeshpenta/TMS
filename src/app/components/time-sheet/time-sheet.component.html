@@ -46,8 +46,10 @@
             <div class="flex-head">
               {{ dy.getDate() }}
             </div>
-            <div class="flex-row" *ngFor="let tm of getProjectMembers(project)">
-              <span class="hide-on-hover logged-hours" [ngClass]="getStatus(project, dy, tm)">{{ getLoggedHours(project, dy, tm) }} </span>
+            <div class="flex-row"  [ngClass]="{'hover-effect': checkLogHours(project, dy, tm) }"  *ngFor="let tm of getProjectMembers(project)">
+              <span class="hide-on-hover logged-hours" [ngClass]="getStatus(project, dy, tm)" >
+                {{ getLoggedHours(project, dy, tm) }}
+              </span>
               <span class="show-on-hover">
                 <input [attr.timesheetid]="getTimeSheetId(project, dy, tm)" type="checkbox" (change)="updateCheckedData($event, project, tm, dy)" [attr.name]="'c' + project.id + 'd' + dy.getTime() + 't' + tm.id" />
               </span>
