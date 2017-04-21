@@ -15,38 +15,38 @@
             <tbody>
                 <tr>
                     <th>Job Family</th>
-                    <td>B</td>
+                    <td>{{ profile.jobfamily}}</td>
                 </tr>
                 <tr>
                     <th>Job Grade</th>
-                    <td>B1</td>
+                    <td>{{ profile.jobgrade }}</td>
                 </tr>
                 <tr>
                     <th>Department</th>
-                    <td>Java Practice</td>
+                    <td>{{ profile.practise }}</td>
                 </tr>
                 <tr>
                     <th>Location</th>
-                    <td>Hyderabad</td>
+                    <td>{{ profile.location }}</td>
                 </tr>
                 <tr>
                     <th>Report To</th>
-                    <td>Praveen Kumar Thirupathi</td>
+                    <td>{{ profile.reportingmanger }}</td>
                 </tr>
                 <tr>
                     <th>Date Of Joining</th>
-                    <td>Dec 21, 2016</td>
+                    <td>{{ profile.dob }}</td>
                 </tr>
             </tbody>
         </table>
     </div>
-    <div>
+    <div class="persnal">
         <h4>Personal Details <i class="fa fa-pencil-square-o" (click)="doEditProfile()" aria-hidden="true"></i></h4>
         <table class="table">
             <tr>
                 <td>First Name</td>
                 <td>
-                    <span *ngIf="isEdit == false">{{ profile.firstname}}</span>
+                    <span *ngIf="isEdit == false" >{{ profile.firstname}}</span>
                     <input *ngIf="isEdit" class="form-control" type="text" [(ngModel)]="editProfile.firstname" />
                 </td>
             </tr>
