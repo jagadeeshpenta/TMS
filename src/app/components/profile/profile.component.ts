@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { AuthService } from '../../Shared/auth/auth.service';
-
 import { DBService } from './../../Shared/dbservice';
+
 declare var $: any;
 
 @Component({
@@ -32,8 +32,8 @@ export class ProfileComponent implements OnInit {
     this.editProfile = Object.create(this.auth.user);
   }
   handleSavechanges() {
-    this.profile["firstname"] = this.editProfile.firstname;
-    this.profile["lastname"] = this.editProfile.lastname;
+    this.profile['firstname'] = this.editProfile.firstname;
+    this.profile['lastname'] = this.editProfile.lastname;
     this.profile['dob'] = this.editProfile.dob;
     this.profile['address'] = this.editProfile.address;
     this.profile['phone'] = this.editProfile.phone;
