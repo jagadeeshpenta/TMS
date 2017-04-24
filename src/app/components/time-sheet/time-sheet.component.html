@@ -46,8 +46,8 @@
             <div class="flex-head">
               {{ dy.getDate() }}
             </div>
-            <div class="flex-row"  [ngClass]="{'hover-effect': checkLogHours(project, dy, tm) }"  *ngFor="let tm of getProjectMembers(project)">
-              <span class="hide-on-hover logged-hours" [ngClass]="getStatus(project, dy, tm)" >
+            <div class="flex-row" [ngClass]="{'hover-effect': checkLogHours(project, dy, tm) }" *ngFor="let tm of getProjectMembers(project)">
+              <span class="hide-on-hover logged-hours" [attr.selected]="isLogSelected(project, dy, tm, approvalChecked)" [ngClass]="getStatus(project, dy, tm)">
                 {{ getLoggedHours(project, dy, tm) }}
               </span>
               <span class="show-on-hover">
@@ -69,8 +69,8 @@
         </div>
 
         <div class="m15-top">
-          <button class="btn btn-success" (click)="updateStatus('A')">Approve</button>
-          <button class="btn btn-success" (click)="updateStatus('D')">Decline</button>
+          <button class="btn btn-success" (click)="updateStatus('A')" >Approve</button>
+          <button class="btn btn-success" data-toggle="modal" data-target="#declineCommentModal">Decline</button>
         </div>
       </div>
     </div>
@@ -171,6 +171,34 @@
           <div style="text-align: right;">
             <button type="submit" class="btn btn-success">Submit</button>
             <button type="button" class="btn btn-danger" (click)="close()">Cancel</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<div class="modal fade" id="declineCommentModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">
+          <legend>Decline Comment</legend>
+        </h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form class="form-horizontal" method="POST" (submit)="updateStatus('D')">
+          <div class="form-group">
+            <label for="timesheetcomment">Comment</label>
+            <textarea class="form-control" name="declinecomment" [(ngModel)]="declinecomment" rows="3"></textarea>
+          </div>
+          <div style="text-align: right;">
+            <button type="submit" class="btn btn-success">Submit</button>
+            <button type="button" class="btn btn-danger" (click)="closedeclinemodal()">Cancel</button>
           </div>
         </form>
       </div>

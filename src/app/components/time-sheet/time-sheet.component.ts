@@ -26,6 +26,7 @@ export class TimeSheetComponent implements OnInit {
   myProjects = [];
   profile;
   toDay;
+  declinecomment = '';
 
   isLoaded = {
     isEmpLoaded: false,
@@ -63,7 +64,57 @@ export class TimeSheetComponent implements OnInit {
     }
   }
   updateCheckedData(event, project, tm, dy) {
-    this.approvalChecked.push($(event.target).attr('timesheetid'));
+    var timesheetId = $(event.target).attr('timesheetid');
+    if (this.approvalChecked.indexOf(timesheetId) < 0 && $(event.target).is(':checked')) {
+      this.approvalChecked.push($(event.target).attr('timesheetid'));
+    }
+
+    if (!$(event.target).is(':checked')) {
+      if (this.approvalChecked.indexOf(timesheetId.toString()) >= 0) {
+        this.approvalChecked.splice(this.approvalChecked.indexOf(timesheetId.toString()), 1);
+      }
+    }
+  }
+  isLogSelected(project, loggedDate, emp, approvalChecked) {
+    var empid = emp ? emp.empid : this.profile.empid;
+    var timesheetId;
+    if (this.serviceData.Timesheets && this.serviceData.Timesheets.length > 0) {
+      var timesheetData = this.serviceData.Timesheets.filter((t) => {
+        if (t.empid == empid && t.projectid == project.id && t.sheetdate == loggedDate.getDate() && t.sheetmonth == (loggedDate.getMonth() + 1) && t.sheetyear == loggedDate.getFullYear()) {
+          return true;
+        }
+        return false;
+      });
+      if (timesheetData.length > 0) {
+        timesheetId = timesheetData[0].id;
+      }
+      if (timesheetId && approvalChecked.indexOf(timesheetId.toString()) >= 0) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  sendMails(idsStr, typ) {
+    var ids = idsStr.split(',');
+    var updatedTimesheets = [];
+    var emailids = [];
+    this.serviceData.Timesheets.forEach((t) => {
+      if (ids.filter((d) => { return d == t.id }).length > 0) {
+        updatedTimesheets.push(t);
+        var emps = this.serviceData.Employees.filter((em) => { return em.empid == t.empid });
+        if (emps.length > 0) {
+          if (emailids.indexOf(emps[0].emailid.replace('@evoketechnologies.com', '')) < 0) {
+            emailids.push(emps[0].emailid.replace('@evoketechnologies.com', ''));
+          }
+        }
+      }
+    });
+    var emailContent = 'Your Timesheet ' + (typ === 'A' ? ' Approved' : 'Declined');
+    if (emailids.length > 0) {
+      emailids = emailids.length === 1 ? [emailids[0] + '@evoketechnologies.com'] : emailids;
+      this.db.sendMail({ toAddress: emailids.join('@evoketechnologies.com,'), text: emailContent, mailContent: emailContent });
+    }
   }
 
   updateStatus(typ) {
@@ -74,6 +125,7 @@ export class TimeSheetComponent implements OnInit {
           isapproved: true,
         }
       }).then(() => {
+        this.sendMails(this.approvalChecked.join(','), typ);
         this.approvalChecked = [];
         this.getData('/timesheets', 'Timesheets', 'isTimesheetsLoaded');
         this.processData();
@@ -85,12 +137,28 @@ export class TimeSheetComponent implements OnInit {
           isapproved: false,
         }
       }).then(() => {
+        this.sendMails(this.approvalChecked.join(','), typ);
+        this.addTimesheetComment();
+        this.closedeclinemodal();
+        this.declinecomment = '';
         this.approvalChecked = [];
         this.getData('/timesheets', 'Timesheets', 'isTimesheetsLoaded');
         this.processData();
       });
     }
   }
+
+  addTimesheetComment() {
+    var timesheetComment = {
+      timesheetids: this.approvalChecked.join(','),
+      comment: this.declinecomment
+    };
+    this.db.makeRequest('/timesheetcomments?lToken=' + this.db.CookieManager.get('lToken'), new this.db.Headers(), timesheetComment, 'POST').then((resp) => {
+
+    });
+  }
+
+
   processApprovals() {
     if (this.profile.role == 'admin') {
       this.approvalProjects = this.serviceData.Projects;
@@ -282,9 +350,10 @@ export class TimeSheetComponent implements OnInit {
           this.weekDays = this.generateCurrentWeek(new Date(this.toDay));
           this.monthDays = this.generateMonthDays(new Date(this.toDay));
         }
+      } else {
+        console.log('user not logged In');
       }
     });
-
   }
 
 
@@ -445,6 +514,9 @@ export class TimeSheetComponent implements OnInit {
 
   close() {
     $('#logWorkModal').modal('hide');
+  }
+  closedeclinemodal() {
+    $('#declineCommentModal').modal('hide');
   }
 
   getHtml5DateFormat(dy) {
