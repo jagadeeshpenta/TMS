@@ -43,6 +43,21 @@
                     .flex-row {
                         height: 45px;
                         .logged-hours {
+                            position: relative;
+                            &[selected="true"] {
+                                &:before {
+                                    content: '';
+                                    position: absolute;
+                                    top: -1px;
+                                    left: -6px;
+                                    width: 20px;
+                                    height: 20px;
+                                    background-color: transparent;
+                                    border-radius: 20px;
+                                    z-index: -1;
+                                    border: 2px solid blue;
+                                }
+                            }
                             &.approved {
                                 color: white;
                                 position: relative;
@@ -56,6 +71,11 @@
                                     background-color: green;
                                     border-radius: 20px;
                                     z-index: -1;
+                                }
+                                &[selected="true"] {
+                                    &:before {
+                                        border: 2px solid blue;
+                                    }
                                 }
                             }
                             &.declined {
@@ -72,12 +92,17 @@
                                     border-radius: 20px;
                                     z-index: -1;
                                 }
+                                &[selected="true"] {
+                                    &:before {
+                                        border: 2px solid blue;
+                                    }
+                                }
                             }
                         }
                         .show-on-hover {
                             display: none;
                         }
-                        &.hover-effect{
+                        &.hover-effect {
                             &:hover {
                                 .hide-on-hover {
                                     display: none;
