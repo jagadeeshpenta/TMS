@@ -13,7 +13,7 @@ export class AppComponent implements OnChanges, OnInit {
 
   constructor(public auth: AuthService, private router: Router) {
     router.events.subscribe((val) => {
-      if (val instanceof NavigationStart) {
+      if (val instanceof NavigationStart && val.url !== '/login') {
         auth.checkUser().then(({ err, result }) => {
           if (err) {
             router.navigateByUrl('/login');

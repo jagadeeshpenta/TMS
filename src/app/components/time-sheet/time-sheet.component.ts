@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { DBService } from './../../Shared/dbservice';
 import { AuthService } from './../../Shared/auth/auth.service';
-
 declare var $: any;
 
 @Component({
@@ -13,6 +12,7 @@ export class TimeSheetComponent implements OnInit {
 
   weekDays = [];
   monthDays = [];
+
 
   serviceData: any = {
     Employees: [],
@@ -39,7 +39,7 @@ export class TimeSheetComponent implements OnInit {
   MonthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
   weekNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
   constructor(public db: DBService, public auth: AuthService) {
-
+    
   }
 
   waitingForapprovalsLoaded = false;
