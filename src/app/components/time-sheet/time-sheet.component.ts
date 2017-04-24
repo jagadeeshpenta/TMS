@@ -21,7 +21,7 @@ export class TimeSheetComponent implements OnInit {
     Timesheets: []
   };
 
-  isWeek = false;
+  isWeek = true;
   isMonth = !this.isWeek;
   myProjects = [];
   profile;
@@ -45,6 +45,7 @@ export class TimeSheetComponent implements OnInit {
   waitingForapprovalsLoaded = false;
   approvalProjects = [];
   approvalDays = [];
+  approvalWeekDays = [];
   approvalChecked = [];
 
   getTimeSheetId(project, loggedDate, emp) {
@@ -176,7 +177,8 @@ export class TimeSheetComponent implements OnInit {
         return false;
       });
     }
-    this.approvalDays = this.getDaysToDisplay({});
+    this.approvalDays = this.generateMonthDays(new Date(this.toDay))
+    this.approvalWeekDays = this.generateCurrentWeek(new Date(this.toDay));
     this.waitingForapprovalsLoaded = true;
   }
 
@@ -207,7 +209,7 @@ export class TimeSheetComponent implements OnInit {
     if (this.isMonth) {
       this.approvalDays = this.generateMonthDays(ld);
     } else {
-
+      this.approvalWeekDays = this.generateCurrentWeek(ld);
     }
   }
 

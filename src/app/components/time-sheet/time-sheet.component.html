@@ -74,12 +74,73 @@
         </div>
       </div>
     </div>
+
+    <div *ngIf="isWeek">
+      <div style="display: flex;">
+        <div style="flex: 1 1 auto;">
+          <button class="btn btn-primary" (click)="moveApprovalDays()">Prev Week</button>
+        </div>
+        <div style="flex: 1 1 auto; text-align:center; font-weight: bold;">
+          {{ approvalDays[0].getFullYear() }}
+        </div>
+        <div style="flex: 1 1 auto;text-align:right;">
+          <button class="btn btn-primary" (click)="moveApprovalDays(1)">Next Week</button>
+        </div>
+      </div>
+
+      <div class="sheet-view monthly no-border" *ngFor="let project of approvalProjects; let i = index;" >
+        <div  *ngIf="getProjectMembers(project).length > 0">
+          <h5>{{ project.name }}</h5>
+          <div class="flex-container">
+                    <div class="flex-col left-align">
+                      <div class="flex-head" *ngIf="i === 0">
+                        Name
+                      </div>
+                      <div class="flex-row" *ngFor="let tm of getProjectMembers(project)">
+                        {{ tm.firstname + ' ' + tm.lastname }}
+                      </div>
+                    </div>
+
+                    <div class="flex-col" *ngFor="let dy of approvalWeekDays">
+                      <div class="flex-head" *ngIf="i === 0">
+                        {{ dy.getDate() }}
+                      </div>
+                      <div class="flex-row" [ngClass]="{'hover-effect': checkLogHours(project, dy, tm) }" *ngFor="let tm of getProjectMembers(project)">
+                        <span class="hide-on-hover logged-hours" [attr.selected]="isLogSelected(project, dy, tm, approvalChecked)" [ngClass]="getStatus(project, dy, tm)">
+                          {{ getLoggedHours(project, dy, tm) }}
+                        </span>
+                        <span class="show-on-hover">
+                          <input [attr.timesheetid]="getTimeSheetId(project, dy, tm)" type="checkbox" (change)="updateCheckedData($event, project, tm, dy)" [attr.name]="'c' + project.id + 'd' + dy.getTime() + 't' + tm.id" />
+                        </span>
+                      </div>
+                    </div>
+
+                    <div class="flex-col">
+                      <div class="flex-head" *ngIf="i === 0">
+                        T.Hrs
+                      </div>
+                      <div class="flex-row" *ngFor="let tm of getProjectMembers(project)">
+                        {{ getTotalHrs(project, tm) }}
+                      </div>
+                    </div>
+
+
+                  </div>
+
+                  <div class="m15-top">
+                    <button class="btn btn-success" (click)="updateStatus('A')">Approve</button>
+                    <button class="btn btn-success" data-toggle="modal" data-target="#declineCommentModal">Decline</button>
+                  </div>
+        </div>
+      </div>
+    </div>
   </div>
 
 
 
 
   <div class="m20-top">
+    <h3>My Timesheet</h3>
     <div *ngIf="isWeek">
       <div>
         <button class="btn btn-primary" (click)="navigateToWeek()">Prev Week</button>
