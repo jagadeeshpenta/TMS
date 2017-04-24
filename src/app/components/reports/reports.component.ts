@@ -246,7 +246,11 @@ export class ReportsComponent implements OnInit {
         return false;
       });
       if (timesheetData.length > 0) {
-        return timesheetData[0].loggedhours;
+        if (timesheetData[0].isapproved && timesheetData[0].declinedcount == 0) {
+          return timesheetData[0].loggedhours;
+        } else {
+          return '-';
+        }
       }
     }
     return '-';
@@ -271,7 +275,9 @@ export class ReportsComponent implements OnInit {
         });
 
         if (tsheet.length > 0) {
-          totalHours = totalHours + parseInt(tsheet[0].loggedhours);
+          if (tsheet[0].isapproved && tsheet[0].declinedcount == 0) {
+            totalHours = totalHours + parseInt(tsheet[0].loggedhours);
+          }
         }
       })
       return totalHours;
