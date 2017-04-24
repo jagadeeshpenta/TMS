@@ -12,24 +12,17 @@ export class AppComponent implements OnChanges, OnInit {
   user;
 
   constructor(public auth: AuthService, private router: Router) {
-    // auth.checkUser().then(({ err, result }) => {
-    //   if (err) {
-    //     router.navigateByUrl('/login');
-    //   }
-    // });
-
     router.events.subscribe((val) => {
       if (val instanceof NavigationStart) {
         auth.checkUser().then(({ err, result }) => {
           if (err) {
-            //router.navigateByUrl('/login');
+            router.navigateByUrl('/login');
           } else {
             this.user = result.profile;
           }
         });
       }
     });
-
   }
 
   ngOnChanges() {
