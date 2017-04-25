@@ -202,12 +202,18 @@ export class TimeSheetComponent implements OnInit {
     var ld;
     if (isNext) {
       var daytoGenerate = this.approvalDays[this.approvalDays.length - 1];
+      if (this.isWeek) {
+        daytoGenerate = this.approvalWeekDays[this.approvalWeekDays.length - 1];
+      }
       if (daytoGenerate) {
         ld = new Date(daytoGenerate.getTime());
         ld.setDate(ld.getDate() + 1);
       }
     } else {
       var daytoGenerate = this.approvalDays[0];
+      if (this.isWeek) {
+        daytoGenerate = this.approvalWeekDays[0];
+      }
       if (daytoGenerate) {
         ld = new Date(daytoGenerate.getTime());
         ld.setDate(ld.getDate() - 1);
