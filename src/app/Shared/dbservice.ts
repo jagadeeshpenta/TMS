@@ -9,11 +9,15 @@ export class DBService {
   baseUrl = environment.apiUrl;
   lToken;
   cacheData: any;
+  CookieManager;
+  Headers;
   constructor(private http: Http) {
     this.lToken = Cookie.get('lToken');
+    this.CookieManager = Cookie;
+    this.Headers = Headers;
   }
 
-  private makeRequest(url, headers, reqData, method) {
+  makeRequest(url, headers, reqData, method) {
     var self = this;
     return new Promise((res) => {
       switch (method) {
@@ -162,6 +166,15 @@ export class DBService {
   addTimesheet(newlogTimesheet) {
     return new Promise((res) => {
       this.makeRequest('/timesheets?lToken=' + Cookie.get('lToken'), new Headers(), newlogTimesheet, 'POST').then((resp) => {
+        res(resp);
+      });
+    });
+  }
+
+
+  sendMail(mailOptions) {
+    return new Promise((res) => {
+      this.makeRequest('/sendmail?lToken=' + Cookie.get('lToken'), new Headers(), mailOptions, 'POST').then((resp) => {
         res(resp);
       });
     });

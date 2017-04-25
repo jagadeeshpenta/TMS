@@ -48,7 +48,7 @@
                 <tr>
                   <td>password</td>
                   <td>
-                    <input type="password" name="password" class="form-control" [(ngModel)]="newEmployee.password" />
+                    <input type="password" [required]="isEdit ? null : ''" name="password"  class="form-control" [(ngModel)]="newEmployee.password" />
                   </td>
                 </tr>
                 <tr>
