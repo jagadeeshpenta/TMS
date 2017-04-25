@@ -30,7 +30,6 @@ export class MyTeamComponent implements OnInit {
   profile = {};
   showDropDownBox;
 
-
   Projects = [];
   Employees = [];
   Allocations = [];
@@ -80,7 +79,7 @@ export class MyTeamComponent implements OnInit {
               empofProjects.push(em);
             }
           });
-          project.Employees = empofProjects;
+          project.Employees = empofProjects; 
         });
 
         this.projectsProcessed = true;
@@ -243,8 +242,7 @@ export class MyTeamComponent implements OnInit {
       this.getAllocationsandEmployees();
     });
   }
-
-
+ 
   getDisplayDateFormat(timeStamp) {
     if (timeStamp) {
       var tmp = new Date(timeStamp);

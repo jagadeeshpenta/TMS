@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { DBService } from './../../Shared/dbservice';
 import { AuthService } from './../../Shared/auth/auth.service';
+
 declare var $: any;
 
 @Component({
@@ -22,11 +23,13 @@ export class TimeSheetComponent implements OnInit {
   };
 
   isWeek = true;
+
   isMonth = !this.isWeek;
   myProjects = [];
   profile;
   toDay;
   declinecomment = '';
+
 
   isLoaded = {
     isEmpLoaded: false,
@@ -46,6 +49,7 @@ export class TimeSheetComponent implements OnInit {
   approvalProjects = [];
   approvalDays = [];
   approvalWeekDays = [];
+
   approvalChecked = [];
 
   getTimeSheetId(project, loggedDate, emp) {
@@ -127,6 +131,7 @@ export class TimeSheetComponent implements OnInit {
         }
       }).then(() => {
         this.sendMails(this.approvalChecked.join(','), typ);
+
         this.approvalChecked = [];
         this.getData('/timesheets', 'Timesheets', 'isTimesheetsLoaded');
         this.processData();
@@ -142,6 +147,7 @@ export class TimeSheetComponent implements OnInit {
         this.addTimesheetComment();
         this.closedeclinemodal();
         this.declinecomment = '';
+
         this.approvalChecked = [];
         this.getData('/timesheets', 'Timesheets', 'isTimesheetsLoaded');
         this.processData();
@@ -180,6 +186,7 @@ export class TimeSheetComponent implements OnInit {
     this.approvalDays = this.generateMonthDays(new Date(this.toDay))
     this.approvalWeekDays = this.generateCurrentWeek(new Date(this.toDay));
     this.waitingForapprovalsLoaded = true;
+
   }
 
   getDaysToDisplay(project) {
@@ -210,6 +217,7 @@ export class TimeSheetComponent implements OnInit {
       this.approvalDays = this.generateMonthDays(ld);
     } else {
       this.approvalWeekDays = this.generateCurrentWeek(ld);
+
     }
   }
 
@@ -373,6 +381,7 @@ export class TimeSheetComponent implements OnInit {
         console.log('user not logged In');
       }
     });
+
   }
 
 
@@ -537,6 +546,7 @@ export class TimeSheetComponent implements OnInit {
   closedeclinemodal() {
     $('#declineCommentModal').modal('hide');
   }
+
 
   getHtml5DateFormat(dy) {
     var formateTo2digit = (mnth) => {
