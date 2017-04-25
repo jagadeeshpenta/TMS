@@ -28,6 +28,8 @@ export class MyTeamComponent implements OnInit {
   };
 
   profile = {};
+  showDropDownBox;
+
 
   Projects = [];
   Employees = [];
@@ -64,18 +66,21 @@ export class MyTeamComponent implements OnInit {
     if (this.allocationLoaded && this.employeesLoaded) {
       if (this.Projects.length > 0) {
         this.Projects.forEach((project) => {
-          project.Employees = this.Employees.filter((employee) => {
+          var empofProjects = [];
+          this.Employees.forEach((em) => {
             var alls = this.Allocations.filter((a) => {
-              if (a.projectid == project.id && a.empid == employee.empid) {
+              if (a.projectid == project.id && a.empid == em.empid) {
                 return true;
               }
               return false;
             });
             if (alls.length > 0) {
-              return true;
+              em.role = alls[0].role;
+              em.allocationid = alls[0].id;
+              empofProjects.push(em);
             }
-            return false;
           });
+          project.Employees = empofProjects;
         });
 
         this.projectsProcessed = true;
@@ -221,6 +226,24 @@ export class MyTeamComponent implements OnInit {
       }
     }
   }
+
+
+  showDropdown() {
+    this.showDropDownBox = true;
+  }
+
+  cancelDropDown() {
+    this.showDropDownBox = false;
+  }
+
+  saveRoles(project, emp) {
+    this.db.addToProject({ id: emp.allocationid, role: emp.role, empid: emp.empid, projectid: project.id }).then(() => {
+      this.allocationLoaded = false;
+      this.employeesLoaded = false;
+      this.getAllocationsandEmployees();
+    });
+  }
+
 
   getDisplayDateFormat(timeStamp) {
     if (timeStamp) {

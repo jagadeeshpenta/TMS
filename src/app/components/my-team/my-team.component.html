@@ -11,7 +11,7 @@
   </div>
 
   <div *ngIf="profile">
-    <button *ngIf="profile.role === 'admin'"  class="btn btn-default" data-toggle="modal" data-target="#addProjectModal">Add Project</button>
+    <button *ngIf="profile.role === 'admin'" class="btn btn-default" data-toggle="modal" data-target="#addProjectModal">Add Project</button>
   </div>
 
   <div class="project-list m20-top" *ngIf="projectsProcessed">
@@ -21,7 +21,7 @@
           <i class="fa fa-folder-o" aria-hidden="true"></i>
           <i class="fa fa-folder-open-o" aria-hidden="true"></i> {{ project.name}}
 
-          <button *ngIf="profile && profile.role === 'admin'"  class="btn btn-danger" style="float: right;" (click)="removeProject(project, $event)"> <i class="fa fa-trash-o" aria-hidden="true"></i> Remove</button>
+          <button *ngIf="profile && profile.role === 'admin'" class="btn btn-danger" style="float: right;" (click)="removeProject(project, $event)"> <i class="fa fa-trash-o" aria-hidden="true"></i> Remove</button>
         </h4>
       </div>
       <div class="acord-content">
@@ -50,11 +50,31 @@
             </tr>
             <tr *ngFor="let emp of project.Employees">
               <td>{{emp.firstname + ' ' + emp.lastname}}</td>
-              <td>{{ getAllocationType(project.id, emp.empid) }}</td>
+              <td>
+                <div *ngIf="!emp.showDropDownBox">
+                  {{ emp.role }}
+                </div>
+                <div *ngIf="emp.showDropDownBox">
+                  <select class="form-control" name="emp2projectrole" [(ngModel)]="emp.role">
+                    <option value="member">Member</option>
+                    <option value="lead">lead</option>
+                    <option value="manager">Manager</option>
+                  </select>
+                </div>
+              </td>
               <td *ngIf="profile && profile.role === 'admin'">
-                <button (click)="removeAllocation(emp, project)" class="btn btn-danger" title="Remove Employee from Project">
-                  <i class="fa fa-trash-o" aria-hidden="true"></i>
+                <button class="btn btn-link" (click)="emp.showDropDownBox = true;" *ngIf="!emp.showDropDownBox">
+                  <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
                 </button>
+                <button class="btn btn-link" *ngIf="emp.showDropDownBox" (click)="saveRoles(project, emp)">
+                  Save
+                </button>
+                <button class="btn btn-link" *ngIf="emp.showDropDownBox" (click)="emp.showDropDownBox = false;">
+                  Cancel
+                </button>
+                <button (click)="removeAllocation(emp, project)" class="btn btn-danger pull-right" title="Remove Employee from Project">
+                   <i class="fa fa-trash-o" aria-hidden="true"></i>	
+                 </button>
               </td>
             </tr>
           </table>
@@ -78,28 +98,28 @@
       </div>
       <div class="modal-body">
         <form class="form-horizontal" method="POST" (submit)="addProject()">
-            <div class="form-group size">
-              <div class="input-group">
-                <span class="input-group-addon text align-right">Project Name </span>
-                <input required type="text" class="size" name="Project" [(ngModel)]="newProject.name" />
-              </div>
+          <div class="form-group size">
+            <div class="input-group">
+              <span class="input-group-addon text align-right">Project Name </span>
+              <input required type="text" class="size" name="Project" [(ngModel)]="newProject.name" />
             </div>
-            <div class="form-group size">
-              <div class="input-group">
-                <span class="input-group-addon text align-right">Start Date</span>
-                <input type="date" class="size" name="startdate" [(ngModel)]="newProject.actualstartdate" />
-              </div>
+          </div>
+          <div class="form-group size">
+            <div class="input-group">
+              <span class="input-group-addon text align-right">Start Date</span>
+              <input type="date" class="size" name="startdate" [(ngModel)]="newProject.actualstartdate" />
             </div>
-            <div class="form-group size">
-              <div class="input-group">
-                <span class="input-group-addon text align-right">End  Date</span>
-                <input type="date" class="size" name="enddate" [(ngModel)]="newProject.actualenddate" />
-              </div>
+          </div>
+          <div class="form-group size">
+            <div class="input-group">
+              <span class="input-group-addon text align-right">End  Date</span>
+              <input type="date" class="size" name="enddate" [(ngModel)]="newProject.actualenddate" />
             </div>
-            <div style="text-align: right;">
-              <button type="submit" class="btn btn-success">Submit</button>
-              <button type="button" class="btn btn-danger" (click)="close()">Cancel</button>
-            </div>
+          </div>
+          <div style="text-align: right;">
+            <button type="submit" class="btn btn-success">Submit</button>
+            <button type="button" class="btn btn-danger" (click)="close()">Cancel</button>
+          </div>
         </form>
       </div>
     </div>
@@ -124,8 +144,9 @@
           <div *ngIf="employeeToProject.onSubmit && !employeeToProject.emp.empid">Please Select Employee</div>
           <div class="form-group" style="position: relative;">
             <label for="addemployee">Add Employee to <span style="font-weight: bold;">{{ employeeToProject.project.name}}</span></label>
-            <input autocomplete="off" name="sdgffdgsdgdgf" (keyup)="filterSuggestions($event, employeeToProject.project)" type="text" class="form-control" [(ngModel)]="employeeToProject.empadd"
-              id="addemployee" placeholder="Search By EmpId or Employee Name" />
+            <input autocomplete="off" name="sdgffdgsdgdgf" (keyup)="filterSuggestions($event, employeeToProject.project)" type="text"
+              class="form-control" [(ngModel)]="employeeToProject.empadd" id="addemployee" placeholder="Search By EmpId or Employee Name"
+            />
             <div class="emp-sugestion-list" [ngClass]="{'show': employeeToProject.showSuggestions}">
               <ul class="list-group">
                 <li class="list-group-item" (click)="selectEmpToProject(empSuggestion)" *ngFor="let empSuggestion of EmployeeSuggestions">{{empSuggestion.firstname + ' ' + empSuggestion.lastname + ' - ' + empSuggestion.empid}}</li>

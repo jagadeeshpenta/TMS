@@ -214,7 +214,7 @@ export class TimeSheetComponent implements OnInit {
   }
 
   getTotalHrs(project, emp) {
-    var dayToCount = this.approvalDays;
+    var dayToCount = this.isMonth ? this.approvalDays : this.approvalWeekDays;
     if (this.serviceData.Timesheets && this.serviceData.Timesheets.length > 0) {
       var totalHours = 0;
       var timesheetbyempproject = this.serviceData.Timesheets.filter((t) => {
