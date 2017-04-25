@@ -39,7 +39,7 @@ export class TimeSheetComponent implements OnInit {
   MonthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
   weekNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
   constructor(public db: DBService, public auth: AuthService) {
-    
+
   }
 
   waitingForapprovalsLoaded = false;
@@ -308,6 +308,23 @@ export class TimeSheetComponent implements OnInit {
       }
     }
     return '-';
+  }
+
+  isApproved(project, loggedDate, emp) {
+    var empid = emp ? emp.empid : this.profile.empid;
+    if (this.serviceData.Timesheets && this.serviceData.Timesheets.length > 0) {
+      var timesheetData = this.serviceData.Timesheets.filter((t) => {
+        if (t.empid == empid && t.projectid == project.id && t.sheetdate == loggedDate.getDate() && t.sheetmonth == (loggedDate.getMonth() + 1) && t.sheetyear == loggedDate.getFullYear()) {
+          return true;
+        }
+        return false;
+      });
+      if (timesheetData.length > 0 && timesheetData[0].isapproved == true) {
+        return true;
+      }
+    }
+
+    return false;
   }
 
   getStatus(project, loggedDate, emp) {
