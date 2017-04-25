@@ -49,10 +49,30 @@
               <th *ngIf="profile && profile.role === 'admin'">Options</th>
             </tr>
             <tr *ngFor="let emp of project.Employees">
-              <td>{{emp.firstname + ' ' + emp.lastname}}</td>
-              <td>{{ getAllocationType(project.id, emp.empid) }}</td>
+              <td >{{emp.firstname + ' ' + emp.lastname}}</td>
+              <td >
+                <div *ngIf="!emp.showDropDownBox">
+                  {{ emp.role }}
+                </div>
+                <div *ngIf="emp.showDropDownBox">
+                  <select class="form-control" name="emp2projectrole" [(ngModel)]="emp.role">
+                    <option value="member">Member</option>
+                    <option value="lead">lead</option>
+                    <option value="manager">Manager</option>
+                  </select>
+                </div>
+              </td>
               <td *ngIf="profile && profile.role === 'admin'">
-                <button (click)="removeAllocation(emp, project)" class="btn btn-danger" title="Remove Employee from Project">
+                <button class="btn btn-link" (click)="emp.showDropDownBox = true;" *ngIf="!emp.showDropDownBox">
+                  <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
+                </button>
+                <button class="btn btn-link" *ngIf="emp.showDropDownBox" (click)="saveRoles(project, emp)">
+                  Save
+                </button>
+                <button class="btn btn-link" *ngIf="emp.showDropDownBox" (click)="emp.showDropDownBox = false;">
+                  Cancel
+                </button>
+                <button (click)="removeAllocation(emp, project)" class="btn btn-danger pull-right" title="Remove Employee from Project">
                   <i class="fa fa-trash-o" aria-hidden="true"></i>
                 </button>
               </td>
