@@ -188,7 +188,7 @@
         <tr *ngFor="let project of myProjects">
           <td>{{project.name}}</td>
           <td *ngFor="let dy of monthDays" class="p0">
-            <button class="btn btn-primary" (click)="openLogWorkmodal(project, dy)">{{getLoggedHours(project, dy)}}</button>
+            <button class="btn btn-primary" [disabled]="isApproved(project, dy)" (click)="openLogWorkmodal(project, dy)">{{getLoggedHours(project, dy)}}</button>
           </td>
         </tr>
       </table>
