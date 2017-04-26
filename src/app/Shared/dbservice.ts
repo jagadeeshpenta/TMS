@@ -132,6 +132,19 @@ export class DBService {
     });
   }
 
+  editProject(project) {
+    return new Promise((res) => {
+      this.makeRequest('/projects?lToken=' + Cookie.get('lToken'), new Headers(), {
+        id: project.id,
+        name: project.editName,
+        actualstartdate: project.editStartDate,
+        actualenddate: project.editEndDate
+      }, 'POST').then((resp) => {
+        res(resp);
+      });
+    });
+  }
+
   deleteProject({ projectToDelete }) {
     return new Promise((res, rej) => {
       this.makeRequest('/projects?lToken=' + Cookie.get('lToken'), new Headers(), projectToDelete, 'DELETE').then((resp) => {

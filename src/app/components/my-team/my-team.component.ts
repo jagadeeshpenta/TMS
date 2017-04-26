@@ -40,6 +40,7 @@ export class MyTeamComponent implements OnInit {
   employeesLoaded = false;
 
   projectsProcessed = false;
+  editProject = false;
   constructor(public db: DBService, public auth: AuthService) {
 
     auth.checkUser().then(({ err, result }) => {
@@ -65,7 +66,7 @@ export class MyTeamComponent implements OnInit {
   processDate() {
     if (this.allocationLoaded && this.employeesLoaded) {
       if (this.Projects.length > 0) {
-        this.Projects.forEach((project) => { 
+        this.Projects.forEach((project) => {
           var empofProjects = [];
           this.Employees.forEach((em) => {
             var alls = this.Allocations.filter((a) => {
@@ -74,7 +75,7 @@ export class MyTeamComponent implements OnInit {
               }
               return false;
             });
-            if (alls.length > 0) {              
+            if (alls.length > 0) {
               em.role = alls[0].role;
               em.allocationid = alls[0].id;
               empofProjects.push(em);
@@ -236,11 +237,37 @@ export class MyTeamComponent implements OnInit {
   }
 
   saveRoles(project, emp) {
-    console.log(project, emp);
-    this.db.addToProject({ id: emp.allocationid, role: emp.role, empid:emp.empid, projectid:project.id }).then(() => {
+    this.db.addToProject({ id: emp.allocationid, role: emp.role, empid: emp.empid, projectid: project.id }).then(() => {
       this.allocationLoaded = false;
       this.employeesLoaded = false;
       this.getAllocationsandEmployees();
+    });
+  }
+
+  getHtml5DateFormat(dy) {
+    var formateTo2digit = (mnth) => {
+      if (mnth < 10) {
+        return `0${mnth}`;
+      } else {
+        return `${mnth}`;
+      }
+    };
+    return dy.getFullYear() + '-' + formateTo2digit(dy.getMonth() + 1) + '-' + formateTo2digit(dy.getDate());
+  }
+
+  EditProject(project) {
+    this.editProject = true;
+    project.editName = project.name;
+    project.editStartDate = this.getHtml5DateFormat(new Date(project.actualstartdate));
+    project.editEndDate = this.getHtml5DateFormat(new Date(project.actualenddate));
+  }
+
+  saveEditProject(project) {
+    //console.log(project);
+    this.db.editProject(project).then(({ err, result }) => {
+      if (!err) {
+        this.fillProjects();
+      }
     });
   }
 

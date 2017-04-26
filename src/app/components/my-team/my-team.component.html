@@ -16,24 +16,36 @@
 
   <div class="project-list m20-top" *ngIf="projectsProcessed">
     <div class="acord-item project-item" *ngFor="let project of Projects" [ngClass]="{'expand': project.expand}">
-      <div class="acord-head project-head" (click)="project.expand = !project.expand; EmployeeSuggestions = Employees; employeeToProject.project = {}; employeeToProject.emp = {}; employeeToProject.empadd = '';">
-        <h4>
+      <div class="acord-head project-head clearfix" style="clear:both;">
+        <h4 style="width:60%; float:left;" (click)="project.expand = !project.expand; EmployeeSuggestions = Employees; employeeToProject.project = {}; employeeToProject.emp = {}; employeeToProject.empadd = '';">
           <i class="fa fa-folder-o" aria-hidden="true"></i>
-          <i class="fa fa-folder-open-o" aria-hidden="true"></i> {{ project.name}}
-
-          <button *ngIf="profile && profile.role === 'admin'"  class="btn btn-danger" style="float: right;" (click)="removeProject(project, $event)"> <i class="fa fa-trash-o" aria-hidden="true"></i> Remove</button>
+          <i class="fa fa-folder-open-o" aria-hidden="true"></i> <span *ngIf="!editProject">{{ project.name}}</span><input *ngIf="editProject" type="text" [(ngModel)]="project.editName">
         </h4>
+        <button *ngIf="profile && profile.role === 'admin'"  class="btn btn-danger" style="float: right;" (click)="removeProject(project, $event)"> <i class="fa fa-trash-o" aria-hidden="true"></i> Remove</button>
+        <button class="btn btn-primary" *ngIf="!editProject" style="float: right;margin-right:15px;" (click)="project.expand = true; EmployeeSuggestions = Employees; employeeToProject.project = {}; employeeToProject.emp = {}; employeeToProject.empadd = '';EditProject(project);" > Edit</button>
+        <button class="btn btn-primary" style="float: right;margin-right:20px;" *ngIf="editProject" (click)="editProject=false;">Cancel</button>
+        <button class="btn btn-primary" style="float: right;margin-right:25px;" *ngIf="editProject" (click)="saveEditProject(project);">Save</button>
       </div>
       <div class="acord-content">
         <div>
           <table>
             <tr>
               <td>Start Date</td>
-              <td>{{ getDisplayDateFormat(project.actualstartdate)}}</td>
+              <div *ngIf="!editProject">
+                <td>{{ getDisplayDateFormat(project.actualstartdate)}}</td>
+              </div>
+              <div *ngIf="editProject">
+                <td><input type="date" class="size" name="editStartDate" [(ngModel)]="project.editStartDate"></td>
+              </div>
             </tr>
             <tr>
               <td>End Date</td>
-              <td>{{ getDisplayDateFormat(project.actualenddate)}}</td>
+              <div *ngIf="!editProject">
+                <td>{{ getDisplayDateFormat(project.actualenddate)}}</td>
+              </div>
+              <div *ngIf="editProject">
+                <td><input type="date" class="size" name="editEndDate" [(ngModel)]="project.editEndDate" /></td>
+              </div>
             </tr>
           </table>
         </div>
