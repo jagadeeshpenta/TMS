@@ -64,7 +64,15 @@
               {{ getTotalHrs(project, tm) }}
             </div>
           </div>
-
+          <div class="flex-col">
+              <div class="flex-head" > 
+              </div>
+              <div class="flex-row" *ngFor="let tm of getProjectMembers(project)">
+                <span >
+                  <input type="checkbox" (change)="updateCheckedDataEmp($event,project,tm)" name="SelectEmp" [attr.selected]="isLogSelectedEmp(project, tm, approvalChecked)"/>
+                </span>
+             </div>
+          </div>
 
         </div>
 
@@ -123,7 +131,15 @@
                 {{ getTotalHrs(project, tm) }}
               </div>
             </div>
-
+            <div class="flex-col">
+              <div class="flex-head" > 
+              </div>
+              <div class="flex-row" *ngFor="let tm of getProjectMembers(project)">
+                <span >
+                  <input type="checkbox" (change)="updateCheckedDataEmp($event,project,tm)" name="SelectEmp"  [attr.selected]="isLogSelectedEmp(project, tm, approvalChecked)"/>
+                </span>
+             </div>
+          </div>
 
           </div>
 

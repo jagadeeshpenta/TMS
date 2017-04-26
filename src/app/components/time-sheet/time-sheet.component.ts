@@ -68,7 +68,7 @@ export class TimeSheetComponent implements OnInit {
       return 0;
     }
   }
-  updateCheckedData(event, project, tm, dy) {
+  updateCheckedData(event, project, tm,dy) {
     var timesheetId = $(event.target).attr('timesheetid');
     if (this.approvalChecked.indexOf(timesheetId) < 0 && $(event.target).is(':checked')) {
       this.approvalChecked.push($(event.target).attr('timesheetid'));
@@ -80,6 +80,25 @@ export class TimeSheetComponent implements OnInit {
       }
     }
   }
+
+  updateCheckedDataEmp(event, project, tm) {
+    var dayToCount = this.isMonth ? this.approvalDays : this.approvalWeekDays;
+    console.log(this.approvalChecked)
+    dayToCount.forEach((w) => {
+      var getHours = this.getLoggedHours(project,w,tm,true);
+      var timesheetId = typeof getHours.id=='number' ? getHours.id : 0;
+      if (this.approvalChecked.indexOf(timesheetId) < 0 && $(event.target).is(':checked') && typeof getHours=='object') {
+        this.approvalChecked.push(timesheetId);
+      }
+
+      if (!$(event.target).is(':checked')) {
+        if (this.approvalChecked.indexOf(timesheetId.toString()) >= 0) {
+          this.approvalChecked.splice(this.approvalChecked.indexOf(timesheetId.toString()), 1);
+        }
+      }
+    });
+  }
+
   isLogSelected(project, loggedDate, emp, approvalChecked) {
     var empid = emp ? emp.empid : this.profile.empid;
     var timesheetId;
@@ -97,6 +116,29 @@ export class TimeSheetComponent implements OnInit {
         return true;
       }
     }
+    return false;
+  }
+
+  isLogSelectedEmp(project, emp, approvalChecked) {
+    var empid = emp ? emp.empid : this.profile.empid;
+    var timesheetId;
+    var dayToCount = this.isMonth ? this.approvalDays : this.approvalWeekDays;
+    dayToCount.forEach((loggedDate) => {
+      if (this.serviceData.Timesheets && this.serviceData.Timesheets.length > 0) {
+        var timesheetData = this.serviceData.Timesheets.filter((t) => {
+          if (t.empid == empid && t.projectid == project.id && t.sheetdate == loggedDate.getDate() && t.sheetmonth == (loggedDate.getMonth() + 1) && t.sheetyear == loggedDate.getFullYear()) {
+            return true;
+          }
+          return false;
+        });
+        if (timesheetData.length > 0) {
+          timesheetId = timesheetData[0].id;
+        }
+        if (timesheetId && approvalChecked.indexOf(timesheetId.toString()) >= 0) {
+          return true;
+        }
+      }
+    });
     return false;
   }
 
@@ -308,7 +350,7 @@ export class TimeSheetComponent implements OnInit {
     }
     return false;
   }
-  getLoggedHours(project, loggedDate, emp) {
+  getLoggedHours(project, loggedDate, emp, returnObj=false) {
     var empid = emp ? emp.empid : this.profile.empid;
     if (this.serviceData.Timesheets && this.serviceData.Timesheets.length > 0) {
       var timesheetData = this.serviceData.Timesheets.filter((t) => {
@@ -318,7 +360,7 @@ export class TimeSheetComponent implements OnInit {
         return false;
       });
       if (timesheetData.length > 0) {
-        return timesheetData[0].loggedhours;
+        return returnObj ? timesheetData[0] : timesheetData[0].loggedhours;
       }
     }
     return '-';
