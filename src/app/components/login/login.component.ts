@@ -47,4 +47,8 @@ export class LoginComponent {
     });
   }
 
+  forgotPass() {
+      alert('hi');
+    }
+
 }
