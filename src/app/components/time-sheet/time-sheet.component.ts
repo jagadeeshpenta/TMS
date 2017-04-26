@@ -1,6 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { DBService } from './../../Shared/dbservice';
 import { AuthService } from './../../Shared/auth/auth.service';
+<<<<<<< HEAD
+=======
+
+>>>>>>> ebf734d21ccc7b5ff248edda249e8fd21c54ea01
 declare var $: any;
 
 @Component({
@@ -22,12 +26,20 @@ export class TimeSheetComponent implements OnInit {
   };
 
   isWeek = true;
+<<<<<<< HEAD
+=======
+
+>>>>>>> ebf734d21ccc7b5ff248edda249e8fd21c54ea01
   isMonth = !this.isWeek;
   myProjects = [];
   profile;
   toDay;
   declinecomment = '';
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> ebf734d21ccc7b5ff248edda249e8fd21c54ea01
   isLoaded = {
     isEmpLoaded: false,
     isProjectsLoaded: false,
@@ -39,13 +51,21 @@ export class TimeSheetComponent implements OnInit {
   MonthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
   weekNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
   constructor(public db: DBService, public auth: AuthService) {
+<<<<<<< HEAD
     
+=======
+
+>>>>>>> ebf734d21ccc7b5ff248edda249e8fd21c54ea01
   }
 
   waitingForapprovalsLoaded = false;
   approvalProjects = [];
   approvalDays = [];
   approvalWeekDays = [];
+<<<<<<< HEAD
+=======
+
+>>>>>>> ebf734d21ccc7b5ff248edda249e8fd21c54ea01
   approvalChecked = [];
 
   getTimeSheetId(project, loggedDate, emp) {
@@ -127,6 +147,10 @@ export class TimeSheetComponent implements OnInit {
         }
       }).then(() => {
         this.sendMails(this.approvalChecked.join(','), typ);
+<<<<<<< HEAD
+=======
+
+>>>>>>> ebf734d21ccc7b5ff248edda249e8fd21c54ea01
         this.approvalChecked = [];
         this.getData('/timesheets', 'Timesheets', 'isTimesheetsLoaded');
         this.processData();
@@ -142,6 +166,10 @@ export class TimeSheetComponent implements OnInit {
         this.addTimesheetComment();
         this.closedeclinemodal();
         this.declinecomment = '';
+<<<<<<< HEAD
+=======
+
+>>>>>>> ebf734d21ccc7b5ff248edda249e8fd21c54ea01
         this.approvalChecked = [];
         this.getData('/timesheets', 'Timesheets', 'isTimesheetsLoaded');
         this.processData();
@@ -180,6 +208,10 @@ export class TimeSheetComponent implements OnInit {
     this.approvalDays = this.generateMonthDays(new Date(this.toDay))
     this.approvalWeekDays = this.generateCurrentWeek(new Date(this.toDay));
     this.waitingForapprovalsLoaded = true;
+<<<<<<< HEAD
+=======
+
+>>>>>>> ebf734d21ccc7b5ff248edda249e8fd21c54ea01
   }
 
   getDaysToDisplay(project) {
@@ -210,11 +242,19 @@ export class TimeSheetComponent implements OnInit {
       this.approvalDays = this.generateMonthDays(ld);
     } else {
       this.approvalWeekDays = this.generateCurrentWeek(ld);
+<<<<<<< HEAD
+=======
+
+>>>>>>> ebf734d21ccc7b5ff248edda249e8fd21c54ea01
     }
   }
 
   getTotalHrs(project, emp) {
+<<<<<<< HEAD
     var dayToCount = this.approvalDays;
+=======
+    var dayToCount = this.isMonth ? this.approvalDays : this.approvalWeekDays;
+>>>>>>> ebf734d21ccc7b5ff248edda249e8fd21c54ea01
     if (this.serviceData.Timesheets && this.serviceData.Timesheets.length > 0) {
       var totalHours = 0;
       var timesheetbyempproject = this.serviceData.Timesheets.filter((t) => {
@@ -310,6 +350,26 @@ export class TimeSheetComponent implements OnInit {
     return '-';
   }
 
+<<<<<<< HEAD
+=======
+  isApproved(project, loggedDate, emp) {
+    var empid = emp ? emp.empid : this.profile.empid;
+    if (this.serviceData.Timesheets && this.serviceData.Timesheets.length > 0) {
+      var timesheetData = this.serviceData.Timesheets.filter((t) => {
+        if (t.empid == empid && t.projectid == project.id && t.sheetdate == loggedDate.getDate() && t.sheetmonth == (loggedDate.getMonth() + 1) && t.sheetyear == loggedDate.getFullYear()) {
+          return true;
+        }
+        return false;
+      });
+      if (timesheetData.length > 0 && timesheetData[0].isapproved == true) {
+        return true;
+      }
+    }
+
+    return false;
+  }
+
+>>>>>>> ebf734d21ccc7b5ff248edda249e8fd21c54ea01
   getStatus(project, loggedDate, emp) {
     var empid = emp ? emp.empid : this.profile.empid;
     if (this.serviceData.Timesheets && this.serviceData.Timesheets.length > 0) {
@@ -356,6 +416,10 @@ export class TimeSheetComponent implements OnInit {
         console.log('user not logged In');
       }
     });
+<<<<<<< HEAD
+=======
+
+>>>>>>> ebf734d21ccc7b5ff248edda249e8fd21c54ea01
   }
 
 
@@ -521,6 +585,10 @@ export class TimeSheetComponent implements OnInit {
     $('#declineCommentModal').modal('hide');
   }
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> ebf734d21ccc7b5ff248edda249e8fd21c54ea01
   getHtml5DateFormat(dy) {
     var formateTo2digit = (mnth) => {
       if (mnth < 10) {

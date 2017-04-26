@@ -11,11 +11,16 @@
   </div>
 
   <div *ngIf="profile">
+<<<<<<< HEAD
     <button *ngIf="profile.role === 'admin'"  class="btn btn-default" data-toggle="modal" data-target="#addProjectModal">Add Project</button>
+=======
+    <button *ngIf="profile.role === 'admin'" class="btn btn-default" data-toggle="modal" data-target="#addProjectModal">Add Project</button>
+>>>>>>> ebf734d21ccc7b5ff248edda249e8fd21c54ea01
   </div>
 
   <div class="project-list m20-top" *ngIf="projectsProcessed">
     <div class="acord-item project-item" *ngFor="let project of Projects" [ngClass]="{'expand': project.expand}">
+<<<<<<< HEAD
       <div class="acord-head project-head clearfix" style="clear:both;">
         <h4 style="width:60%; float:left;" (click)="project.expand = !project.expand; EmployeeSuggestions = Employees; employeeToProject.project = {}; employeeToProject.emp = {}; employeeToProject.empadd = '';">
           <i class="fa fa-folder-o" aria-hidden="true"></i>
@@ -25,12 +30,22 @@
         <button class="btn btn-primary" *ngIf="!editProject" style="float: right;margin-right:15px;" (click)="project.expand = true; EmployeeSuggestions = Employees; employeeToProject.project = {}; employeeToProject.emp = {}; employeeToProject.empadd = '';EditProject(project);" > Edit</button>
         <button class="btn btn-primary" style="float: right;margin-right:20px;" *ngIf="editProject" (click)="editProject=false;">Cancel</button>
         <button class="btn btn-primary" style="float: right;margin-right:25px;" *ngIf="editProject" (click)="saveEditProject(project);">Save</button>
+=======
+      <div class="acord-head project-head" (click)="project.expand = !project.expand; EmployeeSuggestions = Employees; employeeToProject.project = {}; employeeToProject.emp = {}; employeeToProject.empadd = '';">
+        <h4>
+          <i class="fa fa-folder-o" aria-hidden="true"></i>
+          <i class="fa fa-folder-open-o" aria-hidden="true"></i> {{ project.name}}
+
+          <button *ngIf="profile && profile.role === 'admin'" class="btn btn-danger" style="float: right;" (click)="removeProject(project, $event)"> <i class="fa fa-trash-o" aria-hidden="true"></i> Remove</button>
+        </h4>
+>>>>>>> ebf734d21ccc7b5ff248edda249e8fd21c54ea01
       </div>
       <div class="acord-content">
         <div>
           <table>
             <tr>
               <td>Start Date</td>
+<<<<<<< HEAD
               <div *ngIf="!editProject">
                 <td>{{ getDisplayDateFormat(project.actualstartdate)}}</td>
               </div>
@@ -46,6 +61,13 @@
               <div *ngIf="editProject">
                 <td><input type="date" class="size" name="editEndDate" [(ngModel)]="project.editEndDate" /></td>
               </div>
+=======
+              <td>{{ getDisplayDateFormat(project.actualstartdate)}}</td>
+            </tr>
+            <tr>
+              <td>End Date</td>
+              <td>{{ getDisplayDateFormat(project.actualenddate)}}</td>
+>>>>>>> ebf734d21ccc7b5ff248edda249e8fd21c54ea01
             </tr>
           </table>
         </div>
@@ -61,8 +83,13 @@
               <th *ngIf="profile && profile.role === 'admin'">Options</th>
             </tr>
             <tr *ngFor="let emp of project.Employees">
+<<<<<<< HEAD
               <td >{{emp.firstname + ' ' + emp.lastname}}</td>
               <td >
+=======
+              <td>{{emp.firstname + ' ' + emp.lastname}}</td>
+              <td>
+>>>>>>> ebf734d21ccc7b5ff248edda249e8fd21c54ea01
                 <div *ngIf="!emp.showDropDownBox">
                   {{ emp.role }}
                 </div>
@@ -85,8 +112,13 @@
                   Cancel
                 </button>
                 <button (click)="removeAllocation(emp, project)" class="btn btn-danger pull-right" title="Remove Employee from Project">
+<<<<<<< HEAD
                   <i class="fa fa-trash-o" aria-hidden="true"></i>
                 </button>
+=======
+                   <i class="fa fa-trash-o" aria-hidden="true"></i>	
+                 </button>
+>>>>>>> ebf734d21ccc7b5ff248edda249e8fd21c54ea01
               </td>
             </tr>
           </table>
@@ -110,6 +142,7 @@
       </div>
       <div class="modal-body">
         <form class="form-horizontal" method="POST" (submit)="addProject()">
+<<<<<<< HEAD
             <div class="form-group size">
               <div class="input-group">
                 <span class="input-group-addon text align-right">Project Name </span>
@@ -132,6 +165,30 @@
               <button type="submit" class="btn btn-success">Submit</button>
               <button type="button" class="btn btn-danger" (click)="close()">Cancel</button>
             </div>
+=======
+          <div class="form-group size">
+            <div class="input-group">
+              <span class="input-group-addon text align-right">Project Name </span>
+              <input required type="text" class="size" name="Project" [(ngModel)]="newProject.name" />
+            </div>
+          </div>
+          <div class="form-group size">
+            <div class="input-group">
+              <span class="input-group-addon text align-right">Start Date</span>
+              <input type="date" class="size" name="startdate" [(ngModel)]="newProject.actualstartdate" />
+            </div>
+          </div>
+          <div class="form-group size">
+            <div class="input-group">
+              <span class="input-group-addon text align-right">End  Date</span>
+              <input type="date" class="size" name="enddate" [(ngModel)]="newProject.actualenddate" />
+            </div>
+          </div>
+          <div style="text-align: right;">
+            <button type="submit" class="btn btn-success">Submit</button>
+            <button type="button" class="btn btn-danger" (click)="close()">Cancel</button>
+          </div>
+>>>>>>> ebf734d21ccc7b5ff248edda249e8fd21c54ea01
         </form>
       </div>
     </div>
@@ -156,8 +213,14 @@
           <div *ngIf="employeeToProject.onSubmit && !employeeToProject.emp.empid">Please Select Employee</div>
           <div class="form-group" style="position: relative;">
             <label for="addemployee">Add Employee to <span style="font-weight: bold;">{{ employeeToProject.project.name}}</span></label>
+<<<<<<< HEAD
             <input autocomplete="off" name="sdgffdgsdgdgf" (keyup)="filterSuggestions($event, employeeToProject.project)" type="text" class="form-control" [(ngModel)]="employeeToProject.empadd"
               id="addemployee" placeholder="Search By EmpId or Employee Name" />
+=======
+            <input autocomplete="off" name="sdgffdgsdgdgf" (keyup)="filterSuggestions($event, employeeToProject.project)" type="text"
+              class="form-control" [(ngModel)]="employeeToProject.empadd" id="addemployee" placeholder="Search By EmpId or Employee Name"
+            />
+>>>>>>> ebf734d21ccc7b5ff248edda249e8fd21c54ea01
             <div class="emp-sugestion-list" [ngClass]="{'show': employeeToProject.showSuggestions}">
               <ul class="list-group">
                 <li class="list-group-item" (click)="selectEmpToProject(empSuggestion)" *ngFor="let empSuggestion of EmployeeSuggestions">{{empSuggestion.firstname + ' ' + empSuggestion.lastname + ' - ' + empSuggestion.empid}}</li>

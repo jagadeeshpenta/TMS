@@ -27,9 +27,14 @@ export class MyTeamComponent implements OnInit {
     onSubmit: false
   };
 
+<<<<<<< HEAD
   showDropDownBox;
 
   profile = {};
+=======
+  profile = {};
+  showDropDownBox;
+>>>>>>> ebf734d21ccc7b5ff248edda249e8fd21c54ea01
 
   Projects = [];
   Employees = [];
@@ -40,7 +45,10 @@ export class MyTeamComponent implements OnInit {
   employeesLoaded = false;
 
   projectsProcessed = false;
+<<<<<<< HEAD
   editProject = false;
+=======
+>>>>>>> ebf734d21ccc7b5ff248edda249e8fd21c54ea01
   constructor(public db: DBService, public auth: AuthService) {
 
     auth.checkUser().then(({ err, result }) => {
@@ -81,7 +89,11 @@ export class MyTeamComponent implements OnInit {
               empofProjects.push(em);
             }
           });
+<<<<<<< HEAD
           project.Employees = empofProjects;
+=======
+          project.Employees = empofProjects; 
+>>>>>>> ebf734d21ccc7b5ff248edda249e8fd21c54ea01
         });
 
         this.projectsProcessed = true;
@@ -228,6 +240,10 @@ export class MyTeamComponent implements OnInit {
     }
   }
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> ebf734d21ccc7b5ff248edda249e8fd21c54ea01
   showDropdown() {
     this.showDropDownBox = true;
   }
@@ -243,6 +259,7 @@ export class MyTeamComponent implements OnInit {
       this.getAllocationsandEmployees();
     });
   }
+<<<<<<< HEAD
 
   getHtml5DateFormat(dy) {
     var formateTo2digit = (mnth) => {
@@ -271,6 +288,9 @@ export class MyTeamComponent implements OnInit {
     });
   }
 
+=======
+ 
+>>>>>>> ebf734d21ccc7b5ff248edda249e8fd21c54ea01
   getDisplayDateFormat(timeStamp) {
     if (timeStamp) {
       var tmp = new Date(timeStamp);

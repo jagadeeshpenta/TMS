@@ -132,6 +132,7 @@ export class DBService {
     });
   }
 
+<<<<<<< HEAD
   editProject(project) {
     return new Promise((res) => {
       this.makeRequest('/projects?lToken=' + Cookie.get('lToken'), new Headers(), {
@@ -145,6 +146,8 @@ export class DBService {
     });
   }
 
+=======
+>>>>>>> ebf734d21ccc7b5ff248edda249e8fd21c54ea01
   deleteProject({ projectToDelete }) {
     return new Promise((res, rej) => {
       this.makeRequest('/projects?lToken=' + Cookie.get('lToken'), new Headers(), projectToDelete, 'DELETE').then((resp) => {
