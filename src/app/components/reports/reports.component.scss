@@ -59,11 +59,19 @@
                 border: none;
             }
         }
+        .flex-table-col{
+            
+        }
     }
+
 }
 
 .reports-table {
     tr {
         margin-top: 5px;
     }
+}
+
+#xlstable{
+    display: none;
 }
