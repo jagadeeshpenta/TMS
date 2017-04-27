@@ -136,7 +136,7 @@
               </div>
               <div class="flex-row" *ngFor="let tm of getProjectMembers(project)">
                 <span >
-                  <input type="checkbox" (change)="updateCheckedDataEmp($event,project,tm)" name="SelectEmp"  [attr.selected]="isLogSelectedEmp(project, tm, approvalChecked)"/>
+                  <ui-switch size="small" (change)="updateCheckedDataEmp($event,project,tm)" color="green" [attr.checked] = "isLogSelectedEmp(project,tm,approvalChecked)"></ui-switch>
                 </span>
              </div>
           </div>

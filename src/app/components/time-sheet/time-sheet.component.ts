@@ -87,7 +87,7 @@ export class TimeSheetComponent implements OnInit {
     dayToCount.forEach((w) => {
       var getHours = this.getLoggedHours(project,w,tm,true);
       var timesheetId = typeof getHours.id=='number' ? getHours.id : 0;
-      if (this.approvalChecked.indexOf(timesheetId) < 0 && $(event.target).is(':checked') && typeof getHours=='object') {
+      if (this.approvalChecked.indexOf(timesheetId) < 0 && event && typeof getHours=='object') {
         this.approvalChecked.push(timesheetId);
       }
 
@@ -379,7 +379,6 @@ export class TimeSheetComponent implements OnInit {
         return true;
       }
     }
-
     return false;
   }
 

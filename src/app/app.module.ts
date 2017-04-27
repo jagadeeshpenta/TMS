@@ -5,6 +5,7 @@ import { HttpModule } from '@angular/http';
 import { routes } from './app.router';
 import './Shared/app.constants';
 import { ToastrModule } from '../../node_modules/toastr-ng2';
+import { UiSwitchModule } from '../../node_modules/angular2-ui-switch';
 
 import { AppComponent } from './app.component';
 import { NavigationComponent } from './components/navigation/navigation.component';
@@ -39,7 +40,8 @@ var importModulesArr = [
   HttpModule,
   TodoModule,
   routes,
-  ToastrModule.forRoot()
+  ToastrModule.forRoot(),
+  UiSwitchModule
 ];
 
 if (!environment.production) {
