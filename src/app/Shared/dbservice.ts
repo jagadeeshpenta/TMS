@@ -3,6 +3,7 @@ import { Http, Response, Headers, RequestOptions, URLSearchParams } from '@angul
 import { Cookie } from 'ng2-cookies';
 
 import { environment } from './../../environments/environment';
+import { ToastrService, ToastConfig } from './../../../node_modules/toastr-ng2';
 
 @Injectable()
 export class DBService {
@@ -11,10 +12,13 @@ export class DBService {
   cacheData: any;
   CookieManager;
   Headers;
-  constructor(private http: Http) {
+  toastrInstance;
+  toastCfg = new ToastConfig({ timeOut: 900 });
+  constructor(private http: Http, private toastr: ToastrService) {
     this.lToken = Cookie.get('lToken');
     this.CookieManager = Cookie;
     this.Headers = Headers;
+    this.toastrInstance = toastr;
   }
 
   makeRequest(url, headers, reqData, method) {

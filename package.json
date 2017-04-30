@@ -10,6 +10,7 @@
     "lint": "ng lint",
     "e2e": "ng e2e",
     "dist": "ng build --env=prod --progress=false && node ./tasks/rename-index.js",
+    "gcloud": "ng build --env=gcloud --progress=false && node ./tasks/rename-index.js",
     "renameindex": "node ./tasks/rename-index.js"
   },
   "private": true,

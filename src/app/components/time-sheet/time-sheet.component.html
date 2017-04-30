@@ -70,7 +70,7 @@
 
         <div class="m15-top">
           <button class="btn btn-success" (click)="updateStatus('A')">Approve</button>
-          <button class="btn btn-success" data-toggle="modal" data-target="#declineCommentModal">Decline</button>
+          <button class="btn btn-danger" data-toggle="modal" data-target="#declineCommentModal">Decline</button>
         </div>
       </div>
     </div>
@@ -161,7 +161,7 @@
         <tr *ngFor="let project of myProjects">
           <td>{{project.name}}</td>
           <td *ngFor="let dy of weekDays">
-            <button class="btn btn-primary" [disabled]="isApproved(project, dy)" (click)="openLogWorkmodal(project, dy)">{{getLoggedHours(project, dy)}}</button>
+            <button class="btn btn-primary" [disabled]="checktimesheetsubmision(project, dy)" (click)="openLogWorkmodal(project, dy)">{{getLoggedHours(project, dy)}}</button>
           </td>
         </tr>
       </table>
@@ -188,11 +188,20 @@
         <tr *ngFor="let project of myProjects">
           <td>{{project.name}}</td>
           <td *ngFor="let dy of monthDays" class="p0">
-            <button class="btn btn-primary" [disabled]="isApproved(project, dy)" (click)="openLogWorkmodal(project, dy)">{{getLoggedHours(project, dy)}}</button>
+            <button class="btn btn-primary" [disabled]="checktimesheetsubmision(project, dy)" (click)="openLogWorkmodal(project, dy)">{{getLoggedHours(project, dy)}}</button>
           </td>
         </tr>
       </table>
 
+    </div>
+    <div class="clearfix" *ngIf="monthDays.length > 0 && isLoaded.isProjectsLoaded &&  isLoaded.isSubmissionsLoaded && isLoaded.isTimesheetsLoaded">
+      <button [disabled]="checktimesheetsubmisionall(myProjects, monthDays[0])" (click)="submittimesheets()" class="btn btn-success pull-right"
+        style="margin-right:20px;margin-bottom:30px;"> {{isTimesheetSubmited}}
+        <span *ngIf="isMonth && monthDays.length > 0">
+           Timesheet of {{ MonthNames[monthDays[0].getMonth()] }}, {{ monthDays[0].getFullYear() }}
+        </span>
+        <span *ngIf="isWeek && weekDays.length > 0"> Timesheet of {{ MonthNames[weekDays[0].getMonth()] }}, {{ weekDays[0].getFullYear() }}</span>
+      </button>
     </div>
   </div>
 

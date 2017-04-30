@@ -15,7 +15,7 @@
   </div>
 
   <div class="project-list m20-top" *ngIf="projectsProcessed">
-    <div class="acord-item project-item" *ngFor="let project of Projects" [ngClass]="{'expand': project.expand}">
+    <div class="acord-item project-item" [attr.projectid]="project.id" *ngFor="let project of Projects" [ngClass]="{'expand': project.expand}">
       <div class="acord-head project-head" (click)="project.expand = !project.expand; EmployeeSuggestions = Employees; employeeToProject.project = {}; employeeToProject.emp = {}; employeeToProject.empadd = '';">
         <h4>
           <i class="fa fa-folder-o" aria-hidden="true"></i>

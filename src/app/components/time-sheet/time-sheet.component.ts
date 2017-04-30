@@ -19,7 +19,8 @@ export class TimeSheetComponent implements OnInit {
     Employees: [],
     Projects: [],
     Allocations: [],
-    Timesheets: []
+    Timesheets: [],
+    Submissions: []
   };
 
   isWeek = true;
@@ -36,6 +37,7 @@ export class TimeSheetComponent implements OnInit {
     isProjectsLoaded: false,
     isAllocationsLoaded: false,
     isTimesheetsLoaded: false,
+    isSubmissionsLoaded: false,
     userLoaded: false
   };
 
@@ -130,8 +132,9 @@ export class TimeSheetComponent implements OnInit {
           isapproved: true,
         }
       }).then(() => {
-        this.sendMails(this.approvalChecked.join(','), typ);
+        this.db.toastrInstance.success('', 'Timesheet approved', this.db.toastCfg);
 
+        this.sendMails(this.approvalChecked.join(','), typ);
         this.approvalChecked = [];
         this.getData('/timesheets', 'Timesheets', 'isTimesheetsLoaded');
         this.processData();
@@ -143,11 +146,12 @@ export class TimeSheetComponent implements OnInit {
           isapproved: false,
         }
       }).then(() => {
+        this.db.toastrInstance.success('', 'Timesheet declined', this.db.toastCfg);
+
         this.sendMails(this.approvalChecked.join(','), typ);
         this.addTimesheetComment();
         this.closedeclinemodal();
         this.declinecomment = '';
-
         this.approvalChecked = [];
         this.getData('/timesheets', 'Timesheets', 'isTimesheetsLoaded');
         this.processData();
@@ -276,7 +280,7 @@ export class TimeSheetComponent implements OnInit {
 
   processData() {
     this.myProjects = [];
-    if (this.isLoaded.userLoaded && this.isLoaded.isEmpLoaded && this.isLoaded.isAllocationsLoaded && this.isLoaded.isProjectsLoaded && this.isLoaded.isTimesheetsLoaded) {
+    if (this.isLoaded.isSubmissionsLoaded && this.isLoaded.userLoaded && this.isLoaded.isEmpLoaded && this.isLoaded.isAllocationsLoaded && this.isLoaded.isProjectsLoaded && this.isLoaded.isTimesheetsLoaded) {
       if (this.serviceData.Projects.length > 0) {
         this.serviceData.Projects.forEach((project) => {
           var alls = this.serviceData.Allocations.filter((a) => {
@@ -286,6 +290,14 @@ export class TimeSheetComponent implements OnInit {
             }
             return false;
           });
+        });
+
+        this.myProjects.sort(function (a, b) {
+          if (a.id < b.id)
+            return 1;
+          if (a.id > b.id)
+            return -1;
+          return 0;
         });
 
         this.processApprovals();
@@ -337,7 +349,24 @@ export class TimeSheetComponent implements OnInit {
         return true;
       }
     }
+    return false;
+  }
 
+  isDisabled(project, loggedDate, emp) {
+    var empid = emp ? emp.empid : this.profile.empid;
+    if (this.serviceData.Submissions && this.serviceData.Submissions.length > 0) {
+      var isSubmitted = false;
+      for (let i = 0, len = this.serviceData.Submissions.length; i < len; i++) {
+        let sub = this.serviceData.Submissions[i];
+        if (sub.subyear == loggedDate.getFullYear() && sub.submonth == loggedDate.getMonth() && sub.empid == empid && sub.pid == project.id) {
+          isSubmitted = true;
+          break;
+        }
+      }
+      if (isSubmitted) {
+        return true;
+      }
+    }
     return false;
   }
 
@@ -368,6 +397,20 @@ export class TimeSheetComponent implements OnInit {
     });
   }
 
+  refreshData() {
+    this.isLoaded.isEmpLoaded = false;
+    this.isLoaded.isProjectsLoaded = false;
+    this.isLoaded.isAllocationsLoaded = false;
+    this.isLoaded.isTimesheetsLoaded = false;
+    this.isLoaded.isSubmissionsLoaded = false;
+
+    this.getData('/employees', 'Employees', 'isEmpLoaded');
+    this.getData('/projects', 'Projects', 'isProjectsLoaded');
+    this.getData('/allocations', 'Allocations', 'isAllocationsLoaded');
+    this.getData('/timesheets', 'Timesheets', 'isTimesheetsLoaded');
+    this.getData('/submissions', 'Submissions', 'isSubmissionsLoaded');
+  }
+
   ngOnInit() {
     this.auth.checkUser().then(({ err, result }) => {
       if (result && result.profile) {
@@ -378,6 +421,7 @@ export class TimeSheetComponent implements OnInit {
         this.getData('/projects', 'Projects', 'isProjectsLoaded');
         this.getData('/allocations', 'Allocations', 'isAllocationsLoaded');
         this.getData('/timesheets', 'Timesheets', 'isTimesheetsLoaded');
+        this.getData('/submissions', 'Submissions', 'isSubmissionsLoaded');
 
         if (this.toDay) {
           this.weekDays = this.generateCurrentWeek(new Date(this.toDay));
@@ -576,12 +620,127 @@ export class TimeSheetComponent implements OnInit {
       $('#logWorkModal').modal('hide');
       this.logModalData.ispreload = false;
       this.logModalData.timesheetdate = this.getHtml5DateFormat(new Date());
+
+      this.db.toastrInstance.success('', 'Timesheet Log Updated', this.db.toastCfg);
+
       if (!err) {
         this.getData('/timesheets', 'Timesheets', 'isTimesheetsLoaded');
         this.processData();
       }
     });
 
+  }
+
+  checktimesheetsubmision(project, loggedDate, emp) {
+    var empid = emp ? emp.empid : this.profile.empid;
+    var issub = false, isapproved = false, isdeclined = false;
+    if (this.serviceData.Submissions && this.serviceData.Submissions.length > 0) {
+      var isSubmitted = false;
+      for (let i = 0, len = this.serviceData.Submissions.length; i < len; i++) {
+        let sub = this.serviceData.Submissions[i];
+        if (sub.subyear == loggedDate.getFullYear() && sub.submonth == loggedDate.getMonth() && sub.empid == empid && sub.pid == project.id) {
+          isSubmitted = true;
+          break;
+        }
+      }
+      if (isSubmitted) {
+        issub = true;
+      }
+    }
+
+    if (this.serviceData.Timesheets && this.serviceData.Timesheets.length > 0) {
+      var timesheetData = this.serviceData.Timesheets.filter((t) => {
+        if (t.empid == empid && t.projectid == project.id && t.sheetdate == loggedDate.getDate() && t.sheetmonth == (loggedDate.getMonth() + 1) && t.sheetyear == loggedDate.getFullYear()) {
+          return true;
+        }
+        return false;
+      });
+      if (timesheetData.length > 0) {
+        if (timesheetData[0].isapproved == true) {
+          isapproved = true;
+        } else {
+          isdeclined = true;
+        }
+      }
+    }
+
+    if (issub) {
+      if (isdeclined) {
+        return false;
+      }
+      return true;
+    } else {
+      if (isapproved) {
+        return true;
+      }
+    }
+
+    return false;
+  }
+
+
+  isTimesheetSubmited = 'Submit';
+  checktimesheetsubmisionall(projects, loggedDate, emp) {
+    this.isTimesheetSubmited = 'Submit';
+    var empid = emp ? emp.empid : this.profile.empid;
+    var issub = false, isapproved = false, isdeclined = false;
+    projects.forEach((p) => {
+      if (this.serviceData.Submissions && this.serviceData.Submissions.length > 0) {
+        var isSubmitted = false;
+        for (let i = 0, len = this.serviceData.Submissions.length; i < len; i++) {
+          let sub = this.serviceData.Submissions[i];
+          if (sub.subyear == loggedDate.getFullYear() && sub.submonth == loggedDate.getMonth() && sub.empid == empid && sub.pid == p.id) {
+            isSubmitted = true;
+            break;
+          }
+        }
+        if (isSubmitted) {
+          issub = true;
+        }
+      }
+      this.serviceData.Timesheets.forEach((t) => {
+        if (t.empid == empid && t.projectid == p.id && t.sheetmonth == (loggedDate.getMonth() + 1) && t.sheetyear == loggedDate.getFullYear()) {
+          if (!t.isapproved) {
+            isdeclined = true;
+          }
+          return true;
+        }
+        return false;
+      });
+    });
+
+
+    if (issub) {
+      this.isTimesheetSubmited = 'Re submit';
+      if (isdeclined) {
+        return false;
+      }
+      return true;
+    } else {
+      if (isapproved) {
+        return true;
+      }
+    }
+
+    return false;
+  }
+
+  submittimesheets() {
+    var submonth = this.monthDays[0].getMonth();
+    var subyear = this.monthDays[0].getFullYear();
+
+    var projectsToSubmit = this.myProjects.map((p) => p.id).join(',');
+    var empid = this.profile.empid;
+    var submisionData = {
+      submonth,
+      subyear,
+      empid,
+      subcount: 1,
+      pid: projectsToSubmit
+    };
+    this.db.makeRequest('/submissions?lToken=' + this.db.CookieManager.get('lToken'), new this.db.Headers(), submisionData, 'POST').then((resp) => {
+      this.refreshData();
+    });
   }
 
 }

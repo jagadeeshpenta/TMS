@@ -122,6 +122,7 @@ export class MyTeamComponent implements OnInit {
       if (!err) {
         $('#addProjectModal').modal('hide');
         this.fillProjects();
+        this.db.toastrInstance.success('', 'Project added successfully', this.db.toastCfg);
       }
     });
   }
@@ -131,6 +132,7 @@ export class MyTeamComponent implements OnInit {
     this.db.deleteProject({ projectToDelete }).then(({ err, result }) => {
       if (!err) {
         this.fillProjects();
+         this.db.toastrInstance.success('', 'Project removed successfully', this.db.toastCfg);
       }
     });
   }
@@ -197,12 +199,15 @@ export class MyTeamComponent implements OnInit {
         role: this.employeeToProject.role
       }).then(({ err, result }) => {
         if (!err) {
+          this.db.toastrInstance.success('', 'Employee added to project successfully', this.db.toastCfg);
           this.employeeToProject.project = {};
           this.employeeToProject.showSuggestions = false;
           this.employeeToProject.empadd = '';
           this.employeeToProject.emp = {};
           $('#addEmployeeToProjectModal').modal('hide');
           this.getAllocations();
+        } else {
+          this.db.toastrInstance.error('', 'Failed to add employee to project.', this.db.toastCfg);
         }
       });
     }
@@ -220,6 +225,7 @@ export class MyTeamComponent implements OnInit {
       if (allocation.length > 0) {
         allocation = allocation[0];
         this.db.removeFromProject({ id: allocation['id'] }).then(({ err, result }) => {
+           this.db.toastrInstance.success('', 'Employee removed from project successfully', this.db.toastCfg);
           this.getAllocations();
         });
       }
