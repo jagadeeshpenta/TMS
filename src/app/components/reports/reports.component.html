@@ -20,6 +20,7 @@
           </h4>
         </div>
         <div class="accord-content">
+          
           <div class="clearfix">
             <div class="btn-group btn-toggle pull-right">
               <button class="btn btn-primary" [ngClass]="{'btn-default' : !isMonth}" [disabled]="!project.isMonth" (click)="project.isMonth =!project.isMonth;">Week</button>
@@ -104,7 +105,43 @@
                 </div>
               </div>
             </div>
+
+
+            <table class="m15-top" id="xlstable" *ngIf="project.isMonth">
+              <thead class="flex-container flex-col col-first">
+                <tr><th id="span" colspan="33">{{ project.name}}</th></tr>
+                <tr><th *ngIf="project.weekToDisplay.length > 0">{{ project.weekToDisplay[0].getFullYear() }}</th></tr>
+                <tr class="flex-col col-first">
+                  <th class="flex-head">Employee Name</th>
+                  <th class="flex-col" *ngFor="let dy of project.monthToDisplay">
+                    <div class="flex-head">
+                      {{ dy.getDate() }}
+                    </div>
+                  </th>
+                  <th>Total</th>
+                </tr>
+              </thead>
+              <tbody class="flex-container" >
+                <tr class="flex-col">
+                  <td class="flex-row" *ngFor="let allocation of getAllocationsOfProject(project)">
+                  {{ allocation.emp.firstname + ' ' + allocation.emp.lastname }}
+                  </td>
+                  <td class="flex-row" *ngFor="let dy of project.monthToDisplay">
+                    <div class="flex-row" *ngFor="let allocation of getAllocationsOfProject(project)">
+                        {{ getLoggedHours(project, dy, allocation.emp) }}
+                    </div>
+                  </td>
+                  <td class="flex-row" *ngFor="let allocation of getAllocationsOfProject(project)" >
+                  {{ getWeekTotalHours(project, project.monthToDisplay, allocation) }}
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+            <div class="btn-group ">
+              <button (click)="generateXls(project)" class="btn btn-primary">generate</button>
+            </div>
           </div>
+          
         </div>
       </div>
     </div>

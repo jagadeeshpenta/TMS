@@ -21,6 +21,7 @@ import { TimeSheetComponent } from './components/time-sheet/time-sheet.component
 import { MyTeamComponent } from './components/my-team/my-team.component';
 import { EmployeesComponent } from './components/employees/employees.component';
 import { ReportsComponent } from './components/reports/reports.component';
+import { NotificationComponent } from './components/notification/notification.component';
 
 
 import { AuthService } from './Shared/auth/auth.service';
@@ -50,6 +51,7 @@ if (!environment.production) {
   declarations: [
     AppComponent,
     NavigationComponent,
+    NotificationComponent,
     FooterComponent,
     DashboardComponent,
     LoginComponent,

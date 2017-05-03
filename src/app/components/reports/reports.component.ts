@@ -1,7 +1,6 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { DBService } from './../../Shared/dbservice';
 import { AuthService } from './../../Shared/auth/auth.service';
-
 declare var $: any;
 @Component({
   selector: 'app-reports',
@@ -284,5 +283,31 @@ export class ReportsComponent implements OnInit {
     }
     return 0;
   }
+  generateDates(sDate, eDate){
+   var strtDate = new Date(sDate);
+   var endDate = new Date(eDate);
+   var daysToGenerate = [];
+   for(var i = 0; i < 100; i++){
+   var tmpDate = new Date(strtDate.getTime());
+   tmpDate.setDate(tmpDate.getDate() + i);
+   daysToGenerate.push(new Date(tmpDate.getTime()));
+    if (tmpDate.getFullYear() == endDate.getFullYear() && tmpDate.getMonth() == endDate.getMonth() && tmpDate.getDate() == endDate.getDate()){
+    break;
+    }
+    
+   }  
+  return daysToGenerate;
+  }
 
+  generateXls(project){
+    $("#xlstable").table2excel({
+        exclude: ".noExl",
+        name: "Excel Document Name",
+        filename: project.name.replace(' ', '-') +"-Reports",
+        fileext: ".xls",
+        exclude_img: true,
+        exclude_links: true,
+        exclude_inputs: true
+    });
+  }
 }
