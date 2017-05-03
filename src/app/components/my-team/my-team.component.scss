@@ -3,6 +3,9 @@
         margin-top: 10px;
         border: 1px solid transparent;
         border-top: 1px solid #232323;
+        &[projectid="1"] {
+            display: none;
+        }
         &:hover,
         &.expand {
             border: 1px solid #232323;

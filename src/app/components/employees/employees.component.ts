@@ -55,9 +55,14 @@ export class EmployeesComponent implements OnInit {
   }
 
   addEmployee() {
+    
     this.db.addEmployee({ newEmployee: this.newEmployee }).then(({ err, result }) => {
       if (!err) {
         this.fllEmployees();
+        var toastrMessage = (this.isEdit ? 'Updating' : 'Adding') + ' employee successfully';
+        this.db.toastrInstance.success('', toastrMessage, this.db.toastCfg);
+      } else {
+        this.db.toastrInstance.error('', 'Failed adding employee', this.db.toastCfg);
       }
     });
 
@@ -68,6 +73,7 @@ export class EmployeesComponent implements OnInit {
     this.db.deleteEmployee({ empToDelete }).then(({ err, result }) => {
       if (!err) {
         this.fllEmployees();
+        this.db.toastrInstance.success('', 'Deleted employee succesfully', this.db.toastCfg);
       }
     });
   }

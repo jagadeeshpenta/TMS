@@ -3,6 +3,7 @@ import { Http, Response, Headers, RequestOptions, URLSearchParams } from '@angul
 import { Cookie } from 'ng2-cookies';
 
 import { environment } from './../../environments/environment';
+import { ToastrService, ToastConfig } from './../../../node_modules/toastr-ng2';
 
 @Injectable()
 export class DBService {
@@ -11,10 +12,14 @@ export class DBService {
   cacheData: any;
   CookieManager;
   Headers;
-  constructor(private http: Http) {
+ 
+  toastrInstance;
+  toastCfg = new ToastConfig({ timeOut: 900 });
+  constructor(private http: Http, private toastr: ToastrService) {
     this.lToken = Cookie.get('lToken');
     this.CookieManager = Cookie;
     this.Headers = Headers;
+    this.toastrInstance = toastr;
   }
 
   makeRequest(url, headers, reqData, method) {
@@ -132,7 +137,6 @@ export class DBService {
     });
   }
 
-<<<<<<< HEAD
   editProject(project) {
     return new Promise((res) => {
       this.makeRequest('/projects?lToken=' + Cookie.get('lToken'), new Headers(), {
@@ -145,9 +149,7 @@ export class DBService {
       });
     });
   }
-
-=======
->>>>>>> ebf734d21ccc7b5ff248edda249e8fd21c54ea01
+ 
   deleteProject({ projectToDelete }) {
     return new Promise((res, rej) => {
       this.makeRequest('/projects?lToken=' + Cookie.get('lToken'), new Headers(), projectToDelete, 'DELETE').then((resp) => {
