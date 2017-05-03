@@ -24,13 +24,12 @@ export class TimeSheetComponent implements OnInit {
   };
 
   isWeek = true;
-
+ 
   isMonth = !this.isWeek;
   myProjects = [];
   profile;
   toDay;
   declinecomment = '';
-
 
   isLoaded = {
     isEmpLoaded: false,
@@ -44,14 +43,12 @@ export class TimeSheetComponent implements OnInit {
   MonthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
   weekNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
   constructor(public db: DBService, public auth: AuthService) {
-
   }
 
   waitingForapprovalsLoaded = false;
   approvalProjects = [];
   approvalDays = [];
   approvalWeekDays = [];
-
   approvalChecked = [];
 
   getTimeSheetId(project, loggedDate, emp) {
@@ -147,7 +144,6 @@ export class TimeSheetComponent implements OnInit {
         }
       }).then(() => {
         this.db.toastrInstance.success('', 'Timesheet declined', this.db.toastCfg);
-
         this.sendMails(this.approvalChecked.join(','), typ);
         this.addTimesheetComment();
         this.closedeclinemodal();
@@ -190,7 +186,6 @@ export class TimeSheetComponent implements OnInit {
     this.approvalDays = this.generateMonthDays(new Date(this.toDay))
     this.approvalWeekDays = this.generateCurrentWeek(new Date(this.toDay));
     this.waitingForapprovalsLoaded = true;
-
   }
 
   getDaysToDisplay(project) {
@@ -227,7 +222,6 @@ export class TimeSheetComponent implements OnInit {
       this.approvalDays = this.generateMonthDays(ld);
     } else {
       this.approvalWeekDays = this.generateCurrentWeek(ld);
-
     }
   }
 
@@ -335,7 +329,7 @@ export class TimeSheetComponent implements OnInit {
     }
     return '-';
   }
-
+ 
   isApproved(project, loggedDate, emp) {
     var empid = emp ? emp.empid : this.profile.empid;
     if (this.serviceData.Timesheets && this.serviceData.Timesheets.length > 0) {
@@ -431,7 +425,6 @@ export class TimeSheetComponent implements OnInit {
         console.log('user not logged In');
       }
     });
-
   }
 
 
@@ -596,7 +589,6 @@ export class TimeSheetComponent implements OnInit {
   closedeclinemodal() {
     $('#declineCommentModal').modal('hide');
   }
-
 
   getHtml5DateFormat(dy) {
     var formateTo2digit = (mnth) => {

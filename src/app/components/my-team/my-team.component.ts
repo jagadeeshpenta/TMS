@@ -29,7 +29,6 @@ export class MyTeamComponent implements OnInit {
 
   profile = {};
   showDropDownBox;
-
   Projects = [];
   Employees = [];
   Allocations = [];
@@ -39,6 +38,7 @@ export class MyTeamComponent implements OnInit {
   employeesLoaded = false;
 
   projectsProcessed = false;
+  editProject = false;
   constructor(public db: DBService, public auth: AuthService) {
 
     auth.checkUser().then(({ err, result }) => {
@@ -79,7 +79,8 @@ export class MyTeamComponent implements OnInit {
               empofProjects.push(em);
             }
           });
-          project.Employees = empofProjects; 
+ 
+          project.Employees = empofProjects;
         });
 
         this.projectsProcessed = true;
@@ -232,7 +233,6 @@ export class MyTeamComponent implements OnInit {
     }
   }
 
-
   showDropdown() {
     this.showDropDownBox = true;
   }
@@ -246,6 +246,33 @@ export class MyTeamComponent implements OnInit {
       this.allocationLoaded = false;
       this.employeesLoaded = false;
       this.getAllocationsandEmployees();
+    });
+  }
+ 
+  getHtml5DateFormat(dy) {
+    var formateTo2digit = (mnth) => {
+      if (mnth < 10) {
+        return `0${mnth}`;
+      } else {
+        return `${mnth}`;
+      }
+    };
+    return dy.getFullYear() + '-' + formateTo2digit(dy.getMonth() + 1) + '-' + formateTo2digit(dy.getDate());
+  }
+
+  EditProject(project) {
+    this.editProject = true;
+    project.editName = project.name;
+    project.editStartDate = this.getHtml5DateFormat(new Date(project.actualstartdate));
+    project.editEndDate = this.getHtml5DateFormat(new Date(project.actualenddate));
+  }
+
+  saveEditProject(project) {
+    //console.log(project);
+    this.db.editProject(project).then(({ err, result }) => {
+      if (!err) {
+        this.fillProjects();
+      }
     });
   }
  
