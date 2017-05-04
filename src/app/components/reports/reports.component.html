@@ -11,7 +11,7 @@
 
 
   <div class="project-list" *ngIf="isLoaded.readyToRender" style="padding: 20px;">
-    <div class="project-item" *ngFor="let project of serviceData.Projects" [ngClass]="{'expand': project.expand}">
+    <div class="project-item" [attr.projectid]="project.id" *ngFor="let project of serviceData.Projects" [ngClass]="{'expand': project.expand}">
       <div class="accord-item">
         <div class="accord-head" (click)="project.expand = !project.expand;">
           <h4>

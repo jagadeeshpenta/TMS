@@ -3,6 +3,10 @@ import { Router } from '@angular/router';
 import { AuthService } from '../../Shared/auth/auth.service';
 import { ToastrService, ToastConfig } from '../../../../node_modules/toastr-ng2';
 
+import { DBService } from './../../Shared/dbservice';
+
+declare var $: any;
+
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html'
@@ -13,8 +17,10 @@ export class LoginComponent {
     password: ''
   };
 
+  forgotpassword = '';
+
   checkUser = false;
-  constructor(private _router: Router, private auth: AuthService, private toastrService: ToastrService) {
+  constructor(private _router: Router, private auth: AuthService, private toastrService: ToastrService, public db: DBService) {
     auth.checkUser().then(({ err, result }) => {
       this.checkUser = true;
       if (!err && result) {
@@ -44,6 +50,22 @@ export class LoginComponent {
       } else {
         this._router.navigateByUrl('/dashboard');
       }
+    });
+  }
+
+  submitforgotpwd() {
+    this.db.makeRequest('/forgotpassword', new this.db.Headers(), { username: this.forgotpassword }, 'POST').then((resp) => {
+      this.forgotpassword = '';
+      $('#forgotPassModal').modal('hide');
+      var result = resp['result'] ? resp['result'] : null;
+      var emailid = '';
+      if (result instanceof Array) {
+        emailid = result[0].emailid;
+        this.toastrService.success('Reset password sent to <b>' + emailid + '@evoketechnologies.com</b>', '', new ToastConfig({ timeOut: 3700, enableHtml: true }));
+      } else {
+        this.toastrService.error('', 'EmpId or EmailiD not found in system', new ToastConfig({ timeOut: 1000}));
+      }
+
     });
   }
 }
