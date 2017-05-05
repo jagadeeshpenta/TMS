@@ -33,6 +33,7 @@ import { RootService } from './Shared/root-service';
 
 import { UiForApiModule } from './ui-for-api/ui-for-api.module';
 import { environment } from './../environments/environment';
+import { WaitingForApprovalsComponent } from './components/waiting-for-approvals/waiting-for-approvals.component';
 
 var importModulesArr = [
   BrowserModule,
@@ -60,7 +61,8 @@ if (!environment.production) {
     TimeSheetComponent,
     MyTeamComponent,
     EmployeesComponent,
-    ReportsComponent
+    ReportsComponent,
+    WaitingForApprovalsComponent
   ],
   imports: importModulesArr,
   providers: [AuthService, UserService, AuthGuard, DBService, RootService],
