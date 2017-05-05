@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthService } from '../../Shared/auth/auth.service';
 import { ToastrService, ToastConfig } from '../../../../node_modules/toastr-ng2';
+import { DBService } from './../../Shared/dbservice';
+declare var $: any;
 
 @Component({
   selector: 'app-login',
@@ -13,8 +15,12 @@ export class LoginComponent {
     password: ''
   };
 
+  forgotusername='';
+
+  showForgotMsg = false;
+
   checkUser = false;
-  constructor(private _router: Router, private auth: AuthService, private toastrService: ToastrService) {
+  constructor(private _router: Router, private auth: AuthService, private toastrService: ToastrService, public db: DBService) {
     auth.checkUser().then(({ err, result }) => {
       this.checkUser = true;
       if (!err && result) {
@@ -45,5 +51,17 @@ export class LoginComponent {
         this._router.navigateByUrl('/dashboard');
       }
     });
+  }
+
+  forgotPwd(forgotusername) {
+    this.db.forgotUserName(this.forgotusername).then((res) => {
+      this.showForgotMsg = true;
+    });
+  }
+
+  closeForgotModel() {
+    //alert('hi close');
+    $('#forgotPassModal').modal('hide');
+    this.showForgotMsg = false;
   }
 }

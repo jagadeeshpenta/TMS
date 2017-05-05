@@ -198,4 +198,12 @@ export class DBService {
     });
   }
 
+  forgotUserName(userName) {
+    return new Promise((res) => {
+      this.makeRequest('/forgotpassword?lToken=' + Cookie.get('lToken'), new Headers(), {username: userName}, 'POST').then((resp)=> {
+        res(resp);
+      });
+    });
+  }
+
 }

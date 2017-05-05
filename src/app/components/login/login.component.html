@@ -1,4 +1,4 @@
-<div style=" background-image: url(./src/bg-9-full.jpg); margin-top: -12px;">
+<div style=" background-image: url(./src/assets/bg-9-full.jpg); margin-top: -12px;">
   <div class="container" style="height: 100vh; width: 100vh;">
       <div class="" *ngIf="!checkUser" >
         Loading...
@@ -6,8 +6,9 @@
       <div class="row login" *ngIf="checkUser">
         <div class="col-lg-6 col-md-6 col-sm-6" >
           <div class="card" style="margin-top: 100px;width: 530px; margin-left: -100px; background-color: rgb(221, 221, 221); border: 1px solid rgba(0, 0, 0, 0.125);">
-            <div style="margin-left: 138px;">
-              <img src="./src/Evoke_logo.png">
+            <div style="margin-left: 215px; margin-top: 20px">
+              <!--<img src="./src/assets/Evoke_logo_kk.png">-->
+              <h3>Sign-in</h3>
             </div>
             <div class="card-block">
               <form class="form-horizontal" method="POST" (submit)="Login()"  #loginForm="ngForm">
@@ -36,16 +37,32 @@
       </div>
       <div class="modal fade" id="forgotPassModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
         <div class="modal-dialog" role="document">
+        
+          <form class="form-horizontal" method="POST" (submit)="forgotPwd(forgotusername)"  #ForgotForm="ngForm">
+            
         <div class="modal-content">
           <div class="modal-header">
             <h5 class="modal-title">
               <legend>Forgot Password</legend>
             </h5>
           </div>
+          <div *ngIf="!showForgotMsg">
           <div class="modal-body">
-            <input type="text" id="empid" class="form-control" placeholder="EmailId or EmpId">
+            <input type="text" id="empid" class="form-control" placeholder="EmailId or EmpId" name="empid" [(ngModel)]="forgotusername">
             <button class="btn btn-success">Submit</button>
           </div>
+        </div>
+          <div *ngIf="showForgotMsg">
+            <div class="modal-body">
+            <span>Temporary Password has been sent to your emailId</span>
+            <div>
+              <button type="button" class="btn btn-primary" name="closeForgotModel" (click)="closeForgotModel()">Close</button>
+            </div>
+             </div>
+          </div>
+        </div>
+        
+        </form>
         </div>
       </div>
   </div>
