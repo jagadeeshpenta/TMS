@@ -135,7 +135,7 @@
         <div class="underline m15-bottom">
           <h4 class="heading">My Timesheet</h4>
         </div>
-        <div *ngIf="isWeek">
+        <!--<div *ngIf="isWeek">
           <div class="row">
             <div class="col-md-6">
               <button class="btn btn-primary icon" (click)="navigateToWeek()"><i class="fa fa-chevron-left"></i></button>
@@ -199,6 +199,39 @@
             </tr>
           </table>
 
+        </div>-->
+        <div class="row m15-bottom">
+          <div class="col-md-6">
+            <button class="btn btn-primary icon" (click)="navigateToMonth()">Previous Month</button>
+          </div>
+          <div class="col-md-6 btn-group btn-toggle calender-view-toggle">
+            <button class="btn btn-primary icon" (click)="navigateToMonth(1)">Next Month</button>
+          </div>
+        </div>
+        <div class="calender-container">
+          <table class="table table-bordered calender-monthly">
+            <thead class="bg">
+              <tr>
+                <th>Monday</th>
+                <th>Tuesday</th>
+                <th>Wednesday</th>
+                <th>Thursday</th>
+                <th>Friday</th>
+                <th>Saturday</th>
+                <th>Sunday</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let week of [1,2,3,4,5]">
+                <td *ngFor="let day of [1,2,3,4,5,6,7]">
+                  <div class="date-time">
+                    <span class="date">{{day}}</span>
+                    <span class="time">8:00</span>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
         </div>
         <div class="clearfix" *ngIf="monthDays.length > 0 && isLoaded.isProjectsLoaded &&  isLoaded.isSubmissionsLoaded && isLoaded.isTimesheetsLoaded">
           <button [disabled]="checktimesheetsubmisionall(myProjects, monthDays[0])" (click)="submittimesheets()" class="btn btn-success pull-right"> 
