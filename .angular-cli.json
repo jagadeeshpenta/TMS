@@ -34,7 +34,8 @@
       "environments": {
         "dev": "environments/environment.ts",
         "prod": "environments/environment.prod.ts",
-        "gcloud": "environments/environment.gcloud.ts"
+        "gcloud": "environments/environment.gcloud.ts",
+        "ginstance": "environments/environment.ginstance.ts"
       }
     }
   ],
