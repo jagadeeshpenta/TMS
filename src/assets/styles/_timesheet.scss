@@ -2,3 +2,36 @@
     display: flex;
     justify-content: flex-end;
 }
+.calender-container {
+    display: flex;
+    .calender-monthly {
+        thead th {
+            border-bottom-width: 1px;
+        }
+        td {
+            position: relative;
+            height: 80px;
+            width: 100px;
+            & > .date-time {
+                display: flex;
+                justify-content: center;
+                height: 100%;
+                align-items: center;
+                & > .date {
+                    position: absolute;
+                    top: 5px;
+                    right: 10px;
+                    opacity: 0.5;
+                }
+                & > .time {
+                    font-size: 24px;
+                    font-weight: bold;
+                }
+            }
+        }
+        td:nth-child(6),
+        td:nth-child(7) {
+            background: #efefef;
+        }
+    }
+}
