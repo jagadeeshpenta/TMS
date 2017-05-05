@@ -27,12 +27,12 @@ body {
   min-width: 115px;
 }
 
-.btn-primary,
-.btn-primary::before {
+.btn,
+.btn::before {
   animation-timing-function: cubic-bezier(0.2, 1, .3, 1);
 }
 
-.btn-primary::before {
+.btn::before {
   content: '';
   position: absolute;
   top: 0;
@@ -40,7 +40,6 @@ body {
   z-index: -1;
   width: 100%;
   height: 100%;
-  background-color: #1a252f;
   opacity: 0;
   -ms-filter: alpha(opacity=0 * 100);
   filter: alpha(opacity=0 * 100);
@@ -56,7 +55,7 @@ body {
   border-radius: 2px;
 }
 
-.btn-primary:hover::before {
+.btn:hover::before {
   -moz-opacity: 1;
   -webkit-opacity: 1;
   opacity: 1;
@@ -66,6 +65,13 @@ body {
   -moz-transform: translate3d(0, 0, 0);
   -ms-transform: translate3d(0, 0, 0);
   transform: translate3d(0, 0, 0);
+}
+
+.btn-primary::before {
+  background-color: #1a252f;
+}
+.btn-success::before {
+    background-color: #128f76;
 }
 
 .underline {

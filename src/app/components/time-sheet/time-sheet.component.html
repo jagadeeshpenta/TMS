@@ -178,16 +178,16 @@
             </div>
           </div>
           <table class="table m15-top timesheet-month" *ngIf="monthDays.length > 0">
-            <tr class="table-head">
+            <tr>
               <td [attr.colspan]="monthDays.length + 1" style="text-align: center;">
                 <div>{{ MonthNames[monthDays[0].getMonth()] }}, {{ monthDays[0].getFullYear() }}</div>
               </td>
             </tr>
-            <tr class="table-head">
+            <tr>
               <td></td>
               <td *ngFor="let dy of monthDays">{{ weekNames[dy.getDay()][0] }}</td>
             </tr>
-            <tr class="table-head">
+            <tr>
               <td>Project Name </td>
               <td *ngFor="let dy of monthDays">{{ dy.getDate()}}</td>
             </tr>
@@ -201,13 +201,13 @@
 
         </div>
         <div class="clearfix" *ngIf="monthDays.length > 0 && isLoaded.isProjectsLoaded &&  isLoaded.isSubmissionsLoaded && isLoaded.isTimesheetsLoaded">
-          <button [disabled]="checktimesheetsubmisionall(myProjects, monthDays[0])" (click)="submittimesheets()" class="btn btn-success pull-right"
-            style="margin-right:20px;margin-bottom:30px;"> {{isTimesheetSubmited}}
-        <span *ngIf="isMonth && monthDays.length > 0">
-           Timesheet of {{ MonthNames[monthDays[0].getMonth()] }}, {{ monthDays[0].getFullYear() }}
-        </span>
-        <span *ngIf="isWeek && weekDays.length > 0"> Timesheet of {{ MonthNames[weekDays[0].getMonth()] }}, {{ weekDays[0].getFullYear() }}</span>
-      </button>
+          <button [disabled]="checktimesheetsubmisionall(myProjects, monthDays[0])" (click)="submittimesheets()" class="btn btn-success pull-right"> 
+            {{isTimesheetSubmited}}
+            <span *ngIf="isMonth && monthDays.length > 0">
+              Timesheet of {{ MonthNames[monthDays[0].getMonth()] }}, {{ monthDays[0].getFullYear() }}
+            </span>
+            <span *ngIf="isWeek && weekDays.length > 0"> Timesheet of {{ MonthNames[weekDays[0].getMonth()] }}, {{ weekDays[0].getFullYear() }}</span>
+          </button>
         </div>
       </div>
     </div>
