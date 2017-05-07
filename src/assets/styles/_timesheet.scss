@@ -12,7 +12,8 @@
             position: relative;
             height: 80px;
             width: 100px;
-            & > .date-time {
+            perspective: 1000px;
+            & .date-time-view {
                 display: flex;
                 justify-content: center;
                 height: 100%;
@@ -28,10 +29,31 @@
                     font-weight: bold;
                 }
             }
+            &:focus > .flipper {
+                transform: rotateY(180deg);
+            }
         }
         td:nth-child(6),
         td:nth-child(7) {
             background: #efefef;
         }
     }
+}
+.flipper {
+    transition: 0.6s;
+    transform-style: preserve-3d;
+    position: relative;
+}
+.front, .back{
+    backface-visibility: hidden;
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+.front {
+    z-index: 2;
+    transform: rotateY(0deg);
+}
+.back {
+    transform: rotateY(180deg);
 }

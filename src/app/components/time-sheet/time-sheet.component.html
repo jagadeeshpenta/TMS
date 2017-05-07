@@ -224,9 +224,14 @@
             <tbody>
               <tr *ngFor="let week of [1,2,3,4,5]">
                 <td *ngFor="let day of [1,2,3,4,5,6,7]">
-                  <div class="date-time">
-                    <span class="date">{{day}}</span>
-                    <span class="time">8:00</span>
+                  <div class="flipper">
+                    <div class="date-time-view front">
+                      <span class="date">{{day}}</span>
+                      <span class="time">8:00</span>
+                    </div>
+                    <div class="date-time-edit back">
+                      test
+                    </div>
                   </div>
                 </td>
               </tr>
