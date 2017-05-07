@@ -32,6 +32,7 @@ import { RootService } from './Shared/root-service';
 
 
 import { UiForApiModule } from './ui-for-api/ui-for-api.module';
+import { WaitingForApprovalsComponent } from './components/waiting-for-approvals/waiting-for-approvals.component';
 import { environment } from './../environments/environment';
 import { TimeSheetModule } from './../app/components/time-sheet';
 
@@ -61,7 +62,8 @@ if (!environment.production) {
     ChangePasswordComponent,
     MyTeamComponent,
     EmployeesComponent,
-    ReportsComponent
+    ReportsComponent,
+    WaitingForApprovalsComponent
   ],
   imports: importModulesArr,
   providers: [AuthService, UserService, AuthGuard, DBService, RootService],

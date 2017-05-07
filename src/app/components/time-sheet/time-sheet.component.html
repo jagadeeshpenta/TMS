@@ -161,7 +161,7 @@
             <tr *ngFor="let project of myProjects">
               <td>{{project.name}}</td>
               <td *ngFor="let dy of weekDays">
-                <button class="btn btn-primary" [disabled]="checktimesheetsubmision(project, dy)" (click)="openLogWorkmodal(project, dy)">{{getLoggedHours(project, dy)}}</button>
+                <button class="btn btn-primary btn-log-work" [disabled]="checktimesheetsubmision(project, dy)" (click)="openLogWorkmodal(project, dy)">{{getLoggedHours(project, dy)}}</button>
               </td>
             </tr>
           </table>

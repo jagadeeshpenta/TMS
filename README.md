@@ -21,3 +21,8 @@ check Todo sample for http functionality (GET,POST)
 
 1. Naming convention should be followed (TMS-change-password or TMS-profile). Name of the branch should be followed by TMS-*.
 2. Don't delete branches after raising pull request and merging with master. This is for the tracking purpose.
+
+
+## Creation
+
+1.To create component run  `ng g component components/waiting-for-approvals`
