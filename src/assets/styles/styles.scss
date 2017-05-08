@@ -186,6 +186,7 @@ body {
   .dropdown-menu {
     a.dropdown-item {
       color: inherit;
+      cursor: pointer;
       &:hover {
         color: #fff;
         text-decoration: none;

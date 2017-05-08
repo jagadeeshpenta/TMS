@@ -68,19 +68,27 @@
               </div>
             </div>
           </div>
+
+          <!--<div style="margin-top:15px;" class="project-sheet" *ngFor="let project of approvalProjects">
+            <table class="table table-sheet-monthly">
+              <tr>
+                <td>Name</td>
+                <td *ngFor="let dy of approvalDays">
+                  {{ dy.getDate() }}
+                </td>
+                <td>T.Hrs</td>
+              </tr>
+            </table>
+          </div>-->
+
           <div class="m15-top">
             <button class="btn btn-success" (click)="updateStatus('A')">Approve</button>
             <button class="btn btn-danger" (click)="opendeclineModal()">Decline</button>
           </div>
         </div>
       </div>
-
     </div>
   </div>
-
-
-
-
 </div>
 
 

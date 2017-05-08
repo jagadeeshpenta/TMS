@@ -158,13 +158,14 @@ export class DBService {
     });
   }
 
-  addToProject({ id = 0, empid, projectid, role }) {
+  addToProject({ id = 0, empid, projectid, role, isbillable = true }) {
     return new Promise((res) => {
       this.makeRequest('/allocations?lToken=' + Cookie.get('lToken'), new Headers(), {
         id,
         empid,
         projectid,
-        role
+        role,
+        isbillable
       }, 'POST').then((resp) => {
         res(resp);
       });

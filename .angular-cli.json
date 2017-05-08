@@ -28,7 +28,7 @@
         "../node_modules/jquery/dist/jquery.min.js",
         "../node_modules/tether/dist/js/tether.js",
         "../node_modules/bootstrap/dist/js/bootstrap.min.js",
-        "../pre-build/jquery.table2excel.min.js"
+        "../pre-build/jquery.table2excel.js"
       ],
       "environmentSource": "environments/environment.ts",
       "environments": {

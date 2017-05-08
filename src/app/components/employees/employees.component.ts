@@ -18,9 +18,15 @@ export class EmployeesComponent implements OnInit {
     id: 0
   };
   profile;
-
+  expandpersonalfields = false;
   isEdit = false;
   employeesLoaded = false;
+
+  roleNames = {
+    'user': 'Employee',
+    'admin': 'Admin',
+    'hr': 'HR'
+  };
 
   constructor(public db: DBService, public auth: AuthService, private toastrService: ToastrService) {
     auth.checkUser().then(({ err, result }) => {

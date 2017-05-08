@@ -20,51 +20,6 @@
           </h4>
         </div>
         <div class="accord-content">
-
-          <!--<div class="clearfix">
-            <div class="btn-group btn-toggle pull-right">
-              <button class="btn btn-primary" [ngClass]="{'btn-default' : !isMonth}" [disabled]="!project.isMonth" (click)="project.isMonth =!project.isMonth;">Week</button>
-              <button class="btn btn-primary" [ngClass]="{'btn-default' : isMonth}" [disabled]="project.isMonth" (click)="project.isMonth =!project.isMonth">Month</button>
-            </div>
-          </div>-->
-          <div class="weekly-report m20-top" *ngIf="!project.isMonth">
-            <table class="" style="width: 100%;">
-              <tr>
-                <td>
-                  <button class="btn btn-primary" (click)="navigateToWeek(project)">Prev</button>
-                </td>
-                <td style="text-align: center;">
-                  <span *ngIf="project.weekToDisplay.length > 0">{{ project.weekToDisplay[0].getFullYear() }} </span>
-                </td>
-                <td style="text-align: right">
-                  <button class="btn btn-primary" (click)="navigateToWeek(project, 1)">Next</button>
-                </td>
-              </tr>
-            </table>
-            <table class="table m15-top reports-table">
-              <tr>
-                <th>Employee Name</th>
-                <th *ngFor="let dy of project.weekToDisplay">
-                  <div>{{ MonthNames[dy.getMonth()] }}</div>
-                  <div>{{ dy.getDate() }}</div>
-                  <div>{{ weekNames[dy.getDay()] }}</div>
-                </th>
-                <th>
-                  <div>Total </div>
-                  <div>Hours</div>
-                </th>
-              </tr>
-              <tr *ngFor="let allocation of getAllocationsOfProject(project)">
-                <td>{{ allocation.emp.firstname + ' ' + allocation.emp.lastname }} </td>
-                <td *ngFor="let dy of project.weekToDisplay">
-                  {{ getLoggedHours(project, dy, allocation.emp) }}
-                </td>
-                <td>
-                  {{getWeekTotalHours(project, project.weekToDisplay, allocation.emp)}}
-                </td>
-              </tr>
-            </table>
-          </div>
           <div class="monthly-report m20-top p20-btm" *ngIf="project.isMonth">
             <div class="flex-container no-border">
               <div class="flex-col text-left">
@@ -106,46 +61,52 @@
               </div>
             </div>
 
-
-            <table class="m15-top" id="xlstable" *ngIf="project.isMonth">
-              <thead class="flex-container flex-col col-first">
+            <table class="m15-top table" style="position: fixed; bottom:-120%;" id="xlstable" [id]="'xlstable-' + project.id" *ngIf="project.isMonth">
+              <thead>
                 <tr>
-                  <th id="span" colspan="33">{{ project.name}}</th>
+                  <th colspan="2">Project Name : {{ project.name}}</th>
                 </tr>
                 <tr>
-                  <th *ngIf="project.weekToDisplay.length > 0">{{ project.weekToDisplay[0].getFullYear() }}</th>
+                  <th></th>
+                  <th></th>
                 </tr>
-                <tr class="flex-col col-first">
-                  <th class="flex-head">Employee Name</th>
-                  <th class="flex-col" *ngFor="let dy of project.monthToDisplay">
-                    <div class="flex-head">
-                      {{ dy.getDate() }}
-                    </div>
-                  </th>
-                  <th>Total</th>
+                <tr>
+                  <th colspan="2">Billing Start Date : {{ project.monthToDisplay[0].getDate() + ' ' + MonthNames[project.monthToDisplay[0].getMonth()]
+                    + ', ' + project.monthToDisplay[0].getFullYear()}}</th>
+                </tr>
+                <tr>
+                  <th></th>
+                  <th></th>
+                </tr>
+                <tr>
+                  <th colspan="2">Billing End Date : {{ project.monthToDisplay[project.monthToDisplay.length - 1].getDate() + ' ' + MonthNames[project.monthToDisplay[project.monthToDisplay.length
+                    - 1].getMonth()] + ', ' + project.monthToDisplay[project.monthToDisplay.length - 1].getFullYear()}}</th>
+                </tr>
+                <tr>
+                  <th></th>
+                  <th></th>
+                </tr>
+                <tr>
+                  <th>Employee Name</th>
+                  <th>T Hrs</th>
                 </tr>
               </thead>
-              <tbody class="flex-container">
-                <tr class="flex-col">
-                  <td class="flex-row" *ngFor="let allocation of getAllocationsOfProject(project)">
+              <tbody>
+                <tr *ngFor="let allocation of getAllocationsOfProject(project)">
+                  <td>
                     {{ allocation.emp.firstname + ' ' + allocation.emp.lastname }}
                   </td>
-                  <td class="flex-row" *ngFor="let dy of project.monthToDisplay">
-                    <div class="flex-row" *ngFor="let allocation of getAllocationsOfProject(project)">
-                      {{ getLoggedHours(project, dy, allocation.emp) }}
-                    </div>
-                  </td>
-                  <td class="flex-row" *ngFor="let allocation of getAllocationsOfProject(project)">
-                    {{ getWeekTotalHours(project, project.monthToDisplay, allocation) }}
+                  <td>
+                    {{ getWeekTotalHours(project, project.monthToDisplay, allocation.emp, true) }}
                   </td>
                 </tr>
               </tbody>
             </table>
-            <div class="btn-group ">
+
+            <div class="btn-group m15-top">
               <button (click)="generateXls(project)" class="btn btn-primary">Export to Excel</button>
             </div>
           </div>
-
         </div>
       </div>
     </div>

@@ -15,16 +15,17 @@ export class MyTeamComponent implements OnInit {
     actualstartdate: '',
     actualenddate: ''
   };
-  
+
   MonthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-  
+
   employeeToProject = {
     project: {},
     empadd: '',
     role: 'member',
     emp: {},
     showSuggestions: false,
-    onSubmit: false
+    onSubmit: false,
+    isbillable: true
   };
 
   profile = {};
@@ -79,7 +80,7 @@ export class MyTeamComponent implements OnInit {
               empofProjects.push(em);
             }
           });
- 
+
           project.Employees = empofProjects;
         });
 
@@ -133,7 +134,7 @@ export class MyTeamComponent implements OnInit {
     this.db.deleteProject({ projectToDelete }).then(({ err, result }) => {
       if (!err) {
         this.fillProjects();
-         this.db.toastrInstance.success('', 'Project removed successfully', this.db.toastCfg);
+        this.db.toastrInstance.success('', 'Project removed successfully', this.db.toastCfg);
       }
     });
   }
@@ -153,6 +154,7 @@ export class MyTeamComponent implements OnInit {
     this.employeeToProject.showSuggestions = false;
     this.employeeToProject.empadd = '';
     this.employeeToProject.emp = {};
+    this.employeeToProject.isbillable = true;
     $('#addEmployeeToProjectModal').modal('show');
   }
 
@@ -163,7 +165,6 @@ export class MyTeamComponent implements OnInit {
   }
 
   filterSuggestions(event) {
-    console.log('keyup ', this.employeeToProject.empadd)
     this.employeeToProject.showSuggestions = true;
     this.employeeToProject.emp = {};
     var suitableEmps = [],
@@ -197,7 +198,8 @@ export class MyTeamComponent implements OnInit {
       this.db.addToProject({
         empid: this.employeeToProject.emp['empid'],
         projectid: this.employeeToProject.project['id'],
-        role: this.employeeToProject.role
+        role: this.employeeToProject.role,
+        isbillable: this.employeeToProject.isbillable
       }).then(({ err, result }) => {
         if (!err) {
           this.db.toastrInstance.success('', 'Employee added to project successfully', this.db.toastCfg);
@@ -226,7 +228,7 @@ export class MyTeamComponent implements OnInit {
       if (allocation.length > 0) {
         allocation = allocation[0];
         this.db.removeFromProject({ id: allocation['id'] }).then(({ err, result }) => {
-           this.db.toastrInstance.success('', 'Employee removed from project successfully', this.db.toastCfg);
+          this.db.toastrInstance.success('', 'Employee removed from project successfully', this.db.toastCfg);
           this.getAllocations();
         });
       }
@@ -248,7 +250,7 @@ export class MyTeamComponent implements OnInit {
       this.getAllocationsandEmployees();
     });
   }
- 
+
   getHtml5DateFormat(dy) {
     var formateTo2digit = (mnth) => {
       if (mnth < 10) {
@@ -261,10 +263,14 @@ export class MyTeamComponent implements OnInit {
   }
 
   EditProject(project) {
-    this.editProject = true;
+    project.editProject = true;
     project.editName = project.name;
-    project.editStartDate = this.getHtml5DateFormat(new Date(project.actualstartdate));
-    project.editEndDate = this.getHtml5DateFormat(new Date(project.actualenddate));
+    if (project.actualstartdate) {
+      project.editStartDate = this.getHtml5DateFormat(new Date(project.actualstartdate));
+    }
+    if (project.actualenddate) {
+      project.editEndDate = this.getHtml5DateFormat(new Date(project.actualenddate));
+    }
   }
 
   saveEditProject(project) {
@@ -275,7 +281,7 @@ export class MyTeamComponent implements OnInit {
       }
     });
   }
- 
+
   getDisplayDateFormat(timeStamp) {
     if (timeStamp) {
       var tmp = new Date(timeStamp);

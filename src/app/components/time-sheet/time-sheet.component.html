@@ -15,7 +15,7 @@
           <h4 class="heading">My Timesheet</h4>
         </div>
         <div class="clearfix">
-          <button routerLink="/my-approvals" class="btn btn-primary pull-right" *ngIf="profile && profile.managerfor != '0'">Waiting for you approvals</button>
+          <button routerLink="/my-approvals" class="btn btn-primary pull-right" *ngIf="isManager">Waiting for you approvals</button>
         </div>
         <div *ngFor="let project of myProjects" class="accord">
           <div class="accord-head" (click)="project.expand = !project.expand;">
@@ -27,7 +27,7 @@
                 <button class="btn btn-primary icon" (click)="navigateToCalender()">Previous Month</button>
               </div>
               <div class="col-md-4 text-center">
-                {{ MonthNames[calenderDate.getMonth()]}}, {{ calenderDate.getFullYear()}}
+                <span *ngIf="calenderDate">{{ MonthNames[calenderDate.getMonth()]}}, {{ calenderDate.getFullYear()}}</span>
               </div>
               <div class="col-md-4 btn-group btn-toggle calender-view-toggle">
                 <button class="btn btn-primary icon" (click)="navigateToCalender(1)">Next Month</button>
@@ -48,24 +48,31 @@
                 </thead>
                 <tbody>
                   <tr *ngFor="let week of calenderDays">
-                    <td *ngFor="let day of week.days" class="calender-day">
-                      <div class="date-time" *ngIf="day.dayCount" (click)="openLogWorkmodal(project, day.date)">
+                    <td *ngFor="let day of week.days" class="calender-day" >
+                      <div class="date-time" *ngIf="day.dayCount"  [ngClass]="getLoggedClass(project, day.date)"  (click)="openLogWorkmodal(project, day.date)">
                         <span class="date">{{day.dayCount}} </span>
                         <span class="time">{{ getLoggedHours(project, day.date) }}</span>
-                        <!--<span *ngIf="day.date">{{ day.date.getDate() + ' ' + day.date.getMonth()}}</span>-->
+                        <span class="sheet-status">
+                          <i class="fa fa-exclamation" aria-hidden="true"></i>
+                          <i class="fa fa-check" aria-hidden="true"></i>
+                          <i class="fa fa-times" aria-hidden="true"></i>
+                        </span>
+                      </div>
+                      <div class="mask">
+
                       </div>
                     </td>
                   </tr>
                 </tbody>
               </table>
             </div>
-            <div class="clearfix" *ngIf="monthDays.length > 0 && isLoaded.isProjectsLoaded &&  isLoaded.isSubmissionsLoaded && isLoaded.isTimesheetsLoaded">
-              <button [disabled]="checktimesheetsubmisionall(myProjects, monthDays[0])" (click)="submittimesheets()" class="btn btn-success pull-right"> 
+            <div class="clearfix" *ngIf="calenderDate && isLoaded.isProjectsLoaded &&  isLoaded.isSubmissionsLoaded && isLoaded.isTimesheetsLoaded">
+              <button [disabled]="checktimesheetsubmisionall(myProjects, calenderDate)" (click)="submittimesheets(project)" class="btn btn-success pull-right"> 
                 {{isTimesheetSubmited}}
                 <span *ngIf="isMonth && monthDays.length > 0">
-                  Timesheet of {{ MonthNames[monthDays[0].getMonth()] }}, {{ monthDays[0].getFullYear() }}
+                  Timesheet of {{ MonthNames[monthDays[0].getMonth()] }}, {{ calenderDate.getFullYear() }}
                 </span>
-                <span *ngIf="isWeek && weekDays.length > 0"> Timesheet of {{ MonthNames[weekDays[0].getMonth()] }}, {{ weekDays[0].getFullYear() }}</span>
+                <span *ngIf="isWeek && weekDays.length > 0"> Timesheet of {{ MonthNames[calenderDate.getMonth()] }}, {{ calenderDate.getFullYear() }}</span>
               </button>
             </div>
           </div>

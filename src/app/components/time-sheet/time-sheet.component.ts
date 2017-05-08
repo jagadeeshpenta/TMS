@@ -59,7 +59,7 @@ export class TimeSheetComponent implements OnInit {
     var dateToGenerate = new Date(this.calenderDate.getTime());
     if (isNext) {
       dateToGenerate.setMonth(dateToGenerate.getMonth() + 1);
-    } else { 
+    } else {
       dateToGenerate.setMonth(dateToGenerate.getMonth() - 1);
     }
     this.generateCalenderDays(dateToGenerate.getTime());
@@ -85,6 +85,7 @@ export class TimeSheetComponent implements OnInit {
   profile;
   toDay;
   declinecomment = '';
+  isManager = false;
 
   isLoaded = {
     isEmpLoaded: false,
@@ -329,11 +330,15 @@ export class TimeSheetComponent implements OnInit {
 
   processData() {
     this.myProjects = [];
+    this.isManager = false;
     if (this.isLoaded.isSubmissionsLoaded && this.isLoaded.userLoaded && this.isLoaded.isEmpLoaded && this.isLoaded.isAllocationsLoaded && this.isLoaded.isProjectsLoaded && this.isLoaded.isTimesheetsLoaded) {
       if (this.serviceData.Projects.length > 0) {
         this.serviceData.Projects.forEach((project) => {
           var alls = this.serviceData.Allocations.filter((a) => {
             if (a.empid == this.profile.empid && a.projectid == project.id && project.id != 1) {
+              if (a.role === 'manager') {
+                this.isManager = true;
+              }
               this.myProjects.push(project);
               return true;
             }
@@ -349,7 +354,9 @@ export class TimeSheetComponent implements OnInit {
           return 0;
         });
 
-        this.myProjects[0].expand = true;
+        if (this.myProjects.length > 0) {
+          this.myProjects[0].expand = true;
+        }
 
         this.processApprovals();
 
@@ -387,6 +394,67 @@ export class TimeSheetComponent implements OnInit {
       }
     }
     return '-';
+  }
+
+  getLoggedClass(project, loggedDate, emp) {
+    var classHash = { submitted: false, approved: false, pending: false, declined: false };
+
+    var empToCheck = emp || this.profile;
+    var empid = emp ? emp.empid : this.profile.empid;
+    if (this.serviceData.Timesheets && this.serviceData.Timesheets.length > 0) {
+      var timesheetData = this.serviceData.Timesheets.filter((t) => {
+        if (t.empid == empid && t.projectid == project.id && t.sheetdate == loggedDate.getDate() && t.sheetmonth == (loggedDate.getMonth() + 1) && t.sheetyear == loggedDate.getFullYear()) {
+          return true;
+        }
+        return false;
+      });
+      if (timesheetData.length > 0) {
+        var timesheet = timesheetData[0];
+        if (timesheetData[0].isapproved && parseInt(timesheetData[0].declinedcount) === 0) {
+          classHash.approved = true;
+        }
+
+        if (timesheetData[0].isapproved == false && parseInt(timesheetData[0].declinedcount) > 0) {
+          classHash.declined = true;
+        }
+
+        if (!timesheet.approved && !timesheet.declined) {
+          classHash.pending = true;
+        }
+      }
+    }
+    classHash.submitted = this.isDisabled(project, loggedDate, empToCheck);
+    return classHash;
+  }
+  getLoggedData(project, loggedDate, emp) {
+    var empToCheck = emp || this.profile;
+    var empid = emp ? emp.empid : this.profile.empid;
+    var timesheet = { submitted: false, approved: false, pending: false, logged: false, declined: false };
+    if (this.serviceData.Timesheets && this.serviceData.Timesheets.length > 0) {
+      var timesheetData = this.serviceData.Timesheets.filter((t) => {
+        if (t.empid == empid && t.projectid == project.id && t.sheetdate == loggedDate.getDate() && t.sheetmonth == (loggedDate.getMonth() + 1) && t.sheetyear == loggedDate.getFullYear()) {
+          return true;
+        }
+        return false;
+      });
+      if (timesheetData.length > 0) {
+        timesheet = timesheetData[0];
+        timesheet.logged = true;
+        if (timesheetData[0].isapproved && parseInt(timesheetData[0].declinedcount) === 0) {
+          timesheet.approved = true;
+        }
+
+        if (timesheetData[0].isapproved == false && parseInt(timesheetData[0].declinedcount) > 0) {
+          timesheet.declined = true;
+        }
+
+        if (!timesheet.approved && !timesheet.declined) {
+          timesheet.pending = true;
+        }
+      }
+    }
+    timesheet.submitted = this.isDisabled(project, loggedDate, empToCheck);
+    return timesheet;
   }
 
   isApproved(project, loggedDate, emp) {
@@ -481,7 +549,6 @@ export class TimeSheetComponent implements OnInit {
           this.monthDays = this.generateMonthDays(new Date(this.toDay));
         }
       } else {
-        console.log('user not logged In');
       }
     });
   }
@@ -776,11 +843,12 @@ export class TimeSheetComponent implements OnInit {
     return false;
   }
 
-  submittimesheets() {
+  submittimesheets(project) {
     var submonth = this.monthDays[0].getMonth();
     var subyear = this.monthDays[0].getFullYear();
 
-    var projectsToSubmit = this.myProjects.map((p) => p.id).join(',');
+    // var projectsToSubmit = this.myProjects.map((p) => p.id).join(',');
+    var projectsToSubmit = project.id.toString();
     var empid = this.profile.empid;
     var submisionData = {
       submonth,
@@ -789,8 +857,34 @@ export class TimeSheetComponent implements OnInit {
       subcount: 1,
       pid: projectsToSubmit
     };
+
+    var managers = [];
+    this.serviceData.Allocations.forEach(a => {
+      if (a.projectid == project.id && a.role == 'manager') {
+        var emp = this.serviceData.Employees.filter(e => { return e.empid == a.empid; });
+        if (emp.length > 0) {
+          managers.push(emp[0]);
+        }
+      }
+    });
+    var emailids = [];
+    if (managers.length > 0) {
+      emailids = managers.reduce((a, b) => {
+        return a.concat(b.emailid.replace('@evoketechnologies.com', ''));
+      }, []);
+    } else {
+      emailids = this.serviceData.Employees.filter(e => { return e.role == 'admin'; }).reduce((a, b) => {
+        return a.concat(b.emailid.replace('@evoketechnologies.com', ''));
+      }, []);
+    }
+
+    if (emailids.length === 1) {
+      emailids[0] = emailids[0] + '@evoketechnologies.com';
+    }
     this.db.makeRequest('/submissions?lToken=' + this.db.CookieManager.get('lToken'), new this.db.Headers(), submisionData, 'POST').then((resp) => {
       this.refreshData();
+      var emailContent = 'Project (' + project.name + ') - Timesheet (' + this.MonthNames[submonth] + ', ' + subyear + ') are waiting for you approval';
+      this.db.sendMail({ toAddress: emailids.join('@evoketechnologies.com,'), text: emailContent, mailContent: emailContent });
     });
   }
 
