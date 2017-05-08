@@ -125,3 +125,36 @@
 .btn-log-work {
     min-width: 10px;
 }
+
+.disabled {
+    background-color: #dddddd
+}
+
+.calender-container {
+    .calender-monthly {
+        td.calender-day {
+            padding: 0;
+            .date-time {
+                cursor: pointer;
+            }
+        }
+    }
+}
+
+.accord {
+    border: 1px solid #18BC9C;
+    margin-top: 5px;
+    .accord-head {
+        padding: 10px;
+        color: white;
+        background-color: #18BC9C;
+        cursor: pointer;
+    }
+    .accord-content {
+        padding: 15px;
+        display: none;
+        &.expand {
+            display: block;
+        }
+    }
+}

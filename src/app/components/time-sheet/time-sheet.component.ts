@@ -11,6 +11,61 @@ declare var $: any;
 })
 export class TimeSheetComponent implements OnInit {
 
+  calenderDay = 1;
+  calenderRows = [1, 2, 3, 4, 5];
+  calenderColumns = [1, 2, 3, 4, 5, 6, 7];
+
+  getCalenderDate(cr, cc, project) {
+    return {};
+  }
+
+  calenderDays = [];
+  calenderDate;
+  generateCalenderDays(dateToGenerate) {
+    var days = [];
+    var rows = 5;
+    var cols = [1, 2, 3, 4, 5, 6, 0];
+    var tDay = new Date(dateToGenerate || this.toDay);
+    tDay.setDate(1);
+    var dayCount = 0;
+    var isDayStarted = false;
+    var dayStrtsFrom = tDay.getDay();
+    var mnth = tDay.getMonth();
+    var wNames = [''];
+    for (var r = 0; r < rows; r++) {
+      var wdays = [];
+      for (var c = 0; c < cols.length; c++) {
+        if (r === 0 && cols[c] === dayStrtsFrom && !isDayStarted) {
+          isDayStarted = true;
+          this.calenderDate = new Date(tDay.getTime());
+        }
+        var dayData: any = {};
+        if (isDayStarted) {
+          dayCount = dayCount + 1;
+          if (mnth === tDay.getMonth()) {
+            dayData.dayCount = dayCount;
+            dayData.date = new Date(tDay.getTime());
+            tDay.setDate(tDay.getDate() + 1);
+          }
+        }
+        wdays.push(dayData);
+      }
+      days.push({ days: wdays });
+    }
+    this.calenderDays = days;
+  }
+
+  navigateToCalender(isNext) {
+    var dateToGenerate = new Date(this.calenderDate.getTime());
+    if (isNext) {
+      dateToGenerate.setMonth(dateToGenerate.getMonth() + 1);
+    } else { 
+      dateToGenerate.setMonth(dateToGenerate.getMonth() - 1);
+    }
+    this.generateCalenderDays(dateToGenerate.getTime());
+  }
+
+
   weekDays = [];
   monthDays = [];
 
@@ -24,7 +79,7 @@ export class TimeSheetComponent implements OnInit {
   };
 
   isWeek = true;
- 
+
   isMonth = !this.isWeek;
   myProjects = [];
   profile;
@@ -278,7 +333,7 @@ export class TimeSheetComponent implements OnInit {
       if (this.serviceData.Projects.length > 0) {
         this.serviceData.Projects.forEach((project) => {
           var alls = this.serviceData.Allocations.filter((a) => {
-            if (a.empid == this.profile.empid && a.projectid == project.id) {
+            if (a.empid == this.profile.empid && a.projectid == project.id && project.id != 1) {
               this.myProjects.push(project);
               return true;
             }
@@ -294,7 +349,11 @@ export class TimeSheetComponent implements OnInit {
           return 0;
         });
 
+        this.myProjects[0].expand = true;
+
         this.processApprovals();
+
+        this.generateCalenderDays(this.toDay);
       }
     }
   }
@@ -329,7 +388,7 @@ export class TimeSheetComponent implements OnInit {
     }
     return '-';
   }
- 
+
   isApproved(project, loggedDate, emp) {
     var empid = emp ? emp.empid : this.profile.empid;
     if (this.serviceData.Timesheets && this.serviceData.Timesheets.length > 0) {
