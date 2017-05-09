@@ -16,7 +16,8 @@
         }
         .accord-content {
             display: none;
-            padding-left: 20px;
+            padding-left: 10px;
+            padding-right: 10px;
         }
         &.expand {
             .accord-head {
@@ -59,11 +60,23 @@
                 border: none;
             }
         }
+        .flex-table-col{
+            
+        }
     }
+
 }
 
 .reports-table {
     tr {
         margin-top: 5px;
     }
+}
+
+#xlstable{
+    display: none;
+}
+
+.project-item[projectid="1"]{
+    display: none;
 }

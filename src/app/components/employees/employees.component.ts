@@ -18,9 +18,15 @@ export class EmployeesComponent implements OnInit {
     id: 0
   };
   profile;
-
+  expandpersonalfields = false;
   isEdit = false;
   employeesLoaded = false;
+
+  roleNames = {
+    'user': 'Employee',
+    'admin': 'Admin',
+    'hr': 'HR'
+  };
 
   constructor(public db: DBService, public auth: AuthService, private toastrService: ToastrService) {
     auth.checkUser().then(({ err, result }) => {
@@ -55,9 +61,14 @@ export class EmployeesComponent implements OnInit {
   }
 
   addEmployee() {
+    
     this.db.addEmployee({ newEmployee: this.newEmployee }).then(({ err, result }) => {
       if (!err) {
         this.fllEmployees();
+        var toastrMessage = (this.isEdit ? 'Updating' : 'Adding') + ' employee successfully';
+        this.db.toastrInstance.success('', toastrMessage, this.db.toastCfg);
+      } else {
+        this.db.toastrInstance.error('', 'Failed adding employee', this.db.toastCfg);
       }
     });
 
@@ -68,6 +79,7 @@ export class EmployeesComponent implements OnInit {
     this.db.deleteEmployee({ empToDelete }).then(({ err, result }) => {
       if (!err) {
         this.fllEmployees();
+        this.db.toastrInstance.success('', 'Deleted employee succesfully', this.db.toastCfg);
       }
     });
   }

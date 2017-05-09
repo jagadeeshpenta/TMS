@@ -13,6 +13,8 @@ import { EmployeesComponent } from './components/employees/employees.component';
 import { ReportsComponent } from './components/reports/reports.component';
 import { TodoComponent } from './components/todo/todo.component';
 
+import { WaitingForApprovalsComponent } from './components/waiting-for-approvals/waiting-for-approvals.component';
+
 export const router: Routes = [
     
     { path: 'login', component: LoginComponent, canActivate:[AuthGuard]  },
@@ -22,6 +24,7 @@ export const router: Routes = [
     { path: 'time-sheet', component: TimeSheetComponent, canActivate:[AuthGuard] },
     { path: 'my-team', component: MyTeamComponent, canActivate:[AuthGuard] },
     { path: 'employees', component: EmployeesComponent, canActivate:[AuthGuard] },
+    { path: 'my-approvals', component: WaitingForApprovalsComponent, canActivate:[AuthGuard] },
     { path: 'reports', component: ReportsComponent, canActivate:[AuthGuard] },
     { path: 'todo', component: TodoComponent }
 ];

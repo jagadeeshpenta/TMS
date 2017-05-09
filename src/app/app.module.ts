@@ -21,6 +21,7 @@ import { TimeSheetComponent } from './components/time-sheet/time-sheet.component
 import { MyTeamComponent } from './components/my-team/my-team.component';
 import { EmployeesComponent } from './components/employees/employees.component';
 import { ReportsComponent } from './components/reports/reports.component';
+import { NotificationComponent } from './components/notification/notification.component';
 
 
 import { AuthService } from './Shared/auth/auth.service';
@@ -31,7 +32,9 @@ import { RootService } from './Shared/root-service';
 
 
 import { UiForApiModule } from './ui-for-api/ui-for-api.module';
+import { WaitingForApprovalsComponent } from './components/waiting-for-approvals/waiting-for-approvals.component';
 import { environment } from './../environments/environment';
+import { TimeSheetModule } from './../app/components/time-sheet';
 
 var importModulesArr = [
   BrowserModule,
@@ -39,7 +42,8 @@ var importModulesArr = [
   HttpModule,
   TodoModule,
   routes,
-  ToastrModule.forRoot()
+  ToastrModule.forRoot(),
+  TimeSheetModule
 ];
 
 if (!environment.production) {
@@ -50,15 +54,16 @@ if (!environment.production) {
   declarations: [
     AppComponent,
     NavigationComponent,
+    NotificationComponent,
     FooterComponent,
     DashboardComponent,
     LoginComponent,
     ProfileComponent,
     ChangePasswordComponent,
-    TimeSheetComponent,
     MyTeamComponent,
     EmployeesComponent,
-    ReportsComponent
+    ReportsComponent,
+    WaitingForApprovalsComponent
   ],
   imports: importModulesArr,
   providers: [AuthService, UserService, AuthGuard, DBService, RootService],

@@ -1,7 +1,6 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { DBService } from './../../Shared/dbservice';
 import { AuthService } from './../../Shared/auth/auth.service';
-
 declare var $: any;
 @Component({
   selector: 'app-reports',
@@ -256,7 +255,7 @@ export class ReportsComponent implements OnInit {
     return '-';
   }
 
-  getWeekTotalHours(project, weekToCount, emp) {
+  getWeekTotalHours(project, weekToCount, emp, maximum8) {
     if (this.serviceData.Timesheets && this.serviceData.Timesheets.length > 0) {
       var totalHours = 0;
       var timesheetbyempproject = this.serviceData.Timesheets.filter((t) => {
@@ -276,7 +275,11 @@ export class ReportsComponent implements OnInit {
 
         if (tsheet.length > 0) {
           if (tsheet[0].isapproved && tsheet[0].declinedcount == 0) {
-            totalHours = totalHours + parseInt(tsheet[0].loggedhours);
+            var sheetHrs = parseInt(tsheet[0].loggedhours);
+            if (maximum8) {
+              sheetHrs = sheetHrs > 8 ? 8 : sheetHrs;
+            }
+            totalHours = totalHours + sheetHrs;
           }
         }
       })
@@ -284,5 +287,30 @@ export class ReportsComponent implements OnInit {
     }
     return 0;
   }
+  generateDates(sDate, eDate) {
+    var strtDate = new Date(sDate);
+    var endDate = new Date(eDate);
+    var daysToGenerate = [];
+    for (var i = 0; i < 100; i++) {
+      var tmpDate = new Date(strtDate.getTime());
+      tmpDate.setDate(tmpDate.getDate() + i);
+      daysToGenerate.push(new Date(tmpDate.getTime()));
+      if (tmpDate.getFullYear() == endDate.getFullYear() && tmpDate.getMonth() == endDate.getMonth() && tmpDate.getDate() == endDate.getDate()) {
+        break;
+      }
+    }
+    return daysToGenerate;
+  }
 
+  generateXls(project) {
+    $("#xlstable-" + project.id).table2excel({
+      exclude: ".noExl",
+      name: "Excel Document Name",
+      filename: project.name.replace(' ', '-') + "-Reports",
+      fileext: ".xls",
+      exclude_img: true,
+      exclude_links: true,
+      exclude_inputs: true
+    });
+  }
 }

@@ -1,0 +1,130 @@
+<div class="container">
+  <div class="m15-bottom">
+    <ul class="breadcrumbs">
+      <li class="bread-item">
+        <a routerLink="/dashboard">Dashboard</a>
+        <i class="fa fa-angle-right" aria-hidden="true" style="margin-left:5px;"></i>
+      </li>
+      <li class="bread-item">
+        <a routerLink="/time-sheet">Timesheets</a>
+        <i class="fa fa-angle-right" aria-hidden="true" style="margin-left:5px;"></i>
+      </li>
+      <li class="bread-item">Approvals</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <div class="card-block">
+      <div class="clearfix">
+        <button routerLink="/time-sheet" class="btn btn-primary pull-right">Back to Timesheets</button>
+      </div>
+      <div class="waiting-for-approval" *ngIf="waitingForapprovalsLoaded">
+        <h4>Waiting for approvals</h4>
+        <div>
+          <div style="display: flex;">
+            <div style="flex: 1 1 auto;">
+              <button class="btn btn-primary" (click)="moveApprovalDays()">Prev Month</button>
+            </div>
+            <div style="flex: 1 1 auto; text-align:center; font-weight: bold;" *ngIf="approvalDays.length > 0">
+              {{ MonthNames[approvalDays[0].getMonth()] + ' , ' + approvalDays[0].getFullYear() }}
+            </div>
+            <div style="flex: 1 1 auto;text-align:right;">
+              <button class="btn btn-primary" (click)="moveApprovalDays(1)">Next Month</button>
+            </div>
+          </div>
+          <div class="sheet-view monthly" *ngFor="let project of approvalProjects">
+            <h5>{{ project.name }}</h5>
+            <div class="flex-container">
+              <div class="flex-col left-align">
+                <div class="flex-head">
+                  Name
+                </div>
+                <div class="flex-row" *ngFor="let tm of getProjectMembers(project)">
+                  {{ tm.firstname + ' ' + tm.lastname }}
+                </div>
+              </div>
+
+              <div class="flex-col" *ngFor="let dy of approvalDays">
+                <div class="flex-head">
+                  {{ dy.getDate() }}
+                </div>
+                <div class="flex-row" [ngClass]="{'hover-effect': checkLogHours(project, dy, tm) }" *ngFor="let tm of getProjectMembers(project)">
+                  <span class="hide-on-hover logged-hours" [attr.selected]="isTimeSheetSelected(project, dy, tm, approvalChecked, approvalsubmissions)" [ngClass]="getStatus(project, dy, tm)">
+                    {{ getLoggedHours(project, dy, tm) }}
+                  </span>
+                  <span class="show-on-hover">
+                    <input [checked]="isTimeSheetSelected(project, dy, tm, approvalChecked, approvalsubmissions)" [attr.timesheetid]="getTimeSheetId(project, dy, tm)"  type="checkbox" (change)="updateCheckedData($event, project, tm, dy)" [attr.name]="'c' + project.id + 'd' + dy.getTime() + 't' + tm.id" />
+                  </span>
+                </div>
+              </div>
+
+              <div class="flex-col">
+                <div class="flex-head">
+                  T.Hrs
+                </div>
+                <div class="flex-row" *ngFor="let tm of getProjectMembers(project)">
+                  {{ getTotalHrs(project, tm) }}
+                </div>
+              </div>
+
+              <div class="flex-col">
+                <div class="flex-head">
+                  Ops
+                </div>
+                <div class="flex-row" *ngFor="let tm of getProjectMembers(project)">
+                  <input type="checkbox" [checked]="isAllSelected(project, tm, approvalChecked, approvalsubmissions)" (change)="selectAllTimesheets($event, project, tm)"  [attr.name]="'c' + project.id + 'tt' + tm.id" />
+                </div>
+              </div>
+
+            </div>
+          </div>
+
+          <!--<div style="margin-top:15px;" class="project-sheet" *ngFor="let project of approvalProjects">
+            <table class="table table-sheet-monthly">
+              <tr>
+                <td>Name</td>
+                <td *ngFor="let dy of approvalDays">
+                  {{ dy.getDate() }}
+                </td>
+                <td>T.Hrs</td>
+              </tr>
+            </table>
+          </div>-->
+
+          <div class="m15-top">
+            <button class="btn btn-success" (click)="updateStatus('A')">Approve</button>
+            <button class="btn btn-danger" (click)="opendeclineModal()">Decline</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<div class="modal fade" id="declineCommentModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">
+          <legend>Decline Comment</legend>
+        </h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form class="form-horizontal" method="POST" (submit)="updateStatus('D')">
+          <div class="form-group">
+            <label for="timesheetcomment">Comment</label>
+            <textarea class="form-control" name="declinecomment" [(ngModel)]="declinecomment" rows="3"></textarea>
+          </div>
+          <div style="text-align: right;">
+            <button type="submit" class="btn btn-success">Submit</button>
+            <button type="button" class="btn btn-danger" (click)="closedeclinemodal()">Cancel</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

@@ -3,6 +3,7 @@ import { Http, Response, Headers, RequestOptions, URLSearchParams } from '@angul
 import { Cookie } from 'ng2-cookies';
 
 import { environment } from './../../environments/environment';
+import { ToastrService, ToastConfig } from './../../../node_modules/toastr-ng2';
 
 @Injectable()
 export class DBService {
@@ -11,10 +12,14 @@ export class DBService {
   cacheData: any;
   CookieManager;
   Headers;
-  constructor(private http: Http) {
+ 
+  toastrInstance;
+  toastCfg = new ToastConfig({ timeOut: 900 });
+  constructor(private http: Http, private toastr: ToastrService) {
     this.lToken = Cookie.get('lToken');
     this.CookieManager = Cookie;
     this.Headers = Headers;
+    this.toastrInstance = toastr;
   }
 
   makeRequest(url, headers, reqData, method) {
@@ -132,6 +137,19 @@ export class DBService {
     });
   }
 
+  editProject(project) {
+    return new Promise((res) => {
+      this.makeRequest('/projects?lToken=' + Cookie.get('lToken'), new Headers(), {
+        id: project.id,
+        name: project.editName,
+        actualstartdate: project.editStartDate,
+        actualenddate: project.editEndDate
+      }, 'POST').then((resp) => {
+        res(resp);
+      });
+    });
+  }
+ 
   deleteProject({ projectToDelete }) {
     return new Promise((res, rej) => {
       this.makeRequest('/projects?lToken=' + Cookie.get('lToken'), new Headers(), projectToDelete, 'DELETE').then((resp) => {
@@ -140,13 +158,14 @@ export class DBService {
     });
   }
 
-  addToProject({ id = 0, empid, projectid, role }) {
+  addToProject({ id = 0, empid, projectid, role, isbillable = true }) {
     return new Promise((res) => {
       this.makeRequest('/allocations?lToken=' + Cookie.get('lToken'), new Headers(), {
         id,
         empid,
         projectid,
-        role
+        role,
+        isbillable
       }, 'POST').then((resp) => {
         res(resp);
       });

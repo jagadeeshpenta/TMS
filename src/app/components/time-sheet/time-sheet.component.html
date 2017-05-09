@@ -1,5 +1,5 @@
 <div class="container" [ngClass]="{'fluid-container': isMonth, 'container': isWeek}">
-  <div style="margin-top:15px; margin-bottom:15px;">
+  <div class="m15-bottom">
     <ul class="breadcrumbs">
       <li class="bread-item">
         <a routerLink="/dashboard">Dashboard</a>
@@ -8,194 +8,78 @@
       <li class="bread-item">Timesheets</li>
     </ul>
   </div>
-
-  <div class="clearfix m15-top">
-    <div class="btn-group btn-toggle pull-right">
-      <button class="btn btn-primary" [ngClass]="{'btn-default' : isWeek}" [disabled]="isWeek" (click)="isWeek = true; isMonth= false;">Week</button>
-      <button class="btn btn-primary" [ngClass]="{'btn-default' : isMonth}" [disabled]="isMonth" (click)="isWeek = false; isMonth= true;">Month</button>
-    </div>
-  </div>
-
-  <div class="waiting-for-approval" *ngIf="waitingForapprovalsLoaded">
-    <h4>Waiting for approvals</h4>
-    <div *ngIf="isMonth">
-      <div style="display: flex;">
-        <div style="flex: 1 1 auto;">
-          <button class="btn btn-primary" (click)="moveApprovalDays()">Prev Month</button>
+  <div class="card">
+    <div class="card-block">
+      <div class="my-timesheets">
+        <div class="underline m15-bottom">
+          <h4 class="heading">My Timesheet</h4>
         </div>
-        <div style="flex: 1 1 auto; text-align:center; font-weight: bold;">
-          {{ MonthNames[approvalDays[0].getMonth()] + ' , ' + approvalDays[0].getFullYear() }}
+        <div class="clearfix">
+          <button routerLink="/my-approvals" class="btn btn-primary pull-right" *ngIf="isManager || (profile && profile.role == 'admin')">Waiting for you approvals</button>
         </div>
-        <div style="flex: 1 1 auto;text-align:right;">
-          <button class="btn btn-primary" (click)="moveApprovalDays(1)">Next Month</button>
-        </div>
-      </div>
-      <div class="sheet-view monthly" *ngFor="let project of approvalProjects">
-        <h5>{{ project.name }}</h5>
-        <div class="flex-container">
-          <div class="flex-col left-align">
-            <div class="flex-head">
-              Name
-            </div>
-            <div class="flex-row" *ngFor="let tm of getProjectMembers(project)">
-              {{ tm.firstname + ' ' + tm.lastname }}
-            </div>
+        <div *ngFor="let project of myProjects" class="accord">
+          <div class="accord-head" (click)="project.expand = !project.expand;">
+            {{ project.name}}
           </div>
-
-          <div class="flex-col" *ngFor="let dy of approvalDays">
-            <div class="flex-head">
-              {{ dy.getDate() }}
-            </div>
-            <div class="flex-row" [ngClass]="{'hover-effect': checkLogHours(project, dy, tm) }" *ngFor="let tm of getProjectMembers(project)">
-              <span class="hide-on-hover logged-hours" [attr.selected]="isLogSelected(project, dy, tm, approvalChecked)" [ngClass]="getStatus(project, dy, tm)">
-                {{ getLoggedHours(project, dy, tm) }}
-              </span>
-              <span class="show-on-hover">
-                <input [attr.timesheetid]="getTimeSheetId(project, dy, tm)" type="checkbox" (change)="updateCheckedData($event, project, tm, dy)" [attr.name]="'c' + project.id + 'd' + dy.getTime() + 't' + tm.id" />
-              </span>
-            </div>
-          </div>
-
-          <div class="flex-col">
-            <div class="flex-head">
-              T.Hrs
-            </div>
-            <div class="flex-row" *ngFor="let tm of getProjectMembers(project)">
-              {{ getTotalHrs(project, tm) }}
-            </div>
-          </div>
-
-
-        </div>
-
-        <div class="m15-top">
-          <button class="btn btn-success" (click)="updateStatus('A')">Approve</button>
-          <button class="btn btn-success" data-toggle="modal" data-target="#declineCommentModal">Decline</button>
-        </div>
-      </div>
-    </div>
-
-    <div *ngIf="isWeek">
-      <div style="display: flex;">
-        <div style="flex: 1 1 auto;">
-          <button class="btn btn-primary" (click)="moveApprovalDays()">Prev Week</button>
-        </div>
-        <div style="flex: 1 1 auto; text-align:center; font-weight: bold;">
-          {{ approvalDays[0].getFullYear() }}
-        </div>
-        <div style="flex: 1 1 auto;text-align:right;">
-          <button class="btn btn-primary" (click)="moveApprovalDays(1)">Next Week</button>
-        </div>
-      </div>
-
-      <div class="sheet-view monthly no-border" *ngFor="let project of approvalProjects; let i = index;">
-        <div *ngIf="getProjectMembers(project).length > 0">
-          <h5>{{ project.name }}</h5>
-          <div class="flex-container">
-            <div class="flex-col left-align">
-              <div class="flex-head" *ngIf="i === 0">
-                Name
+          <div class="accord-content" [ngClass]="{'expand': project.expand}" *ngIf="calenderDays.length > 0">
+            <div class="row m15-bottom">
+              <div class="col-md-4">
+                <button class="btn btn-primary icon" (click)="navigateToCalender()">Previous Month</button>
               </div>
-              <div class="flex-row" *ngFor="let tm of getProjectMembers(project)">
-                {{ tm.firstname + ' ' + tm.lastname }}
+              <div class="col-md-4 text-center">
+                <span *ngIf="calenderDate">{{ MonthNames[calenderDate.getMonth()]}}, {{ calenderDate.getFullYear()}}</span>
+              </div>
+              <div class="col-md-4 btn-group btn-toggle calender-view-toggle">
+                <button class="btn btn-primary icon" (click)="navigateToCalender(1)">Next Month</button>
               </div>
             </div>
+            <div class="calender-container">
+              <table class="table table-bordered calender-monthly">
+                <thead class="bg">
+                  <tr>
+                    <th>Monday</th>
+                    <th>Tuesday</th>
+                    <th>Wednesday</th>
+                    <th>Thursday</th>
+                    <th>Friday</th>
+                    <th>Saturday</th>
+                    <th>Sunday</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let week of calenderDays">
+                    <td *ngFor="let day of week.days" class="calender-day" >
+                      <div class="date-time" *ngIf="day.dayCount"  [ngClass]="getLoggedClass(project, day.date)"  (click)="openLogWorkmodal(project, day.date)">
+                        <span class="date">{{day.dayCount}} </span>
+                        <span class="time">{{ getLoggedHours(project, day.date) }}</span>
+                        <span class="sheet-status">
+                          <i class="fa fa-exclamation" aria-hidden="true"></i>
+                          <i class="fa fa-check" aria-hidden="true"></i>
+                          <i class="fa fa-times" aria-hidden="true"></i>
+                        </span>
+                      </div>
+                      <div class="mask">
 
-            <div class="flex-col" *ngFor="let dy of approvalWeekDays">
-              <div class="flex-head" *ngIf="i === 0">
-                {{ dy.getDate() }}
-              </div>
-              <div class="flex-row" [ngClass]="{'hover-effect': checkLogHours(project, dy, tm) }" *ngFor="let tm of getProjectMembers(project)">
-                <span class="hide-on-hover logged-hours" [attr.selected]="isLogSelected(project, dy, tm, approvalChecked)" [ngClass]="getStatus(project, dy, tm)">
-                    {{ getLoggedHours(project, dy, tm) }}
+                      </div>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="clearfix" *ngIf="calenderDate && isLoaded.isProjectsLoaded &&  isLoaded.isSubmissionsLoaded && isLoaded.isTimesheetsLoaded">
+              <button [disabled]="checktimesheetsubmisionall(myProjects, calenderDate)" (click)="submittimesheets(project)" class="btn btn-success pull-right"> 
+                {{isTimesheetSubmited}}
+                <span *ngIf="isMonth && monthDays.length > 0">
+                  Timesheet of {{ MonthNames[monthDays[0].getMonth()] }}, {{ calenderDate.getFullYear() }}
                 </span>
-                <span class="show-on-hover">
-                  <input [attr.timesheetid]="getTimeSheetId(project, dy, tm)" type="checkbox" (change)="updateCheckedData($event, project, tm, dy)" [attr.name]="'c' + project.id + 'd' + dy.getTime() + 't' + tm.id" />
-                </span>
-              </div>
+                <span *ngIf="isWeek && weekDays.length > 0"> Timesheet of {{ MonthNames[calenderDate.getMonth()] }}, {{ calenderDate.getFullYear() }}</span>
+              </button>
             </div>
-
-            <div class="flex-col">
-              <div class="flex-head" *ngIf="i === 0">
-                T.Hrs
-              </div>
-              <div class="flex-row" *ngFor="let tm of getProjectMembers(project)">
-                {{ getTotalHrs(project, tm) }}
-              </div>
-            </div>
-
-
-          </div>
-
-          <div class="m15-top">
-            <button class="btn btn-success" (click)="updateStatus('A')">Approve</button>
-            <button class="btn btn-success" data-toggle="modal" data-target="#declineCommentModal">Decline</button>
           </div>
         </div>
       </div>
     </div>
   </div>
-
-
-
-
-  <div class="m20-top">
-    <h3>My Timesheet</h3>
-    <div *ngIf="isWeek">
-      <div>
-        <button class="btn btn-primary" (click)="navigateToWeek()">Prev Week</button>
-        <button class="btn btn-primary pull-right" (click)="navigateToWeek(1)">Next Week</button>
-      </div>
-      <table class="table month-timesheet m15-top" *ngIf="weekDays.length > 0">
-        <tr>
-          <td [attr.colspan]="weekDays.length + 1" style="text-align: center;">{{ weekDays[0].getFullYear() }}</td>
-        </tr>
-        <tr class="days-head">
-          <td style="width: 30%;">Project Name </td>
-          <td *ngFor="let dy of weekDays">
-            <div>{{ MonthNames[dy.getMonth()] }}</div>
-            <div>{{ dy.getDate() }}</div>
-            <div>{{ weekNames[dy.getDay()] }}</div>
-          </td>
-        </tr>
-        <tr *ngFor="let project of myProjects">
-          <td>{{project.name}}</td>
-          <td *ngFor="let dy of weekDays">
-            <button class="btn btn-primary" [disabled]="isApproved(project, dy)" (click)="openLogWorkmodal(project, dy)">{{getLoggedHours(project, dy)}}</button>
-          </td>
-        </tr>
-      </table>
-    </div>
-    <div *ngIf="isMonth">
-      <div class="clearfix">
-        <button class="btn btn-primary" (click)="navigateToMonth()">Prev Month</button>
-        <button class="btn btn-primary pull-right" (click)="navigateToMonth(1)">Next Month</button>
-      </div>
-      <table class="table m15-top timesheet-month" *ngIf="monthDays.length > 0">
-        <tr class="table-head">
-          <td [attr.colspan]="monthDays.length + 1" style="text-align: center;">
-            <div>{{ MonthNames[monthDays[0].getMonth()] }}, {{ monthDays[0].getFullYear() }}</div>
-          </td>
-        </tr>
-        <tr class="table-head">
-          <td></td>
-          <td *ngFor="let dy of monthDays">{{ weekNames[dy.getDay()][0] }}</td>
-        </tr>
-        <tr class="table-head">
-          <td>Project Name </td>
-          <td *ngFor="let dy of monthDays">{{ dy.getDate()}}</td>
-        </tr>
-        <tr *ngFor="let project of myProjects">
-          <td>{{project.name}}</td>
-          <td *ngFor="let dy of monthDays" class="p0">
-            <button class="btn btn-primary" (click)="openLogWorkmodal(project, dy)">{{getLoggedHours(project, dy)}}</button>
-          </td>
-        </tr>
-      </table>
-
-    </div>
-  </div>
-
 </div>
 
 <div class="modal fade" id="logWorkModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">

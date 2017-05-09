@@ -24,12 +24,12 @@ export class MyTeamComponent implements OnInit {
     role: 'member',
     emp: {},
     showSuggestions: false,
-    onSubmit: false
+    onSubmit: false,
+    isbillable: true
   };
 
   profile = {};
   showDropDownBox;
-
   Projects = [];
   Employees = [];
   Allocations = [];
@@ -39,6 +39,7 @@ export class MyTeamComponent implements OnInit {
   employeesLoaded = false;
 
   projectsProcessed = false;
+  editProject = false;
   constructor(public db: DBService, public auth: AuthService) {
 
     auth.checkUser().then(({ err, result }) => {
@@ -79,7 +80,8 @@ export class MyTeamComponent implements OnInit {
               empofProjects.push(em);
             }
           });
-          project.Employees = empofProjects; 
+
+          project.Employees = empofProjects;
         });
 
         this.projectsProcessed = true;
@@ -122,6 +124,7 @@ export class MyTeamComponent implements OnInit {
       if (!err) {
         $('#addProjectModal').modal('hide');
         this.fillProjects();
+        this.db.toastrInstance.success('', 'Project added successfully', this.db.toastCfg);
       }
     });
   }
@@ -131,6 +134,7 @@ export class MyTeamComponent implements OnInit {
     this.db.deleteProject({ projectToDelete }).then(({ err, result }) => {
       if (!err) {
         this.fillProjects();
+        this.db.toastrInstance.success('', 'Project removed successfully', this.db.toastCfg);
       }
     });
   }
@@ -150,6 +154,7 @@ export class MyTeamComponent implements OnInit {
     this.employeeToProject.showSuggestions = false;
     this.employeeToProject.empadd = '';
     this.employeeToProject.emp = {};
+    this.employeeToProject.isbillable = true;
     $('#addEmployeeToProjectModal').modal('show');
   }
 
@@ -160,7 +165,6 @@ export class MyTeamComponent implements OnInit {
   }
 
   filterSuggestions(event) {
-    console.log('keyup ', this.employeeToProject.empadd)
     this.employeeToProject.showSuggestions = true;
     this.employeeToProject.emp = {};
     var suitableEmps = [],
@@ -194,15 +198,19 @@ export class MyTeamComponent implements OnInit {
       this.db.addToProject({
         empid: this.employeeToProject.emp['empid'],
         projectid: this.employeeToProject.project['id'],
-        role: this.employeeToProject.role
+        role: this.employeeToProject.role,
+        isbillable: this.employeeToProject.isbillable
       }).then(({ err, result }) => {
         if (!err) {
+          this.db.toastrInstance.success('', 'Employee added to project successfully', this.db.toastCfg);
           this.employeeToProject.project = {};
           this.employeeToProject.showSuggestions = false;
           this.employeeToProject.empadd = '';
           this.employeeToProject.emp = {};
           $('#addEmployeeToProjectModal').modal('hide');
           this.getAllocations();
+        } else {
+          this.db.toastrInstance.error('', 'Failed to add employee to project.', this.db.toastCfg);
         }
       });
     }
@@ -220,12 +228,12 @@ export class MyTeamComponent implements OnInit {
       if (allocation.length > 0) {
         allocation = allocation[0];
         this.db.removeFromProject({ id: allocation['id'] }).then(({ err, result }) => {
+          this.db.toastrInstance.success('', 'Employee removed from project successfully', this.db.toastCfg);
           this.getAllocations();
         });
       }
     }
   }
-
 
   showDropdown() {
     this.showDropDownBox = true;
@@ -242,7 +250,38 @@ export class MyTeamComponent implements OnInit {
       this.getAllocationsandEmployees();
     });
   }
- 
+
+  getHtml5DateFormat(dy) {
+    var formateTo2digit = (mnth) => {
+      if (mnth < 10) {
+        return `0${mnth}`;
+      } else {
+        return `${mnth}`;
+      }
+    };
+    return dy.getFullYear() + '-' + formateTo2digit(dy.getMonth() + 1) + '-' + formateTo2digit(dy.getDate());
+  }
+
+  EditProject(project) {
+    project.editProject = true;
+    project.editName = project.name;
+    if (project.actualstartdate) {
+      project.editStartDate = this.getHtml5DateFormat(new Date(project.actualstartdate));
+    }
+    if (project.actualenddate) {
+      project.editEndDate = this.getHtml5DateFormat(new Date(project.actualenddate));
+    }
+  }
+
+  saveEditProject(project) {
+    //console.log(project);
+    this.db.editProject(project).then(({ err, result }) => {
+      if (!err) {
+        this.fillProjects();
+      }
+    });
+  }
+
   getDisplayDateFormat(timeStamp) {
     if (timeStamp) {
       var tmp = new Date(timeStamp);

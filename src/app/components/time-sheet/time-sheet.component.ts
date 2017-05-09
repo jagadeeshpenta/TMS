@@ -11,6 +11,62 @@ declare var $: any;
 })
 export class TimeSheetComponent implements OnInit {
 
+  calenderDay = 1;
+  calenderRows = [1, 2, 3, 4, 5];
+  calenderColumns = [1, 2, 3, 4, 5, 6, 7];
+
+  getCalenderDate(cr, cc, project) {
+    return {};
+  }
+
+  showLoading = true;
+  calenderDays = [];
+  calenderDate;
+  generateCalenderDays(dateToGenerate) {
+    var days = [];
+    var rows = 5;
+    var cols = [1, 2, 3, 4, 5, 6, 0];
+    var tDay = new Date(dateToGenerate || this.toDay);
+    tDay.setDate(1);
+    var dayCount = 0;
+    var isDayStarted = false;
+    var dayStrtsFrom = tDay.getDay();
+    var mnth = tDay.getMonth();
+    var wNames = [''];
+    for (var r = 0; r < rows; r++) {
+      var wdays = [];
+      for (var c = 0; c < cols.length; c++) {
+        if (r === 0 && cols[c] === dayStrtsFrom && !isDayStarted) {
+          isDayStarted = true;
+          this.calenderDate = new Date(tDay.getTime());
+        }
+        var dayData: any = {};
+        if (isDayStarted) {
+          dayCount = dayCount + 1;
+          if (mnth === tDay.getMonth()) {
+            dayData.dayCount = dayCount;
+            dayData.date = new Date(tDay.getTime());
+            tDay.setDate(tDay.getDate() + 1);
+          }
+        }
+        wdays.push(dayData);
+      }
+      days.push({ days: wdays });
+    }
+    this.calenderDays = days;
+  }
+
+  navigateToCalender(isNext) {
+    var dateToGenerate = new Date(this.calenderDate.getTime());
+    if (isNext) {
+      dateToGenerate.setMonth(dateToGenerate.getMonth() + 1);
+    } else {
+      dateToGenerate.setMonth(dateToGenerate.getMonth() - 1);
+    }
+    this.generateCalenderDays(dateToGenerate.getTime());
+  }
+
+
   weekDays = [];
   monthDays = [];
 
@@ -19,7 +75,8 @@ export class TimeSheetComponent implements OnInit {
     Employees: [],
     Projects: [],
     Allocations: [],
-    Timesheets: []
+    Timesheets: [],
+    Submissions: []
   };
 
   isWeek = true;
@@ -29,27 +86,26 @@ export class TimeSheetComponent implements OnInit {
   profile;
   toDay;
   declinecomment = '';
-
+  isManager = false;
 
   isLoaded = {
     isEmpLoaded: false,
     isProjectsLoaded: false,
     isAllocationsLoaded: false,
     isTimesheetsLoaded: false,
+    isSubmissionsLoaded: false,
     userLoaded: false
   };
 
   MonthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
   weekNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
   constructor(public db: DBService, public auth: AuthService) {
-
   }
 
   waitingForapprovalsLoaded = false;
   approvalProjects = [];
   approvalDays = [];
   approvalWeekDays = [];
-
   approvalChecked = [];
 
   getTimeSheetId(project, loggedDate, emp) {
@@ -130,8 +186,9 @@ export class TimeSheetComponent implements OnInit {
           isapproved: true,
         }
       }).then(() => {
-        this.sendMails(this.approvalChecked.join(','), typ);
+        this.db.toastrInstance.success('', 'Timesheet approved', this.db.toastCfg);
 
+        this.sendMails(this.approvalChecked.join(','), typ);
         this.approvalChecked = [];
         this.getData('/timesheets', 'Timesheets', 'isTimesheetsLoaded');
         this.processData();
@@ -143,11 +200,11 @@ export class TimeSheetComponent implements OnInit {
           isapproved: false,
         }
       }).then(() => {
+        this.db.toastrInstance.success('', 'Timesheet declined', this.db.toastCfg);
         this.sendMails(this.approvalChecked.join(','), typ);
         this.addTimesheetComment();
         this.closedeclinemodal();
         this.declinecomment = '';
-
         this.approvalChecked = [];
         this.getData('/timesheets', 'Timesheets', 'isTimesheetsLoaded');
         this.processData();
@@ -186,7 +243,6 @@ export class TimeSheetComponent implements OnInit {
     this.approvalDays = this.generateMonthDays(new Date(this.toDay))
     this.approvalWeekDays = this.generateCurrentWeek(new Date(this.toDay));
     this.waitingForapprovalsLoaded = true;
-
   }
 
   getDaysToDisplay(project) {
@@ -202,12 +258,18 @@ export class TimeSheetComponent implements OnInit {
     var ld;
     if (isNext) {
       var daytoGenerate = this.approvalDays[this.approvalDays.length - 1];
+      if (this.isWeek) {
+        daytoGenerate = this.approvalWeekDays[this.approvalWeekDays.length - 1];
+      }
       if (daytoGenerate) {
         ld = new Date(daytoGenerate.getTime());
         ld.setDate(ld.getDate() + 1);
       }
     } else {
       var daytoGenerate = this.approvalDays[0];
+      if (this.isWeek) {
+        daytoGenerate = this.approvalWeekDays[0];
+      }
       if (daytoGenerate) {
         ld = new Date(daytoGenerate.getTime());
         ld.setDate(ld.getDate() - 1);
@@ -217,7 +279,6 @@ export class TimeSheetComponent implements OnInit {
       this.approvalDays = this.generateMonthDays(ld);
     } else {
       this.approvalWeekDays = this.generateCurrentWeek(ld);
-
     }
   }
 
@@ -270,11 +331,15 @@ export class TimeSheetComponent implements OnInit {
 
   processData() {
     this.myProjects = [];
-    if (this.isLoaded.userLoaded && this.isLoaded.isEmpLoaded && this.isLoaded.isAllocationsLoaded && this.isLoaded.isProjectsLoaded && this.isLoaded.isTimesheetsLoaded) {
+    this.isManager = false;
+    if (this.isLoaded.isSubmissionsLoaded && this.isLoaded.userLoaded && this.isLoaded.isEmpLoaded && this.isLoaded.isAllocationsLoaded && this.isLoaded.isProjectsLoaded && this.isLoaded.isTimesheetsLoaded) {
       if (this.serviceData.Projects.length > 0) {
         this.serviceData.Projects.forEach((project) => {
           var alls = this.serviceData.Allocations.filter((a) => {
-            if (a.empid == this.profile.empid && a.projectid == project.id) {
+            if (a.empid == this.profile.empid && a.projectid == project.id && project.id != 1) {
+              if (a.role === 'manager') {
+                this.isManager = true;
+              }
               this.myProjects.push(project);
               return true;
             }
@@ -282,8 +347,24 @@ export class TimeSheetComponent implements OnInit {
           });
         });
 
+        this.myProjects.sort(function (a, b) {
+          if (a.id < b.id)
+            return 1;
+          if (a.id > b.id)
+            return -1;
+          return 0;
+        });
+
+        if (this.myProjects.length > 0) {
+          this.myProjects[0].expand = true;
+        }
+
         this.processApprovals();
+
+        this.generateCalenderDays(this.toDay);
       }
+
+      this.showLoading = false
     }
   }
 
@@ -318,6 +399,67 @@ export class TimeSheetComponent implements OnInit {
     return '-';
   }
 
+  getLoggedClass(project, loggedDate, emp) {
+    var classHash = { submitted: false, approved: false, pending: false, declined: false };
+
+    var empToCheck = emp || this.profile;
+    var empid = emp ? emp.empid : this.profile.empid;
+    if (this.serviceData.Timesheets && this.serviceData.Timesheets.length > 0) {
+      var timesheetData = this.serviceData.Timesheets.filter((t) => {
+        if (t.empid == empid && t.projectid == project.id && t.sheetdate == loggedDate.getDate() && t.sheetmonth == (loggedDate.getMonth() + 1) && t.sheetyear == loggedDate.getFullYear()) {
+          return true;
+        }
+        return false;
+      });
+      if (timesheetData.length > 0) {
+        var timesheet = timesheetData[0];
+        if (timesheetData[0].isapproved && parseInt(timesheetData[0].declinedcount) === 0) {
+          classHash.approved = true;
+        }
+
+        if (timesheetData[0].isapproved == false && parseInt(timesheetData[0].declinedcount) > 0) {
+          classHash.declined = true;
+        }
+
+        if (!timesheet.approved && !timesheet.declined) {
+          classHash.pending = true;
+        }
+      }
+    }
+    classHash.submitted = this.isDisabled(project, loggedDate, empToCheck);
+    return classHash;
+  }
+  getLoggedData(project, loggedDate, emp) {
+    var empToCheck = emp || this.profile;
+    var empid = emp ? emp.empid : this.profile.empid;
+    var timesheet = { submitted: false, approved: false, pending: false, logged: false, declined: false };
+    if (this.serviceData.Timesheets && this.serviceData.Timesheets.length > 0) {
+      var timesheetData = this.serviceData.Timesheets.filter((t) => {
+        if (t.empid == empid && t.projectid == project.id && t.sheetdate == loggedDate.getDate() && t.sheetmonth == (loggedDate.getMonth() + 1) && t.sheetyear == loggedDate.getFullYear()) {
+          return true;
+        }
+        return false;
+      });
+      if (timesheetData.length > 0) {
+        timesheet = timesheetData[0];
+        timesheet.logged = true;
+        if (timesheetData[0].isapproved && parseInt(timesheetData[0].declinedcount) === 0) {
+          timesheet.approved = true;
+        }
+
+        if (timesheetData[0].isapproved == false && parseInt(timesheetData[0].declinedcount) > 0) {
+          timesheet.declined = true;
+        }
+
+        if (!timesheet.approved && !timesheet.declined) {
+          timesheet.pending = true;
+        }
+      }
+    }
+    timesheet.submitted = this.isDisabled(project, loggedDate, empToCheck);
+    return timesheet;
+  }
+
   isApproved(project, loggedDate, emp) {
     var empid = emp ? emp.empid : this.profile.empid;
     if (this.serviceData.Timesheets && this.serviceData.Timesheets.length > 0) {
@@ -331,7 +473,24 @@ export class TimeSheetComponent implements OnInit {
         return true;
       }
     }
+    return false;
+  }
 
+  isDisabled(project, loggedDate, emp) {
+    var empid = emp ? emp.empid : this.profile.empid;
+    if (this.serviceData.Submissions && this.serviceData.Submissions.length > 0) {
+      var isSubmitted = false;
+      for (let i = 0, len = this.serviceData.Submissions.length; i < len; i++) {
+        let sub = this.serviceData.Submissions[i];
+        if (sub.subyear == loggedDate.getFullYear() && sub.submonth == loggedDate.getMonth() && sub.empid == empid && sub.pid == project.id) {
+          isSubmitted = true;
+          break;
+        }
+      }
+      if (isSubmitted) {
+        return true;
+      }
+    }
     return false;
   }
 
@@ -362,6 +521,20 @@ export class TimeSheetComponent implements OnInit {
     });
   }
 
+  refreshData() {
+    this.isLoaded.isEmpLoaded = false;
+    this.isLoaded.isProjectsLoaded = false;
+    this.isLoaded.isAllocationsLoaded = false;
+    this.isLoaded.isTimesheetsLoaded = false;
+    this.isLoaded.isSubmissionsLoaded = false;
+
+    this.getData('/employees', 'Employees', 'isEmpLoaded');
+    this.getData('/projects', 'Projects', 'isProjectsLoaded');
+    this.getData('/allocations', 'Allocations', 'isAllocationsLoaded');
+    this.getData('/timesheets', 'Timesheets', 'isTimesheetsLoaded');
+    this.getData('/submissions', 'Submissions', 'isSubmissionsLoaded');
+  }
+
   ngOnInit() {
     this.auth.checkUser().then(({ err, result }) => {
       if (result && result.profile) {
@@ -372,16 +545,15 @@ export class TimeSheetComponent implements OnInit {
         this.getData('/projects', 'Projects', 'isProjectsLoaded');
         this.getData('/allocations', 'Allocations', 'isAllocationsLoaded');
         this.getData('/timesheets', 'Timesheets', 'isTimesheetsLoaded');
+        this.getData('/submissions', 'Submissions', 'isSubmissionsLoaded');
 
         if (this.toDay) {
           this.weekDays = this.generateCurrentWeek(new Date(this.toDay));
           this.monthDays = this.generateMonthDays(new Date(this.toDay));
         }
       } else {
-        console.log('user not logged In');
       }
     });
-
   }
 
 
@@ -547,7 +719,6 @@ export class TimeSheetComponent implements OnInit {
     $('#declineCommentModal').modal('hide');
   }
 
-
   getHtml5DateFormat(dy) {
     var formateTo2digit = (mnth) => {
       if (mnth < 10) {
@@ -570,12 +741,154 @@ export class TimeSheetComponent implements OnInit {
       $('#logWorkModal').modal('hide');
       this.logModalData.ispreload = false;
       this.logModalData.timesheetdate = this.getHtml5DateFormat(new Date());
+
+      this.db.toastrInstance.success('', 'Timesheet Log Updated', this.db.toastCfg);
+
       if (!err) {
         this.getData('/timesheets', 'Timesheets', 'isTimesheetsLoaded');
         this.processData();
       }
     });
 
+  }
+
+  checktimesheetsubmision(project, loggedDate, emp) {
+    var empid = emp ? emp.empid : this.profile.empid;
+    var issub = false, isapproved = false, isdeclined = false;
+    if (this.serviceData.Submissions && this.serviceData.Submissions.length > 0) {
+      var isSubmitted = false;
+      for (let i = 0, len = this.serviceData.Submissions.length; i < len; i++) {
+        let sub = this.serviceData.Submissions[i];
+        if (sub.subyear == loggedDate.getFullYear() && sub.submonth == loggedDate.getMonth() && sub.empid == empid && sub.pid == project.id) {
+          isSubmitted = true;
+          break;
+        }
+      }
+      if (isSubmitted) {
+        issub = true;
+      }
+    }
+
+    if (this.serviceData.Timesheets && this.serviceData.Timesheets.length > 0) {
+      var timesheetData = this.serviceData.Timesheets.filter((t) => {
+        if (t.empid == empid && t.projectid == project.id && t.sheetdate == loggedDate.getDate() && t.sheetmonth == (loggedDate.getMonth() + 1) && t.sheetyear == loggedDate.getFullYear()) {
+          return true;
+        }
+        return false;
+      });
+      if (timesheetData.length > 0) {
+        if (timesheetData[0].isapproved == true) {
+          isapproved = true;
+        } else {
+          isdeclined = true;
+        }
+      }
+    }
+
+    if (issub) {
+      if (isdeclined) {
+        return false;
+      }
+      return true;
+    } else {
+      if (isapproved) {
+        return true;
+      }
+    }
+
+    return false;
+  }
+
+
+  isTimesheetSubmited = 'Submit';
+  checktimesheetsubmisionall(projects, loggedDate, emp) {
+    this.isTimesheetSubmited = 'Submit';
+    var empid = emp ? emp.empid : this.profile.empid;
+    var issub = false, isapproved = false, isdeclined = false;
+    projects.forEach((p) => {
+      if (this.serviceData.Submissions && this.serviceData.Submissions.length > 0) {
+        var isSubmitted = false;
+        for (let i = 0, len = this.serviceData.Submissions.length; i < len; i++) {
+          let sub = this.serviceData.Submissions[i];
+          if (sub.subyear == loggedDate.getFullYear() && sub.submonth == loggedDate.getMonth() && sub.empid == empid && sub.pid == p.id) {
+            isSubmitted = true;
+            break;
+          }
+        }
+        if (isSubmitted) {
+          issub = true;
+        }
+      }
+      this.serviceData.Timesheets.forEach((t) => {
+        if (t.empid == empid && t.projectid == p.id && t.sheetmonth == (loggedDate.getMonth() + 1) && t.sheetyear == loggedDate.getFullYear()) {
+          if (!t.isapproved) {
+            isdeclined = true;
+          }
+          return true;
+        }
+        return false;
+      });
+    });
+
+
+    if (issub) {
+      this.isTimesheetSubmited = 'Re submit';
+      if (isdeclined) {
+        return false;
+      }
+      return true;
+    } else {
+      if (isapproved) {
+        return true;
+      }
+    }
+
+    return false;
+  }
+
+  submittimesheets(project) {
+    var submonth = this.monthDays[0].getMonth();
+    var subyear = this.monthDays[0].getFullYear();
+
+    // var projectsToSubmit = this.myProjects.map((p) => p.id).join(',');
+    var projectsToSubmit = project.id.toString();
+    var empid = this.profile.empid;
+    var submisionData = {
+      submonth,
+      subyear,
+      empid,
+      subcount: 1,
+      pid: projectsToSubmit
+    };
+
+    var managers = [];
+    this.serviceData.Allocations.forEach(a => {
+      if (a.projectid == project.id && a.role == 'manager') {
+        var emp = this.serviceData.Employees.filter(e => { return e.empid == a.empid; });
+        if (emp.length > 0) {
+          managers.push(emp[0]);
+        }
+      }
+    });
+    var emailids = [];
+    if (managers.length > 0) {
+      emailids = managers.reduce((a, b) => {
+        return a.concat(b.emailid.replace('@evoketechnologies.com', ''));
+      }, []);
+    } else {
+      emailids = this.serviceData.Employees.filter(e => { return e.role == 'admin'; }).reduce((a, b) => {
+        return a.concat(b.emailid.replace('@evoketechnologies.com', ''));
+      }, []);
+    }
+
+    if (emailids.length === 1) {
+      emailids[0] = emailids[0] + '@evoketechnologies.com';
+    }
+    this.db.makeRequest('/submissions?lToken=' + this.db.CookieManager.get('lToken'), new this.db.Headers(), submisionData, 'POST').then((resp) => {
+      this.refreshData();
+      var emailContent = 'Project (' + project.name + ') - Timesheet (' + this.MonthNames[submonth] + ', ' + subyear + ') are waiting for you approval';
+      this.db.sendMail({ toAddress: emailids.join('@evoketechnologies.com,'), text: emailContent, mailContent: emailContent });
+    });
   }
 
 }

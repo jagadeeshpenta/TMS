@@ -22,12 +22,18 @@ export class ChangePasswordComponent implements OnInit {
 
   changePassword() {
     if (this.changePasswordModel.newPassword === this.changePasswordModel.confirmNewPassword) {
-      this.db.changePassword(this.changePasswordModel).then(({ err, result}) => {
+      this.db.changePassword(this.changePasswordModel).then(({ err, result }) => {
+        this.changePasswordModel.currentPassword = '';
+        this.changePasswordModel.newPassword = '';
+        this.changePasswordModel.confirmNewPassword = '';
         $('#changePasswordModal').modal('hide');
+        if (!err) {
+          this.toastrService.success('', 'Password changed succesfully');
+        }
       });
-      
+
     } else {
-      this.toastrService.error('', 'Username and password not Matched');
+      this.toastrService.error('', 'new password and current password must be different');
     }
 
   }
