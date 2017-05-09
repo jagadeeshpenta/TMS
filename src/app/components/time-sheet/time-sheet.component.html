@@ -15,7 +15,7 @@
           <h4 class="heading">My Timesheet</h4>
         </div>
         <div class="clearfix">
-          <button routerLink="/my-approvals" class="btn btn-primary pull-right" *ngIf="isManager">Waiting for you approvals</button>
+          <button routerLink="/my-approvals" class="btn btn-primary pull-right" *ngIf="isManager || (profile && profile.role == 'admin')">Waiting for you approvals</button>
         </div>
         <div *ngFor="let project of myProjects" class="accord">
           <div class="accord-head" (click)="project.expand = !project.expand;">

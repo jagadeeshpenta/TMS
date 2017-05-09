@@ -46,6 +46,7 @@ export class WaitingForApprovalsComponent implements OnInit {
   approvalDays = [];
   approvalWeekDays = [];
   approvalChecked = [];
+  approvalsubmissions = [];
 
 
   MonthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
@@ -146,6 +147,102 @@ export class WaitingForApprovalsComponent implements OnInit {
       }
     }
   }
+
+  isAllSelected(project, tm, approvalChecked, approvalsubmissions) {
+    var tcount = 0, tSelected = 0;
+    var isateastonetimesheet = false;
+    this.approvalDays.forEach(a => {
+      var timesheetData = this.serviceData.Timesheets.filter((t) => {
+        if (t.empid == tm.empid && t.projectid == project.id && t.sheetdate == a.getDate() && t.sheetmonth == (a.getMonth() + 1) && t.sheetyear == a.getFullYear()) {
+          return true;
+        }
+        return false;
+      });
+      if (timesheetData.length > 0) {
+        isateastonetimesheet = true;
+        if (timesheetData[0].id) {
+          var timesheetId = timesheetData[0].id;
+          tcount = tcount + 1;
+          if (this.approvalChecked.indexOf(timesheetId.toString()) >= 0) {
+            tSelected = tSelected + 1;
+          }
+        }
+      }
+    });
+    if (!isateastonetimesheet) {
+      var mnthToCheck = this.approvalDays[0].getMonth().toString();
+      var yearToCheck = this.approvalDays[0].getFullYear().toString();
+      var submisionchecked = false;
+      this.serviceData.Submissions.forEach(s => {
+        if (s.pid == project.id && s.empid == tm.empid && s.submonth == mnthToCheck && s.subyear == yearToCheck) {
+          if (this.approvalsubmissions.indexOf(s.id.toString()) >= 0) {
+            submisionchecked = true;
+          }
+        }
+      });
+      if (submisionchecked) {
+        return true;
+      }
+      return false;
+    }
+    return tcount === tSelected;
+  }
+
+  selectAllTimesheets(event, project, tm) {
+    var timesheets = [];
+    var atleastonesheet = false;
+    this.approvalDays.forEach(a => {
+      var timesheetData = this.serviceData.Timesheets.filter((t) => {
+        if (t.empid == tm.empid && t.projectid == project.id && t.sheetdate == a.getDate() && t.sheetmonth == (a.getMonth() + 1) && t.sheetyear == a.getFullYear()) {
+          return true;
+        }
+        return false;
+      });
+      if (timesheetData.length > 0) {
+        if (timesheetData[0].id) {
+          atleastonesheet = true;
+          var timesheetId = timesheetData[0].id;
+
+          if (this.approvalChecked.indexOf(timesheetId.toString()) < 0 && $(event.target).is(':checked')) {
+            this.approvalChecked.push(timesheetId.toString());
+          }
+
+          if (!$(event.target).is(':checked')) {
+            if (this.approvalChecked.indexOf(timesheetId.toString()) >= 0) {
+              this.approvalChecked.splice(this.approvalChecked.indexOf(timesheetId.toString()), 1);
+            }
+          }
+
+        }
+      }
+    });
+
+    if (!atleastonesheet) {
+      var mnthToCheck = this.approvalDays[0].getMonth().toString();
+      var yearToCheck = this.approvalDays[0].getFullYear().toString();
+      this.serviceData.Submissions.forEach(s => {
+        if (s.pid == project.id && s.empid == tm.empid && s.submonth == mnthToCheck && s.subyear == yearToCheck) {
+          if (this.approvalsubmissions.indexOf(s.id.toString()) < 0 && $(event.target).is(':checked')) {
+            this.approvalsubmissions.push(s.id.toString());
+          }
+          if (!$(event.target).is(':checked')) {
+            if (this.approvalsubmissions.indexOf(s.id.toString()) >= 0) {
+              this.approvalsubmissions.splice(this.approvalsubmissions.indexOf(s.id.toString()), 1);
+            }
+          }
+        }
+      });
+    }
+  }
+
+  isTimeSheetSelected(project, dy, tm) {
+    var timesheetId = this.getTimeSheetId(project, dy, tm);
+    if (this.approvalChecked.indexOf(timesheetId.toString()) >= 0) {
+      return true;
+    }
+    return false;
+  }
+
   isLogSelected(project, loggedDate, emp, approvalChecked) {
     var empid = emp ? emp.empid : this.profile.empid;
     var timesheetId;
@@ -204,6 +301,8 @@ export class WaitingForApprovalsComponent implements OnInit {
   opendeclineModal() {
     if (this.approvalChecked.length > 0) {
       $('#declineCommentModal').modal('show');
+    } else if (this.approvalsubmissions.length > 0) {
+      $('#declineCommentModal').modal('show');
     }
   }
 
@@ -219,25 +318,45 @@ export class WaitingForApprovalsComponent implements OnInit {
 
         this.sendMails(this.approvalChecked.join(','), typ);
         this.approvalChecked = [];
+        this.approvalsubmissions = [];
         this.getData('/timesheets', 'Timesheets', 'isTimesheetsLoaded');
         this.processData();
       });
     } else {
-      this.db.approveTimesheets({
-        sheets: {
-          ids: this.approvalChecked.join(','),
-          isapproved: false,
-        }
-      }).then(() => {
-        this.db.toastrInstance.success('', 'Timesheet declined', this.db.toastCfg);
-        this.sendMails(this.approvalChecked.join(','), typ);
-        this.addTimesheetComment();
+      if (this.approvalChecked.length > 0) {
+        this.db.approveTimesheets({
+          sheets: {
+            ids: this.approvalChecked.join(','),
+            isapproved: false,
+          }
+        }).then(() => {
+          this.db.toastrInstance.success('', 'Timesheet declined', this.db.toastCfg);
+          this.sendMails(this.approvalChecked.join(','), typ);
+          this.addTimesheetComment();
+          this.closedeclinemodal();
+          this.declinecomment = '';
+          this.approvalChecked = [];
+          this.approvalsubmissions = [];
+          this.getData('/timesheets', 'Timesheets', 'isTimesheetsLoaded');
+          this.processData();
+        });
+      }
+
+      if (this.approvalsubmissions.length > 0) {
+        var promises = [];
+
+        this.approvalsubmissions.forEach(s => {
+          let p = this.db.makeRequest('/submissions?lToken=' + this.db.CookieManager.get('lToken'), new this.db.Headers(), { id: s }, 'DELETE');
+          promises.push(p);
+        });
         this.closedeclinemodal();
-        this.declinecomment = '';
-        this.approvalChecked = [];
-        this.getData('/timesheets', 'Timesheets', 'isTimesheetsLoaded');
-        this.processData();
-      });
+        Promise.all(promises).then((ddd) => {
+          this.approvalsubmissions = [];
+          this.approvalChecked = [];
+        });
+
+      }
+
     }
   }
   getStatus(project, loggedDate, emp) {
@@ -385,7 +504,9 @@ export class WaitingForApprovalsComponent implements OnInit {
           return 0;
         });
 
-        this.myProjects[0].expand = true;
+        if (this.myProjects.length > 0) {
+          this.myProjects[0].expand = true;
+        }
         this.processApprovals();
       }
     }
