@@ -237,8 +237,10 @@ export class WaitingForApprovalsComponent implements OnInit {
 
   isTimeSheetSelected(project, dy, tm) {
     var timesheetId = this.getTimeSheetId(project, dy, tm);
-    if (this.approvalChecked.indexOf(timesheetId.toString()) >= 0) {
-      return true;
+    if (timesheetId) {
+      if (this.approvalChecked.indexOf(timesheetId.toString()) >= 0) {
+        return true;
+      }
     }
     return false;
   }
