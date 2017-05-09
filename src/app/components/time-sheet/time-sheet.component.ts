@@ -19,6 +19,7 @@ export class TimeSheetComponent implements OnInit {
     return {};
   }
 
+  showLoading = true;
   calenderDays = [];
   calenderDate;
   generateCalenderDays(dateToGenerate) {
@@ -362,6 +363,8 @@ export class TimeSheetComponent implements OnInit {
 
         this.generateCalenderDays(this.toDay);
       }
+
+      this.showLoading = false
     }
   }
 

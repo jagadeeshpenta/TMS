@@ -20,7 +20,6 @@ export class DashboardComponent implements OnInit {
 
   constructor(private _router: Router, public auth: AuthService, public db: DBService, public root: RootService) {
     auth.checkUser().then(({ err, result }) => {
-      // this.isLoaded = true;
       if (!err) {
         this.profile = result.profile || result.user;
         root.getAllData().then((prom) => {
