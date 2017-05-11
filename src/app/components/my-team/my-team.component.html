@@ -13,7 +13,7 @@
   <div class="card">
     <div class="card-block">
       <div *ngIf="profile">
-        <button *ngIf="profile.role === 'admin'" class="btn btn-default" data-toggle="modal" data-target="#addProjectModal">Add Project</button>
+        <button *ngIf="profile.role === 'admin'" class="btn btn-primary" data-toggle="modal" data-target="#addProjectModal">Add Project</button>
       </div>
 
       <div class="project-list m20-top" *ngIf="projectsProcessed">
@@ -22,7 +22,7 @@
             <h4 style="width:100%; float:left;" (click)="project.expand = !project.expand; EmployeeSuggestions = Employees; employeeToProject.project = {}; employeeToProject.emp = {}; employeeToProject.empadd = '';">
               <i class="fa fa-folder-o" aria-hidden="true"></i>
               <i class="fa fa-folder-open-o" aria-hidden="true"></i>
-              <span>{{ project.name}}</span>
+              <span *ngIf="!project.editProject">{{ project.name}}</span>
               <input *ngIf="project.editProject" (click)="$event.stopPropagation();" type="text" class="size" name="editprojectname" [(ngModel)]="project.editName">
             </h4>
             <div style="position:absolute;right:15px;">
@@ -30,7 +30,7 @@
               <button class="btn btn-primary" *ngIf="project.editProject" (click)="saveEditProject(project);">Save</button>
               <button class="btn btn-primary" *ngIf="project.editProject" (click)="project.editProject=false;">Cancel</button>
 
-              <button class="btn btn-danger" *ngIf="profile && profile.role === 'admin'" (click)="removeProject(project, $event)"> <i class="fa fa-trash-o" aria-hidden="true"></i> Remove</button>
+              <button class="btn btn-danger" *ngIf="profile && profile.role === 'admin'" (click)="removeProject(project, $event)">Remove</button>
             </div>
 
           </div>
@@ -63,14 +63,14 @@
             </div>
             <div class="employees-section">
               <div *ngIf="profile && profile.role === 'admin'">
-                <button class="btn btn-default" (click)="openAddEmpToProjectModal(project)">Add Employee to Project</button>
+                <button class="btn btn-primary" style="margin-top: 10px; margin-bottom: 20px;" (click)="openAddEmpToProjectModal(project)">Add Employee to Project</button>
               </div>
               <h4>Employees</h4>
-              <table class="table">
+              <table class="table" style="width:100%">
                 <tr>
-                  <th>Full Name</th>
-                  <th>Role</th>
-                  <th *ngIf="profile && profile.role === 'admin'">Options</th>
+                  <th style="width: 40%">Full Name</th>
+                  <th style="width: 30%">Role</th>
+                  <th style="width: 30%"><div *ngIf="profile && profile.role === 'admin'" >Options</div></th>
                 </tr>
                 <tr *ngFor="let emp of project.Employees">
                   <td>{{emp.firstname + ' ' + emp.lastname}}</td>
@@ -87,18 +87,16 @@
                     </div>
                   </td>
                   <td *ngIf="profile && profile.role === 'admin'">
-                    <button class="btn btn-link" (click)="emp.showDropDownBox = true;" *ngIf="!emp.showDropDownBox">
-                  <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
-                </button>
-                    <button class="btn btn-link" *ngIf="emp.showDropDownBox" (click)="saveRoles(project, emp)">
-                  Save
-                </button>
-                    <button class="btn btn-link" *ngIf="emp.showDropDownBox" (click)="emp.showDropDownBox = false;">
-                  Cancel
-                </button>
-                    <button (click)="removeAllocation(emp, project)" class="btn btn-danger pull-right" title="Remove Employee from Project">
-                   <i class="fa fa-trash-o" aria-hidden="true"></i>	
-                 </button>
+                    <a class="a-link" (click)="emp.showDropDownBox = true;" *ngIf="!emp.showDropDownBox">
+                      <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
+                    </a>
+                    <a class="a-link" *ngIf="emp.showDropDownBox" (click)="saveRoles(project, emp)">
+                      Save
+                    </a>
+                    <a class="a-link" *ngIf="emp.showDropDownBox" (click)="emp.showDropDownBox = false;">
+                      Cancel
+                    </a>
+                   <a class="a-link" (click)="removeAllocation(emp, project)" title="Remove Employee from Project"><i class="fa fa-trash-o" aria-hidden="true" ></i></a>
                   </td>
                 </tr>
               </table>
