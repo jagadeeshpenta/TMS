@@ -5,3 +5,49 @@
 .btn {
     cursor: pointer;
 }
+
+.opt{
+    padding: 5px;
+    cursor: pointer;
+}
+
+.table1{
+    
+   .element{
+        padding: 12px;
+        display: inline-block;
+   }
+    .label{
+        float: left;
+        width: 170px;
+    }
+    .input{
+        float: right;
+        width: 270px;
+    }
+}
+.fixed{
+    
+}
+
+.layout-two {
+    display: flex;
+    .column {
+        flex: 1 1 50%;
+        .form-control {
+            width:95%;
+        }
+    }
+    .show-btn{
+            margin-left: 60px;
+            margin-top: 30px;
+    }
+}
+
+
+@media (min-width: 576px) {
+    .modal-dialog {
+        max-width: 600px;
+    }
+
+}
