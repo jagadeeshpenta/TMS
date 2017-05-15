@@ -70,9 +70,10 @@
             </div>
             <div class="layout-two">
               <div class="column">
-                <div class="form-group">
+                <div class="form-group" >
                   <label for="empid">Employee Id*</label>
-                  <input type="number" name="empid" required class="form-control" [(ngModel)]="newEmployee.empid" />
+                  <input type="number" name="empid" required class="form-control" (blur)="validateEmpId()" [(ngModel)]="newEmployee.empid" />
+                  <span class="has-error" *ngIf="newEmployee.EmpIDExists">Employee Id already exist</span>
                 </div>
               </div>
               <div class="column">
@@ -86,8 +87,9 @@
               <div class="column">
                 <div class="form-group">
                   <label for="emailid">Email Id*</label>
-                  <input type="text" required name="emailid" class="form-control" [(ngModel)]="newEmployee.emailid" />
-                  <span class="mail">@evoketechnologies.com</span>
+                  <input type="text" required name="emailid" class="form-control" (blur)="validateEmailId()" [(ngModel)]="newEmployee.emailid" />
+                  <span class="mail">@evoketechnologies.com</span><br/>
+                  <span class="has-error" *ngIf="newEmployee.EmpMail">Employee Id already exist</span>
                 </div>
               </div>
               <div class="column">
