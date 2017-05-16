@@ -31,7 +31,7 @@ export class RootService {
         return this.db.getLists({ entityName: entityName }).then(({ err, result }) => {
             if (!err) {
                 this.isLoaded[loadedName] = true;
-                this.serviceData[dataName] = result;
+                this.serviceData[dataName] = result['rows'] ? result['rows'] : result;
             }
             return { err, result };
         });

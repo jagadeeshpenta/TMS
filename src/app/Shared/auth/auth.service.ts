@@ -3,6 +3,7 @@ import { Http, Response, Headers, RequestOptions } from '@angular/http';
 import { Cookie } from 'ng2-cookies';
 
 import { environment } from './../../../environments/environment';
+import { DBService } from './../dbservice';
 
 @Injectable()
 export class AuthService {
@@ -13,26 +14,26 @@ export class AuthService {
 
   baseUrl = environment.apiUrl;
 
-  constructor(private http: Http) {
+  constructor(private http: Http, private db: DBService) {
   }
 
   authenticate(creds) {
     var headers = new Headers();
     return new Promise((resolve) => {
-      this.http.post(this.baseUrl + '/authenticate', {
+
+      this.db.makeRequest('/authenticate', this.db.Headers(), {
         username: creds.username,
         password: creds.password,
         lToken: creds.lToken
-      }, { headers: headers })
-        .subscribe((data) => {
-          var { err, result } = data.json();
-          if (!err) {
-            Cookie.set('lToken', result.lToken);
-            this.user = result.profile;
-            this.toDay = result.toDay;
-          }
-          resolve({ err, result });
-        });
+      }, 'POST').then(({ err, result }) => {
+        if (!err) {
+          Cookie.set('lToken', result.lToken);
+          this.user = result.profile;
+          this.toDay = result.toDay;
+        }
+        resolve({ err, result });
+      });
+
     });
   }
 
@@ -42,6 +43,7 @@ export class AuthService {
         if (this.user) {
           res({ result: { user: this.user, profile: this.user, toDay: this.toDay } });
         } else {
+
           this.authenticate({ lToken: Cookie.get('lToken') }).then(({ err, result }) => {
             if (err) {
               res({ err: { code: 222 } });
