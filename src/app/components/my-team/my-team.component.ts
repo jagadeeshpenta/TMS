@@ -174,8 +174,12 @@ export class MyTeamComponent implements OnInit {
         var alcos = this.Allocations.filter((a) => { return (a.empid == emp.empid && a.projectid == project.id) ? true : false; });
         if (alcos.length > 0) {
           return false;
+        } else {
+           if (emp.firstname.indexOf(event.target.value) === 0 || emp.lastname.indexOf(event.target.value) === 0 || emp.empid.indexOf(event.target.value) === 0 || emp.emailid.indexOf(event.target.value) === 0){
+             return true;
+           }
         }
-        return true;
+        return false;
       });
     }
     this.EmployeeSuggestions = suitableEmps;
@@ -289,5 +293,9 @@ export class MyTeamComponent implements OnInit {
     } else {
       return '';
     }
+  }
+
+  focusFun() {
+    this.employeeToProject.onSubmit = false;
   }
 }
