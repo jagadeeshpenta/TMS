@@ -28,6 +28,7 @@ export class MyTeamComponent implements OnInit {
     isbillable: true
   };
 
+  suggestionValues='';
   profile = {};
   showDropDownBox;
   Projects = [];
@@ -169,13 +170,15 @@ export class MyTeamComponent implements OnInit {
     this.employeeToProject.emp = {};
     var suitableEmps = [],
       project: any = this.employeeToProject.project;
+      this.suggestionValues = event.target.value;
     if (project.id) {
       suitableEmps = this.Employees.filter((emp) => {
         var alcos = this.Allocations.filter((a) => { return (a.empid == emp.empid && a.projectid == project.id) ? true : false; });
         if (alcos.length > 0) {
           return false;
         } else {
-           if (emp.firstname.indexOf(event.target.value) === 0 || emp.lastname.indexOf(event.target.value) === 0 || emp.empid.indexOf(event.target.value) === 0 || emp.emailid.indexOf(event.target.value) === 0){
+          console.log('suggestionValues',this.suggestionValues);
+           if (emp.firstname.toLowerCase().indexOf(this.suggestionValues.toLowerCase()) === 0 || emp.lastname.toLowerCase().indexOf(this.suggestionValues.toLowerCase()) === 0 || emp.empid.indexOf(this.suggestionValues) === 0 || emp.emailid.toLowerCase().indexOf(this.suggestionValues.toLowerCase()) === 0){
              return true;
            }
         }
