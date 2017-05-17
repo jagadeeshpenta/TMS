@@ -884,7 +884,33 @@ export class TimeSheetComponent implements OnInit {
     if (emailids.length === 1) {
       emailids[0] = emailids[0] + '@evoketechnologies.com';
     }
+
+    var timesheetsToAdd = [];
+
+    var projectTimesheets = this.serviceData.Timesheets.filter(t => { return t.projectid == project.id && t.empid == this.profile.empid; });
+    this.calenderDays.forEach(cr => {
+      cr.days.forEach(cc => {
+        if (cc.date) {
+          if (projectTimesheets.filter(t => { if (t.sheetdate === cc.date.getDate() && t.sheetmonth == (cc.date.getMonth() + 1) && t.sheetyear === cc.date.getFullYear()) { return true; } return false; }).length === 0) {
+            timesheetsToAdd.push({
+              empid: empid,
+              projectid: project.id,
+              loggedhours: 0,
+              timesheetdate: this.getHtml5DateFormat(cc.date)
+            });
+          }
+        }
+      });
+    });
+
+
+    this.db.makeRequest('/bulktimesheets?lToken=' + this.db.CookieManager.get('lToken'), new this.db.Headers(), { sheets: timesheetsToAdd }, 'POST').then((resp) => {
+
+    });
+
+
     this.db.makeRequest('/submissions?lToken=' + this.db.CookieManager.get('lToken'), new this.db.Headers(), submisionData, 'POST').then((resp) => {
+
       this.refreshData();
       var emailContent = 'Project (' + project.name + ') - Timesheet (' + this.MonthNames[submonth] + ', ' + subyear + ') are waiting for you approval';
       this.db.sendMail({ toAddress: emailids.join('@evoketechnologies.com,'), text: emailContent, mailContent: emailContent });

@@ -25,7 +25,9 @@ export class MyTeamComponent implements OnInit {
     emp: {},
     showSuggestions: false,
     onSubmit: false,
-    isbillable: true
+    isbillable: true,
+    reportingto: '',
+    subteam: ''
   };
 
   profile = {};
@@ -53,6 +55,7 @@ export class MyTeamComponent implements OnInit {
   ngOnInit() {
   }
 
+
   fillProjects() {
     this.db.getLists({ entityName: '/projects' }).then(({ err, result }) => {
       if (!err) {
@@ -63,7 +66,8 @@ export class MyTeamComponent implements OnInit {
   }
 
   processDate() {
-    if (this.allocationLoaded && this.employeesLoaded) {
+    console.log('profile', this.profile);
+    if (this.allocationLoaded && this.employeesLoaded && this.profile) {
       if (this.Projects.length > 0) {
         this.Projects.forEach((project) => {
           var empofProjects = [];
@@ -82,6 +86,24 @@ export class MyTeamComponent implements OnInit {
           });
 
           project.Employees = empofProjects;
+        });
+
+        var myProjects = this.Projects.filter(p => {
+          var alls = this.Allocations.filter((a) => {
+            if (a.projectid == p.id && a.empid == this.profile['empid']) {
+              return true;
+            }
+            return false;
+          });
+          
+          if(this.profile['role']=== 'admin'){
+            return true;
+          }
+
+          if (alls.length > 0 && alls[0].role === 'manager') {
+            return true;
+          }
+          return false;
         });
 
         this.projectsProcessed = true;

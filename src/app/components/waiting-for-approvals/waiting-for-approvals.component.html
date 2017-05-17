@@ -32,7 +32,7 @@
               <button class="btn btn-primary" (click)="moveApprovalDays(1)">Next Month</button>
             </div>
           </div>
-          <div class="sheet-view monthly" *ngFor="let project of approvalProjects">
+          <div class="sheet-view monthly" [attr.projectid]="project.id" *ngFor="let project of approvalProjects">
             <h5>{{ project.name }}</h5>
             <div class="flex-container">
               <div class="flex-col left-align">
@@ -72,24 +72,12 @@
                   Ops
                 </div>
                 <div class="flex-row" *ngFor="let tm of getProjectMembers(project)">
-                  <input type="checkbox" [checked]="isAllSelected(project, tm, approvalChecked, approvalsubmissions)" (change)="selectAllTimesheets($event, project, tm)"  [attr.name]="'c' + project.id + 'tt' + tm.id" />
+                  <input *ngIf="isSheetSubmitted(project, tm, approvalDays)" type="checkbox" [(ngModel)]="allchecked['P' + project.id]['E' + tm.id]" [checked]="isAllSelected(project, tm, approvalChecked, approvalsubmissions, approvalDays)" (change)="selectAllTimesheets($event, project, tm)"  [attr.name]="'c' + project.id + 'tt' + tm.id" />
                 </div>
               </div>
 
             </div>
           </div>
-
-          <!--<div style="margin-top:15px;" class="project-sheet" *ngFor="let project of approvalProjects">
-            <table class="table table-sheet-monthly">
-              <tr>
-                <td>Name</td>
-                <td *ngFor="let dy of approvalDays">
-                  {{ dy.getDate() }}
-                </td>
-                <td>T.Hrs</td>
-              </tr>
-            </table>
-          </div>-->
 
           <div class="m15-top">
             <button class="btn btn-success" (click)="updateStatus('A')">Approve</button>
