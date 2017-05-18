@@ -25,7 +25,8 @@ export class EmployeesComponent implements OnInit {
   roleNames = {
     'user': 'Employee',
     'admin': 'Admin',
-    'hr': 'HR'
+    'hr': 'HR',
+    'Finance': 'Finance'
   };
 
   constructor(public db: DBService, public auth: AuthService, private toastrService: ToastrService) {
