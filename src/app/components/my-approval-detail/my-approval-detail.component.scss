@@ -1,0 +1,179 @@
+.monthly {
+    .flex-container {
+        display: flex;
+        .flex-col {
+            flex: 1 1 auto;
+            text-align: center;
+            border-right: 1px dashed lightgrey;
+            &.left-align {
+                text-align: left;
+            }
+            .flex-head {
+                height: 50px;
+                overflow: hidden;
+                font-weight: bold;
+            }
+            .flex-row {
+                height: 45px;
+                .logged-hours {
+                    position: relative;
+                    &[selected="true"] {
+                        &:before {
+                            content: '';
+                            position: absolute;
+                            top: -1px;
+                            left: -6px;
+                            width: 20px;
+                            height: 20px;
+                            background-color: transparent;
+                            border-radius: 20px;
+                            z-index: -1;
+                            border: 2px solid blue;
+                        }
+                    }
+                    &.approved {
+                        color: white;
+                        position: relative;
+                        &:before {
+                            content: '';
+                            position: absolute;
+                            top: -1px;
+                            left: -6px;
+                            width: 20px;
+                            height: 20px;
+                            background-color: green;
+                            border-radius: 20px;
+                            z-index: -1;
+                        }
+                        &[selected="true"] {
+                            &:before {
+                                border: 2px solid blue;
+                            }
+                        }
+                    }
+                    &.declined {
+                        color: white;
+                        position: relative;
+                        &:before {
+                            content: '';
+                            position: absolute;
+                            top: -1px;
+                            left: -6px;
+                            width: 20px;
+                            height: 20px;
+                            background-color: red;
+                            border-radius: 20px;
+                            z-index: -1;
+                        }
+                        &[selected="true"] {
+                            &:before {
+                                border: 2px solid blue;
+                            }
+                        }
+                    }
+                }
+                .show-on-hover {
+                    display: none;
+                }
+                &.hover-effect {
+                    &:hover {
+                        .hide-on-hover {
+                            display: none;
+                        }
+                        .show-on-hover {
+                            display: inline;
+                        }
+                    }
+                }
+            }
+            &[day="0"],
+            &[day="6"] {
+                background-color: lightslategray;
+                flex-basis: 2px;
+                border-right: none;
+            }
+        }
+    }
+}
+
+.monthly2 {
+    position: relative;
+    .flex-container {
+        display: flex;
+        .flex-col {
+            flex: 1 1 auto;
+            text-align: center;
+            border-right: 1px dashed lightgrey;
+            &.left-align {
+                text-align: left;
+            }
+            .flex-head {
+                height: 50px;
+                overflow: hidden;
+                font-weight: bold;
+            }
+            .flex-row {
+                height: 45px;
+                .logged-hours {
+                    position: relative;
+                    &[timesheetid] {
+                        cursor: pointer;
+                    }
+                    z-index: 2;
+                    &[selected="true"] {
+                        background-color: blue;
+                        color: white;
+                    }
+                    &.approved {
+                        color: white;
+                        position: relative;
+                        background-color: darkolivegreen;
+                        &[selected="true"] {
+                            background-color: blue;
+                            color: white;
+                        }
+                    }
+                    &.declined {
+                        color: white;
+                        position: relative;
+                        background-color: red;
+                        &[selected="true"] {
+                            background-color: blue;
+                            color: white;
+                        }
+                    }
+                }
+                .show-on-hover {
+                    display: none;
+                }
+                &.hover-effect {
+                    &:hover {
+                        .hide-on-hover {
+                            display: none;
+                        }
+                        .show-on-hover {
+                            display: inline;
+                        }
+                    }
+                }
+            }
+            &[day="0"],
+            &[day="6"] {
+                background-color: lightslategray;
+                flex-basis: 2px;
+                border-right: none;
+            }
+        }
+    }
+}
+
+.mask {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    left: 0;
+    top: 0;
+    background-color: black;
+    z-index: 3;
+    opacity: 0.3;
+}

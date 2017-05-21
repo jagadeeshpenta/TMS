@@ -26,7 +26,7 @@
               <input *ngIf="project.editProject" (click)="$event.stopPropagation();" type="text" class="size" name="editprojectname" [(ngModel)]="project.editName">
             </h4>
             <div style="position:absolute;right:15px;">
-              <button class="btn btn-primary" *ngIf="!project.editProject && profile && (profile.role === 'admin')" (click)="project.expand = true; EmployeeSuggestions = Employees; employeeToProject.project = {}; employeeToProject.emp = {}; employeeToProject.empadd = '';EditProject(project);"> Edit</button>
+              <button class="btn btn-primary" *ngIf="!project.editProject && profile && (profile.role === 'admin')" (click)="enableEditMode(project)"> Edit</button>
               <button class="btn btn-primary" *ngIf="project.editProject" (click)="saveEditProject(project);">Save</button>
               <button class="btn btn-primary" *ngIf="project.editProject" (click)="project.editProject=false;">Cancel</button>
 
@@ -86,7 +86,7 @@
                     </div>
                   </td>
                   <td *ngIf="profile && profile.role === 'admin'">
-                    <a class="a-link" (click)="emp.showDropDownBox = true;" *ngIf="!emp.showDropDownBox">
+                    <a class="a-link" (click)="editAllocation(project, emp)" *ngIf="!emp.showDropDownBox">
                       <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
                     </a>
                     <a class="a-link" *ngIf="emp.showDropDownBox" (click)="saveRoles(project, emp)">

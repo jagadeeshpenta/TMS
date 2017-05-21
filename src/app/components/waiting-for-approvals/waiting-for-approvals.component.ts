@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { DBService } from './../../Shared/dbservice';
 import { AuthService } from './../../Shared/auth/auth.service';
 
+import { Router, ActivatedRoute } from '@angular/router';
+
 declare var $: any;
 
 @Component({
@@ -18,7 +20,7 @@ export class WaitingForApprovalsComponent implements OnInit {
   weekDays = [];
   monthDays = [];
 
-
+  projectID;
   serviceData: any = {
     Employees: [],
     Projects: [],
@@ -54,7 +56,7 @@ export class WaitingForApprovalsComponent implements OnInit {
 
   MonthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
   weekNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
-  constructor(public db: DBService, public auth: AuthService) {
+  constructor(public db: DBService, public auth: AuthService, private route: ActivatedRoute, private router: Router) {
   }
 
   isSheetSubmitted(project, tm, approvalDays) {
@@ -62,7 +64,7 @@ export class WaitingForApprovalsComponent implements OnInit {
 
     var projectTimesheets = this.serviceData.Timesheets.filter(t => { return t.projectid == project.id && t.empid == tm.empid; });
     approvalDays.forEach(dy => {
-      if(projectTimesheets.filter(t => { if (t.sheetdate === dy.getDate() && t.sheetmonth == (dy.getMonth() + 1) && t.sheetyear === dy.getFullYear()) { return true; } return false; }).length > 0){
+      if (projectTimesheets.filter(t => { if (t.sheetdate === dy.getDate() && t.sheetmonth == (dy.getMonth() + 1) && t.sheetyear === dy.getFullYear()) { return true; } return false; }).length > 0) {
         timesheets.push({
           empid: tm.empid,
           projectid: project.id,
@@ -84,7 +86,7 @@ export class WaitingForApprovalsComponent implements OnInit {
         }
       });
 
-      if (submisionchecked){
+      if (submisionchecked) {
         return true;
       }
     } else {
@@ -576,9 +578,9 @@ export class WaitingForApprovalsComponent implements OnInit {
       }
     });
   }
-  ngOnInit() {
+
+  startProcess() {
     this.auth.checkUser().then(({ err, result }) => {
-      console.log('result ', result);
       if (result && result.profile) {
         this.profile = result.profile;
         this.toDay = result.toDay;
@@ -598,4 +600,24 @@ export class WaitingForApprovalsComponent implements OnInit {
     });
   }
 
+
+  ngOnInit() {
+    this.route.params.subscribe((params: ApprovalParams) => {
+      if (params.pid) {
+        this.projectID = params.pid;
+      }
+      this.startProcess();
+    });
+  }
+
+
+  navigateToProject(project) {
+    this.router.navigateByUrl('/my-approvals/' + project.id)
+  }
+
+}
+
+
+class ApprovalParams {
+  pid;
 }

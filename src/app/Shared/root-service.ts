@@ -3,6 +3,7 @@ import { Http, Response, Headers, RequestOptions, URLSearchParams } from '@angul
 import { Cookie } from 'ng2-cookies';
 
 import { DBService } from './dbservice';
+import { AuthService } from './auth/auth.service';
 
 
 @Injectable()
@@ -14,6 +15,7 @@ export class RootService {
         isAllocationsLoaded: false,
         isTimesheetsLoaded: false,
         isSubmissionsLoaded: false,
+        isProjectsubmissionsLoaded: false,
         userLoaded: false
     };
     serviceData: any = {
@@ -21,9 +23,10 @@ export class RootService {
         Projects: [],
         Allocations: [],
         Timesheets: [],
-        Submissions: []
+        Submissions: [],
+        ProjectSubmissions: []
     };
-    constructor(private db: DBService) {
+    constructor(private db: DBService, private auth: AuthService) {
 
     }
 
@@ -43,6 +46,36 @@ export class RootService {
         promises.push(this.getData('/allocations', 'Allocations', 'isAllocationsLoaded'));
         promises.push(this.getData('/timesheets', 'Timesheets', 'isTimesheetsLoaded'));
         promises.push(this.getData('/submissions', 'Submissions', 'isSubmissionsLoaded'));
+
         return Promise.all(promises);
     }
+
+    getProjectSubmissions() {
+        return this.getData('/projectsubmissions', 'ProjectSubmissions', 'isProjectsubmissionsLoaded');
+    }
+
+    getEmployeesByProject() {
+
+    }
+
+    getProjectsByEmployee() {
+
+    }
+
+    getTimesheets({ month, year, date, projectid, empid }) {
+
+    }
+
+    getSubmissions({ }) {
+
+    }
+}
+
+
+class ServiceData {
+    Employees = [];
+    Projects = [];
+    Allocations = [];
+    Timesheets = [];
+    Submissions = [];
 }

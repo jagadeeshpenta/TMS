@@ -66,7 +66,6 @@ export class MyTeamComponent implements OnInit {
   }
 
   processDate() {
-    console.log('profile', this.profile);
     if (this.allocationLoaded && this.employeesLoaded && this.profile) {
       if (this.Projects.length > 0) {
         this.Projects.forEach((project) => {
@@ -95,8 +94,8 @@ export class MyTeamComponent implements OnInit {
             }
             return false;
           });
-          
-          if(this.profile['role']=== 'admin'){
+
+          if (this.profile['role'] === 'admin') {
             return true;
           }
 
@@ -296,7 +295,6 @@ export class MyTeamComponent implements OnInit {
   }
 
   saveEditProject(project) {
-    //console.log(project);
     this.db.editProject(project).then(({ err, result }) => {
       if (!err) {
         this.fillProjects();
@@ -311,5 +309,24 @@ export class MyTeamComponent implements OnInit {
     } else {
       return '';
     }
+  }
+
+  enableEditMode(project) {
+    project.expand = true;
+    this.EmployeeSuggestions = this.Employees;
+    this.employeeToProject.project = {};
+    this.employeeToProject.emp = {};
+    this.employeeToProject.empadd = '';
+    this.EditProject(project);
+  }
+
+  editAllocation(project, emp) {
+    this.employeeToProject.project = project;
+    this.employeeToProject.onSubmit = false;
+    this.employeeToProject.showSuggestions = false;
+    this.employeeToProject.empadd = emp.firstname + ' ' + emp.lastname;
+    this.employeeToProject.emp = emp;
+    this.employeeToProject.isbillable = true;
+    $('#addEmployeeToProjectModal').modal('show');
   }
 }

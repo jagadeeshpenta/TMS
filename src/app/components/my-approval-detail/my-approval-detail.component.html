@@ -1,0 +1,129 @@
+<div class="fluid-container">
+  <div class="m15-bottom">
+    <ul class="breadcrumbs">
+      <li class="bread-item">
+        <a routerLink="/dashboard">Dashboard</a>
+        <i class="fa fa-angle-right" aria-hidden="true" style="margin-left:5px;"></i>
+      </li>
+      <li class="bread-item">
+        <a routerLink="/time-sheet">Timesheets</a>
+        <i class="fa fa-angle-right" aria-hidden="true" style="margin-left:5px;"></i>
+      </li>
+      <li class="bread-item">
+        <a routerLink="/my-approvals">Approvals</a>
+        <i class="fa fa-angle-right" aria-hidden="true" style="margin-left:5px;"></i>
+      </li>
+      <li class="bread-item" *ngIf="!loading">{{ project.name }}</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <div class="card-block">
+      <div class="clearfix">
+        <button routerLink="/my-approvals" class="btn btn-primary pull-right">Back to Approvals</button>
+      </div>
+
+      <div class="waiting-for-approval" *ngIf="!loading">
+        <h4> {{ project.name}} </h4>
+        <div style="display: flex;margin-top:15px;">
+          <div style="flex: 1 1 auto;">
+            <button class="btn btn-primary" (click)="moveApprovalDays()">Prev Month</button>
+          </div>
+          <div style="flex: 1 1 auto; text-align:center; font-weight: bold;" *ngIf="approvalDays.length > 0">
+            {{ MonthNames[approvalDays[0].getMonth()] + ' , ' + approvalDays[0].getFullYear() }}
+          </div>
+          <div style="flex: 1 1 auto;text-align:right;">
+            <button class="btn btn-primary" (click)="moveApprovalDays(1)">Next Month</button>
+          </div>
+        </div>
+
+        <div class="monthly2" style="margin-top:20px;">
+          <div class="flex-container">
+            <div class="flex-col left-align">
+              <div class="flex-head">
+                Name
+              </div>
+              <div class="flex-row" *ngFor="let tm of getProjectMembers(project)">
+                {{ tm.firstname + ' ' + tm.lastname }}
+              </div>
+            </div>
+
+            <div class="flex-col" [attr.day]="dy.getDay()" *ngFor="let dy of approvalDays">
+              <div class="flex-head">
+                <span>{{ dy.getDate() }}</span>
+                <!--<span>{{ weekNamesLetters[dy.getDay()]}}</span>-->
+              </div>
+              <div class="flex-row"  *ngFor="let tm of getProjectMembers(project)">
+                <div [attr.timesheetid]="getTimeSheetId(project, dy, tm)"  (click)="updateCheckedData($event)"  class=" logged-hours" [attr.selected]="isTimeSheetSelected(project, dy, tm, approvalChecked, approvalsubmissions)"
+                  [ngClass]="getStatus(project, dy, tm)">
+                    {{ getLoggedHours(project, dy, tm) }}
+                  </div>
+              </div>
+            </div>
+
+            <div class="flex-col">
+              <div class="flex-head">
+                T.H
+              </div>
+              <div class="flex-row" *ngFor="let tm of getProjectMembers(project)">
+                {{ getTotalHrs(project, tm) }}
+              </div>
+            </div>
+
+            <div class="flex-col">
+              <div class="flex-head">
+                 
+              </div>
+              <div class="flex-row" *ngFor="let tm of getProjectMembers(project)">
+                <div *ngIf="!editDisabled">
+                  <input *ngIf="isSheetSubmitted(project, tm, approvalDays)" type="checkbox" [checked]="isAllSelected(project, tm, approvalChecked, approvalsubmissions, approvalDays)"
+                  (change)="selectAllTimesheets($event, project, tm)" [attr.name]="'c' + project.id + 'tt' + tm.id" />
+                </div>
+              </div>
+            </div>
+
+          </div>
+          <div class="mask" *ngIf="editDisabled"></div>
+        </div>
+
+
+        <div class="m15-top clearfix" *ngIf="!editDisabled">
+          <button class="btn btn-success" (click)="updateStatus('A')">Approve</button>
+          <button class="btn btn-danger" (click)="opendeclineModal()">Decline</button>
+          <button class="btn btn-primary pull-right " (click)="submitProject()"> Submit To Reports </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+
+
+<div class="modal fade" id="declineCommentModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">
+          <legend>Decline Comment</legend>
+        </h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form class="form-horizontal" method="POST" (submit)="updateStatus('D')">
+          <div class="form-group">
+            <label for="timesheetcomment">Comment</label>
+            <textarea class="form-control" name="declinecomment" [(ngModel)]="declinecomment" rows="3"></textarea>
+          </div>
+          <div style="text-align: right;">
+            <button type="submit" class="btn btn-success">Submit</button>
+            <button type="button" class="btn btn-danger" (click)="closedeclinemodal()">Cancel</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

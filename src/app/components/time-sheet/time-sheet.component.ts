@@ -891,13 +891,25 @@ export class TimeSheetComponent implements OnInit {
     this.calenderDays.forEach(cr => {
       cr.days.forEach(cc => {
         if (cc.date) {
-          if (projectTimesheets.filter(t => { if (t.sheetdate === cc.date.getDate() && t.sheetmonth == (cc.date.getMonth() + 1) && t.sheetyear === cc.date.getFullYear()) { return true; } return false; }).length === 0) {
+          var filterSheets = projectTimesheets.filter(t => { if (t.sheetdate === cc.date.getDate() && t.sheetmonth == (cc.date.getMonth() + 1) && t.sheetyear === cc.date.getFullYear()) { return true; } return false; });
+          if (filterSheets.length === 0) {
             timesheetsToAdd.push({
               empid: empid,
               projectid: project.id,
               loggedhours: 0,
               timesheetdate: this.getHtml5DateFormat(cc.date)
             });
+          } else {
+            if (filterSheets[0]) {
+              timesheetsToAdd.push({
+                id: filterSheets[0].id,
+                empid: empid,
+                projectid: project.id,
+                loggedhours: filterSheets[0].loggedhours,
+                timesheetdate: this.getHtml5DateFormat(cc.date)
+              });
+            }
+
           }
         }
       });
@@ -915,6 +927,8 @@ export class TimeSheetComponent implements OnInit {
       var emailContent = 'Project (' + project.name + ') - Timesheet (' + this.MonthNames[submonth] + ', ' + subyear + ') are waiting for you approval';
       this.db.sendMail({ toAddress: emailids.join('@evoketechnologies.com,'), text: emailContent, mailContent: emailContent });
     });
+
+
   }
 
 }
