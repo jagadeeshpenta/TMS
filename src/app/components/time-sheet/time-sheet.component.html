@@ -67,7 +67,7 @@
               </table>
             </div>
             <div class="clearfix" *ngIf="calenderDate && isLoaded.isProjectsLoaded &&  isLoaded.isSubmissionsLoaded && isLoaded.isTimesheetsLoaded">
-              <button [disabled]="checktimesheetsubmisionall(myProjects, calenderDate)" (click)="submittimesheets(project)" class="btn btn-success pull-right"> 
+              <button [disabled]="checktimesheetsubmisionall([project], calenderDate)" (click)="submittimesheets(project)" class="btn btn-success pull-right"> 
                 {{isTimesheetSubmited}}
                 <span *ngIf="isMonth && monthDays.length > 0">
                   Timesheet of {{ MonthNames[monthDays[0].getMonth()] }}, {{ calenderDate.getFullYear() }}
@@ -108,13 +108,15 @@
           <div class="form-group">
             <label for="logwork">Hours</label>
             <input [(ngModel)]="logModalData.loggedhours" required type="number" class="form-control" name="logwork" />
+            <div class="error" *ngIf="logModalData.loggedhours < 0">Negative values not allowed</div>
+            <div class="error" *ngIf="logModalData.loggedhours > 24">Log hours must not exceed 24 hours.</div>
           </div>
           <div class="form-group">
             <label for="timesheetcomment">Comments</label>
             <textarea class="form-control" name="timesheetcomment" [(ngModel)]="logModalData.timesheetcomment" rows="3"></textarea>
           </div>
           <div style="text-align: right;">
-            <button type="submit" class="btn btn-success">Submit</button>
+            <button type="submit" class="btn btn-success" [disabled]="logModalData.loggedhours < 0 || logModalData.loggedhours > 24">Submit</button>
             <button type="button" class="btn btn-danger" (click)="close()">Cancel</button>
           </div>
         </form>

@@ -14,6 +14,7 @@ import { ReportsComponent } from './components/reports/reports.component';
 import { TodoComponent } from './components/todo/todo.component';
 
 import { WaitingForApprovalsComponent } from './components/waiting-for-approvals/waiting-for-approvals.component';
+import { MyApprovalDetailComponent } from './components/my-approval-detail/my-approval-detail.component';
 
 export const router: Routes = [
     
@@ -25,6 +26,7 @@ export const router: Routes = [
     { path: 'my-team', component: MyTeamComponent, canActivate:[AuthGuard] },
     { path: 'employees', component: EmployeesComponent, canActivate:[AuthGuard] },
     { path: 'my-approvals', component: WaitingForApprovalsComponent, canActivate:[AuthGuard] },
+    { path: 'my-approvals/:pid', component: MyApprovalDetailComponent, canActivate:[AuthGuard] },
     { path: 'reports', component: ReportsComponent, canActivate:[AuthGuard] },
     { path: 'todo', component: TodoComponent }
 ];

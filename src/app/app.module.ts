@@ -35,6 +35,7 @@ import { UiForApiModule } from './ui-for-api/ui-for-api.module';
 import { WaitingForApprovalsComponent } from './components/waiting-for-approvals/waiting-for-approvals.component';
 import { environment } from './../environments/environment';
 import { TimeSheetModule } from './../app/components/time-sheet';
+import { MyApprovalDetailComponent } from './components/my-approval-detail/my-approval-detail.component';
 
 var importModulesArr = [
   BrowserModule,
@@ -63,7 +64,8 @@ if (!environment.production) {
     MyTeamComponent,
     EmployeesComponent,
     ReportsComponent,
-    WaitingForApprovalsComponent
+    WaitingForApprovalsComponent,
+    MyApprovalDetailComponent
   ],
   imports: importModulesArr,
   providers: [AuthService, UserService, AuthGuard, DBService, RootService],

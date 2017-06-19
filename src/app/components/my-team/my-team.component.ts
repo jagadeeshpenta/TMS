@@ -25,7 +25,9 @@ export class MyTeamComponent implements OnInit {
     emp: {},
     showSuggestions: false,
     onSubmit: false,
-    isbillable: true
+    isbillable: true,
+    reportingto: '',
+    subteam: ''
   };
 
   profile = {};
@@ -53,6 +55,7 @@ export class MyTeamComponent implements OnInit {
   ngOnInit() {
   }
 
+
   fillProjects() {
     this.db.getLists({ entityName: '/projects' }).then(({ err, result }) => {
       if (!err) {
@@ -63,7 +66,7 @@ export class MyTeamComponent implements OnInit {
   }
 
   processDate() {
-    if (this.allocationLoaded && this.employeesLoaded) {
+    if (this.allocationLoaded && this.employeesLoaded && this.profile) {
       if (this.Projects.length > 0) {
         this.Projects.forEach((project) => {
           var empofProjects = [];
@@ -82,6 +85,24 @@ export class MyTeamComponent implements OnInit {
           });
 
           project.Employees = empofProjects;
+        });
+
+        var myProjects = this.Projects.filter(p => {
+          var alls = this.Allocations.filter((a) => {
+            if (a.projectid == p.id && a.empid == this.profile['empid']) {
+              return true;
+            }
+            return false;
+          });
+
+          if (this.profile['role'] === 'admin') {
+            return true;
+          }
+
+          if (alls.length > 0 && alls[0].role === 'manager') {
+            return true;
+          }
+          return false;
         });
 
         this.projectsProcessed = true;
@@ -274,7 +295,6 @@ export class MyTeamComponent implements OnInit {
   }
 
   saveEditProject(project) {
-    //console.log(project);
     this.db.editProject(project).then(({ err, result }) => {
       if (!err) {
         this.fillProjects();
@@ -289,5 +309,24 @@ export class MyTeamComponent implements OnInit {
     } else {
       return '';
     }
+  }
+
+  enableEditMode(project) {
+    project.expand = true;
+    this.EmployeeSuggestions = this.Employees;
+    this.employeeToProject.project = {};
+    this.employeeToProject.emp = {};
+    this.employeeToProject.empadd = '';
+    this.EditProject(project);
+  }
+
+  editAllocation(project, emp) {
+    this.employeeToProject.project = project;
+    this.employeeToProject.onSubmit = false;
+    this.employeeToProject.showSuggestions = false;
+    this.employeeToProject.empadd = emp.firstname + ' ' + emp.lastname;
+    this.employeeToProject.emp = emp;
+    this.employeeToProject.isbillable = true;
+    $('#addEmployeeToProjectModal').modal('show');
   }
 }

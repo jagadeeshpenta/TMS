@@ -14,8 +14,13 @@ declare var $: any;
 export class EmployeesComponent implements OnInit {
 
   Employees;
+  EmployeesExcludeRoot;
   newEmployee = {
-    id: 0
+    id: 0,
+    EmpIDExists: false,
+    EmpMail: false,
+    empid: '',
+    emailid: ''
   };
   profile;
   expandpersonalfields = false;
@@ -28,6 +33,18 @@ export class EmployeesComponent implements OnInit {
     'hr': 'HR'
   };
 
+
+  validateEmpId() {
+    this.newEmployee.EmpIDExists = this.Employees.filter((emp) => {
+      return emp.empid == this.newEmployee.empid;
+    }).length > 0 ? true : false;
+  }
+
+  validateEmailId() {
+    this.newEmployee.EmpMail = this.Employees.filter((emp) => {
+      return emp.emailid == this.newEmployee.emailid;
+    }).length > 0 ? true : false;
+  }
   constructor(public db: DBService, public auth: AuthService, private toastrService: ToastrService) {
     auth.checkUser().then(({ err, result }) => {
       if (!err) {
@@ -44,8 +61,11 @@ export class EmployeesComponent implements OnInit {
   fllEmployees() {
     this.db.getLists({ entityName: '/employees' }).then(({ err, result }) => {
       if (!err) {
-        this.employeesLoaded = true;
-        this.Employees = result;
+        if (result instanceof Array) {
+          this.employeesLoaded = true;
+          this.Employees = result;
+          this.EmployeesExcludeRoot = result.filter(emp => { return emp.empid != '0'; });
+        }
       }
     });
   }
@@ -61,14 +81,14 @@ export class EmployeesComponent implements OnInit {
   }
 
   addEmployee() {
-    
+
     this.db.addEmployee({ newEmployee: this.newEmployee }).then(({ err, result }) => {
       if (!err) {
         this.fllEmployees();
         var toastrMessage = (this.isEdit ? 'Updating' : 'Adding') + ' employee successfully';
         this.db.toastrInstance.success('', toastrMessage, this.db.toastCfg);
       } else {
-        this.db.toastrInstance.error('', 'Failed adding employee', this.db.toastCfg);
+        //this.db.toastrInstance.error('', 'Failed adding employee', this.db.toastCfg);
       }
     });
 
@@ -84,11 +104,12 @@ export class EmployeesComponent implements OnInit {
     });
   }
 
+
   openAddEmployeeModal(fm) {
     fm.reset();
     fm.resetForm();
     this.newEmployee.id = 0;
-
+    this.newEmployee.EmpIDExists = false;
     $('#addEmployeeModal').modal('show');
   }
 

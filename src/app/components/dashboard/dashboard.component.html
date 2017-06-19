@@ -7,7 +7,7 @@
       <div *ngIf="!isLoaded">Loading......</div>
       <div *ngIf="isLoaded">
         <div class="row">
-          <div class="col-lg-3 col-md-6 col-sm-6">
+          <div class="col-lg-3 col-md-6 col-sm-6" *ngIf="permissions['801']">
             <div class="card card-secondary">
               <div class="card-block hand-symbol" (click)="goToTimesheet()">
                 <h4 class="card-title"><i class="icon ion-ios-alarm"></i> Time Sheet</h4>
@@ -16,7 +16,7 @@
             </div>
           </div>
 
-          <div class="col-lg-3 col-md-6 col-sm-6" *ngIf="profile.role === 'admin' || isManager || profile.role === 'hr' ">
+          <div class="col-lg-3 col-md-6 col-sm-6" *ngIf="permissions['802']">
             <div class="card card-secondary">
               <div class="card-block hand-symbol" (click)="goToMyTeam()">
                 <h4 class="card-title"><i class="icon ion-ios-people"></i> Projects</h4>
@@ -25,7 +25,7 @@
             </div>
           </div>
 
-          <div class="col-lg-3 col-md-6 col-sm-6" *ngIf="profile.role === 'admin' || profile.role === 'hr' ">
+          <div class="col-lg-3 col-md-6 col-sm-6" *ngIf="permissions['803']">
             <div class="card card-secondary">
               <div class="card-block hand-symbol" (click)="goToEmployees()">
                 <h4 class="card-title"><i class="icon ion-md-people"></i> Employees</h4>
@@ -34,7 +34,7 @@
             </div>
           </div>
 
-          <div class="col-lg-3 col-md-6 col-sm-6" *ngIf="profile.role === 'admin' || profile.role === 'hr' ">
+          <div class="col-lg-3 col-md-6 col-sm-6" *ngIf="permissions['804']">
             <div class="card card-secondary">
               <div class="card-block hand-symbol" (click)="goToReports()">
                 <h4 class="card-title"><i class="icon ion-ios-stats"></i> Reports</h4>

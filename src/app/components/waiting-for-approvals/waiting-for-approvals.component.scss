@@ -107,3 +107,26 @@
         }
     }
 }
+
+
+[projectid="1"] {
+    display: none;
+}
+
+.approvals-lists {
+    .approvals-lists-item {
+        position: relative;
+        cursor: pointer;
+        &:hover {
+            background-color: #787878;
+            color: white;
+        }
+        .right-arrow {
+            top: 6px;
+            right: 10px;
+            position: absolute;
+            font-size: 22px;
+            font-weight: bold;
+        }
+    }
+}
