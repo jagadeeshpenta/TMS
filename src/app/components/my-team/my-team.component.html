@@ -166,11 +166,11 @@
       </div>
       <div class="modal-body">
         <form class="form-horizontal" method="POST" (submit)="addEmployeeToProject()">
-          <div *ngIf="employeeToProject.onSubmit && !employeeToProject.emp.empid">Please Select Employee</div>
+          <div *ngIf="employeeToProject.onSubmit && !employeeToProject.emp.empid"  style="color: red;">Please Select Employee</div>
           <div class="form-group" style="position: relative;">
             <label for="addemployee">Add Employee to <span style="font-weight: bold;">{{ employeeToProject.project.name}}</span></label>
             <input autocomplete="off" name="sdgffdgsdgdgf" (keyup)="filterSuggestions($event, employeeToProject.project)" type="text"
-              class="form-control" [(ngModel)]="employeeToProject.empadd" id="addemployee" placeholder="Search By EmpId or Employee Name"
+              class="form-control" (click)="focusFun()" [(ngModel)]="employeeToProject.empadd" id="addemployee" placeholder="Search By EmpId or Employee Name"
             />
             <div class="emp-sugestion-list" [ngClass]="{'show': employeeToProject.showSuggestions}">
               <ul class="list-group">
