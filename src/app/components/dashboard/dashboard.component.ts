@@ -17,6 +17,12 @@ export class DashboardComponent implements OnInit {
 
   isManager = false;
 
+  permissions = {
+    '801': false,
+    '802': false,
+    '803': false,
+    '804': false
+  };
 
   constructor(private _router: Router, public auth: AuthService, public db: DBService, public root: RootService) {
     auth.checkUser().then(({ err, result }) => {
@@ -30,12 +36,36 @@ export class DashboardComponent implements OnInit {
           projects.forEach(p => {
             var alls = allocations.filter(a => { return a.projectid == p.id && a.empid == this.profile.empid });
             if (alls.length > 0) {
-              if(!this.isManager) {
+              if (!this.isManager) {
                 this.isManager = alls[0].role == 'manager';
               }
               myProjects.push({ project: p, allocation: alls[0] });
             }
           });
+
+          if (this.profile.role === 'user') {
+            this.permissions['801'] = true;
+          }
+
+          if (this.profile.role === 'hr') {
+            this.permissions['803'] = true;
+            this.permissions['804'] = true;
+          }
+
+          if (this.profile.role === 'finance') {
+            this.permissions['804'] = true;
+          }
+
+          if (this.isManager) {
+            this.permissions['802'] = true;
+          }
+
+          if (this.profile.role === 'admin') {
+            this.permissions['801'] = true;
+            this.permissions['802'] = true;
+            this.permissions['803'] = true;
+            this.permissions['804'] = true;
+          }
           this.isLoaded = true;
         })
       }
@@ -56,5 +86,7 @@ export class DashboardComponent implements OnInit {
   }
   ngOnInit() {
   }
+
+
 
 }

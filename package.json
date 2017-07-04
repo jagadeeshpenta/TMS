@@ -11,7 +11,7 @@
     "e2e": "ng e2e",
     "dist": "ng build --env=prod --progress=false && node ./tasks/rename-index.js",
     "gcloud": "ng build --env=gcloud --progress=false && node ./tasks/rename-index.js",
-    "ginstance": "ng build --env=ginstance --progress=false && node ./tasks/rename-index.js",
+    "ginstance": "ng build --env=ginstance --progress=false --sourcemaps=false && node ./tasks/rename-index.js",
     "renameindex": "node ./tasks/rename-index.js"
   },
   "private": true,
@@ -41,7 +41,6 @@
     "@angular/cli": "^1.0.0-rc.0",
     "@angular/compiler-cli": "^2.4.0",
     "@types/jasmine": "2.5.38",
-    "@types/jquery": "^2.0.41",
     "@types/node": "~6.0.60",
     "codelyzer": "~2.0.0",
     "jasmine-core": "~2.5.2",

@@ -18,6 +18,7 @@
       <div class="clearfix">
         <button routerLink="/time-sheet" class="btn btn-primary pull-right">Back to Timesheets</button>
       </div>
+<<<<<<< HEAD
       <div class="waiting-for-approval" *ngIf="waitingForapprovalsLoaded">
         <h4>Waiting for approvals</h4>
         <div>
@@ -97,6 +98,21 @@
           </div>
         </div>
       </div>
+=======
+      <div *ngIf="projectID">
+        <div *ngIf="!waitingForapprovalsLoaded" style="padding: 20px;">Loading......</div>
+      </div>
+
+      <div *ngIf="!projectID">
+        <ul class="list-group m15-top approvals-lists">
+          <li  *ngFor="let project of approvalProjects" class="list-group-item approvals-lists-item" [ngClass]="{ 'hidden': (project.id == 1)}" (click)="navigateToProject(project)">
+            {{ project.name }}
+            <div class="right-arrow"><i class="fa fa-angle-right" aria-hidden="true" style="margin-left:5px;"></i></div>
+          </li>
+        </ul>
+      </div>
+
+>>>>>>> 265bccdb00a782de5c3d5ad900c32bb6bf2b3a5f
     </div>
   </div>
 </div>

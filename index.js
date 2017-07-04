@@ -1,1 +1,1 @@
-require('./fe-server')({ fePort: 3434, folder: 'dist' });
+require('./fe-server')({ fePort: 80, folder: 'dist' });

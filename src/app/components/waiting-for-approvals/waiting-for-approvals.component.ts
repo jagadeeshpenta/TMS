@@ -2,6 +2,11 @@ import { Component, OnInit } from '@angular/core';
 import { DBService } from './../../Shared/dbservice';
 import { AuthService } from './../../Shared/auth/auth.service';
 
+<<<<<<< HEAD
+=======
+import { Router, ActivatedRoute } from '@angular/router';
+
+>>>>>>> 265bccdb00a782de5c3d5ad900c32bb6bf2b3a5f
 declare var $: any;
 
 @Component({
@@ -12,10 +17,20 @@ declare var $: any;
 export class WaitingForApprovalsComponent implements OnInit {
 
 
+<<<<<<< HEAD
   weekDays = [];
   monthDays = [];
 
 
+=======
+  allchecked = {
+
+  };
+  weekDays = [];
+  monthDays = [];
+
+  projectID;
+>>>>>>> 265bccdb00a782de5c3d5ad900c32bb6bf2b3a5f
   serviceData: any = {
     Employees: [],
     Projects: [],
@@ -51,10 +66,59 @@ export class WaitingForApprovalsComponent implements OnInit {
 
   MonthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
   weekNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+<<<<<<< HEAD
   constructor(public db: DBService, public auth: AuthService) {
   }
 
   moveApprovalDays(isNext) {
+=======
+  constructor(public db: DBService, public auth: AuthService, private route: ActivatedRoute, private router: Router) {
+  }
+
+  isSheetSubmitted(project, tm, approvalDays) {
+    var timesheets = [];
+
+    var projectTimesheets = this.serviceData.Timesheets.filter(t => { return t.projectid == project.id && t.empid == tm.empid; });
+    approvalDays.forEach(dy => {
+      if (projectTimesheets.filter(t => { if (t.sheetdate === dy.getDate() && t.sheetmonth == (dy.getMonth() + 1) && t.sheetyear === dy.getFullYear()) { return true; } return false; }).length > 0) {
+        timesheets.push({
+          empid: tm.empid,
+          projectid: project.id,
+          submonth: dy.getMonth(),
+          subyear: dy.getFullYear()
+        })
+      }
+    });
+
+    if (timesheets.length === 0) {
+      var mnthToCheck = this.approvalDays[0].getMonth().toString();
+      var yearToCheck = this.approvalDays[0].getFullYear().toString();
+      var submisionchecked = false;
+      this.serviceData.Submissions.forEach(s => {
+        if (s.pid == project.id && s.empid == tm.empid && s.submonth == mnthToCheck && s.subyear == yearToCheck) {
+          if (this.approvalsubmissions.indexOf(s.id.toString()) >= 0) {
+            submisionchecked = true;
+          }
+        }
+      });
+
+      if (submisionchecked) {
+        return true;
+      }
+    } else {
+      return true;
+    }
+    return false;
+  }
+
+  moveApprovalDays(isNext) {
+    Object.keys(this.allchecked).forEach(k => {
+      for (var emp in this.allchecked[k]) {
+        this.allchecked[k][emp] = false;
+      }
+    });
+
+>>>>>>> 265bccdb00a782de5c3d5ad900c32bb6bf2b3a5f
     var ld;
     if (isNext) {
       var daytoGenerate = this.approvalDays[this.approvalDays.length - 1];
@@ -189,6 +253,14 @@ export class WaitingForApprovalsComponent implements OnInit {
   }
 
   selectAllTimesheets(event, project, tm) {
+<<<<<<< HEAD
+=======
+
+    if (this.allchecked['P' + project.id]) {
+      this.allchecked['P' + project.id]['E' + tm.empid] = true;
+    }
+
+>>>>>>> 265bccdb00a782de5c3d5ad900c32bb6bf2b3a5f
     var timesheets = [];
     var atleastonesheet = false;
     this.approvalDays.forEach(a => {
@@ -480,6 +552,13 @@ export class WaitingForApprovalsComponent implements OnInit {
         return false;
       });
     }
+<<<<<<< HEAD
+=======
+
+    this.approvalProjects.forEach(p => {
+      this.allchecked['P' + p.id] = {};
+    });
+>>>>>>> 265bccdb00a782de5c3d5ad900c32bb6bf2b3a5f
     this.approvalDays = this.generateMonthDays(new Date(this.toDay))
     this.waitingForapprovalsLoaded = true;
     console.log('test ');
@@ -522,9 +601,15 @@ export class WaitingForApprovalsComponent implements OnInit {
       }
     });
   }
+<<<<<<< HEAD
   ngOnInit() {
     this.auth.checkUser().then(({ err, result }) => {
       console.log('result ', result);
+=======
+
+  startProcess() {
+    this.auth.checkUser().then(({ err, result }) => {
+>>>>>>> 265bccdb00a782de5c3d5ad900c32bb6bf2b3a5f
       if (result && result.profile) {
         this.profile = result.profile;
         this.toDay = result.toDay;
@@ -544,4 +629,28 @@ export class WaitingForApprovalsComponent implements OnInit {
     });
   }
 
+<<<<<<< HEAD
 }
+=======
+
+  ngOnInit() {
+    this.route.params.subscribe((params: ApprovalParams) => {
+      if (params.pid) {
+        this.projectID = params.pid;
+      }
+      this.startProcess();
+    });
+  }
+
+
+  navigateToProject(project) {
+    this.router.navigateByUrl('/my-approvals/' + project.id)
+  }
+
+}
+
+
+class ApprovalParams {
+  pid;
+}
+>>>>>>> 265bccdb00a782de5c3d5ad900c32bb6bf2b3a5f

@@ -4,6 +4,8 @@ import { Cookie } from 'ng2-cookies';
 
 import { DBService } from './dbservice';
 
+import { AuthService } from './auth/auth.service';
+
 
 @Injectable()
 export class RootService {
@@ -14,6 +16,8 @@ export class RootService {
         isAllocationsLoaded: false,
         isTimesheetsLoaded: false,
         isSubmissionsLoaded: false,
+ 
+        isProjectsubmissionsLoaded: false,
         userLoaded: false
     };
     serviceData: any = {
@@ -21,9 +25,10 @@ export class RootService {
         Projects: [],
         Allocations: [],
         Timesheets: [],
-        Submissions: []
+        Submissions: [],
+        ProjectSubmissions: []
     };
-    constructor(private db: DBService) {
+    constructor(private db: DBService, private auth: AuthService) {
 
     }
 
@@ -31,7 +36,8 @@ export class RootService {
         return this.db.getLists({ entityName: entityName }).then(({ err, result }) => {
             if (!err) {
                 this.isLoaded[loadedName] = true;
-                this.serviceData[dataName] = result;
+ 
+                this.serviceData[dataName] = result['rows'] ? result['rows'] : result;
             }
             return { err, result };
         });
@@ -43,6 +49,36 @@ export class RootService {
         promises.push(this.getData('/allocations', 'Allocations', 'isAllocationsLoaded'));
         promises.push(this.getData('/timesheets', 'Timesheets', 'isTimesheetsLoaded'));
         promises.push(this.getData('/submissions', 'Submissions', 'isSubmissionsLoaded'));
+
         return Promise.all(promises);
     }
+
+    getProjectSubmissions() {
+        return this.getData('/projectsubmissions', 'ProjectSubmissions', 'isProjectsubmissionsLoaded');
+    }
+
+    getEmployeesByProject() {
+
+    }
+
+    getProjectsByEmployee() {
+
+    }
+
+    getTimesheets({ month, year, date, projectid, empid }) {
+
+    }
+
+    getSubmissions({ }) {
+
+    }
+}
+
+
+class ServiceData {
+    Employees = [];
+    Projects = [];
+    Allocations = [];
+    Timesheets = [];
+    Submissions = [];
 }

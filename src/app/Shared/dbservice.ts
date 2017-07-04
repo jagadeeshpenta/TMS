@@ -5,6 +5,8 @@ import { Cookie } from 'ng2-cookies';
 import { environment } from './../../environments/environment';
 import { ToastrService, ToastConfig } from './../../../node_modules/toastr-ng2';
 
+declare var WebSocket: any;
+
 @Injectable()
 export class DBService {
   baseUrl = environment.apiUrl;
@@ -12,15 +14,78 @@ export class DBService {
   cacheData: any;
   CookieManager;
   Headers;
- 
+
   toastrInstance;
   toastCfg = new ToastConfig({ timeOut: 900 });
+
+  ws;
+  wsactions = [];
+  wsEnabled = false;
+  guid(len) {
+    function s4() {
+      return Math.floor((1 + Math.random()) * 0x10000)
+        .toString(16)
+        .substring(1);
+    }
+    if (len == 8) {
+      return s4() + s4();
+    }
+    switch (len) {
+      case 4:
+        return s4();
+      case 8:
+        return s4() + s4();
+      case 12:
+        return s4() + s4() + s4();
+    }
+
+    return s4() + s4() + s4() + s4() + s4() + s4() + (new Date).getTime().toString(16);
+  };
+
+  onwsmessage(e) {
+    var data;
+    try {
+      data = JSON.parse(e.data);
+      if (data) {
+        var wsAction = this.wsactions.filter(w => {
+          return w.guid === data.reqGuid;
+        });
+        if (wsAction && wsAction.length > 0) {
+          wsAction = wsAction[0];
+          data.result = data.result.rows ? data.result.rows : data.result;
+          wsAction['resolve'](data);
+        }
+      }
+    } catch (g) {
+
+    }
+  }
+  onwserror(e) {
+
+  }
+  onwsclose(e) {
+
+  }
   constructor(private http: Http, private toastr: ToastrService) {
     this.lToken = Cookie.get('lToken');
     this.CookieManager = Cookie;
     this.Headers = Headers;
     this.toastrInstance = toastr;
+ 
+
+
+    if (this.wsEnabled) {
+      this.ws = new WebSocket(environment.wsUrl, 'echo-protocol');
+      this.ws.onopen = function () {
+        
+      };
+
+      this.ws.onmessage = this.onwsmessage.bind(this);
+      this.ws.onwsclose = this.onwsclose;
+    }
   }
+
+
 
   makeRequest(url, headers, reqData, method) {
     var self = this;
@@ -28,11 +93,17 @@ export class DBService {
       switch (method) {
         case 'POST':
           var urlToPost = this.baseUrl + url;
-          self.http.post(urlToPost, reqData, { headers }).subscribe((resp) => {
-            res(resp.json());
-          }, (err) => {
-            res({ err });
-          });
+          if (this.wsEnabled && this.ws.readyState === this.ws.OPEN) {
+            var actionguid = this.guid(12);
+            this.wsactions.push({ guid: actionguid, resolve: res });
+            this.ws.send(JSON.stringify({ method: 'POST', url: url, data: reqData, guid: actionguid, lToken: Cookie.get('lToken') }));
+          } else {
+            self.http.post(urlToPost, reqData, { headers }).subscribe((resp) => {
+              res(resp.json());
+            }, (err) => {
+              res({ err });
+            });
+          }
           break;
         case 'GET':
           var params = new URLSearchParams();
@@ -41,14 +112,23 @@ export class DBService {
               params[ky] = reqData[ky];
             });
           }
-          self.http.get(this.baseUrl + url + '?lToken=' + Cookie.get('lToken') + '&ttt=' + (new Date().getTime()), { headers, search: params }).subscribe((resp) => {
-            res(resp.json());
-          }, (err) => {
-            res({ err });
-          });
+          var urlToGet = this.baseUrl + url + '?lToken=' + Cookie.get('lToken') + '&ttt=' + (new Date().getTime());
+          if (this.wsEnabled && this.ws.readyState === this.ws.OPEN) {
+            var actionguid = this.guid(12);
+            this.wsactions.push({ guid: actionguid, resolve: res });
+            this.ws.send(JSON.stringify({ method: 'GET', url: url, data: reqData, guid: actionguid, lToken: Cookie.get('lToken') }));
+          } else {
+            self.http.get(urlToGet, { headers, search: params }).subscribe((resp) => {
+              res(resp.json());
+            }, (err) => {
+              res({ err });
+            });
+          }
+
           break;
         case 'DELETE':
-          self.http.delete(this.baseUrl + url + '&id=' + reqData.id).subscribe((resp) => {
+          var urlToDelete = this.baseUrl + url + '&id=' + reqData.id;
+          self.http.delete(urlToDelete).subscribe((resp) => {
             res(resp.json());
           });
           break;
@@ -149,7 +229,7 @@ export class DBService {
       });
     });
   }
- 
+
   deleteProject({ projectToDelete }) {
     return new Promise((res, rej) => {
       this.makeRequest('/projects?lToken=' + Cookie.get('lToken'), new Headers(), projectToDelete, 'DELETE').then((resp) => {
